@@ -7,14 +7,39 @@ class OpenAIProvider(BaseProvider):
     """OpenAI provider adapter. Requires: pip install semantic-harness[openai]"""
 
     def __init__(self, api_key: str | None = None, base_url: str | None = None, **kwargs: Any):
-        try:
-            import openai as _openai
-        except ImportError:
-            raise ImportError(
-                "OpenAI provider requires: pip install semantic-harness[openai]"
+        self.api_key = api_key
+        self.base_url = base_url
+        self._kwargs = kwargs
+        self._client_instance = None
+        self._async_client_instance = None
+
+    @property
+    def _client(self):
+        if self._client_instance is None:
+            try:
+                import openai as _openai
+            except ImportError:
+                raise ImportError(
+                    "OpenAI provider requires: pip install semantic-harness[openai]"
+                )
+            self._client_instance = _openai.OpenAI(
+                api_key=self.api_key, base_url=self.base_url, **self._kwargs
             )
-        self._client = _openai.OpenAI(api_key=api_key, base_url=base_url, **kwargs)
-        self._async_client = _openai.AsyncOpenAI(api_key=api_key, base_url=base_url, **kwargs)
+        return self._client_instance
+
+    @property
+    def _async_client(self):
+        if self._async_client_instance is None:
+            try:
+                import openai as _openai
+            except ImportError:
+                raise ImportError(
+                    "OpenAI provider requires: pip install semantic-harness[openai]"
+                )
+            self._async_client_instance = _openai.AsyncOpenAI(
+                api_key=self.api_key, base_url=self.base_url, **self._kwargs
+            )
+        return self._async_client_instance
 
     async def complete(
         self,

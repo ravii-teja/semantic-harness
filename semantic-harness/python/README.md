@@ -57,8 +57,22 @@ Semantic Harness solves this with a zero-friction decorator middleware and objec
 pip install semantic-harness
 ```
 
-Or install with all extras:
+Or install with specific providers:
+
 ```bash
+# OpenAI / Azure
+pip install "semantic-harness[openai]"
+
+# Anthropic Claude
+pip install "semantic-harness[anthropic]"
+
+# Hugging Face Inference API / TGI
+pip install "semantic-harness[huggingface]"
+
+# Apple Silicon Metal acceleration (Mac M-series)
+pip install "semantic-harness[mlx]"
+
+# All providers
 pip install "semantic-harness[all]"
 ```
 

@@ -239,7 +239,11 @@ def benchmark_repl_sandbox(runs: int = 100) -> BenchmarkResult:
 
 def main():
     parser = argparse.ArgumentParser(description="Semantic Harness Benchmark Suite")
-    parser.add_argument("--provider", default="local", choices=["local", "openai", "anthropic", "ollama"])
+    parser.add_argument(
+        "--provider",
+        default="local",
+        choices=["local", "openai", "anthropic", "ollama", "huggingface", "hf", "mlx", "metal"],
+    )
     parser.add_argument("--model", default="qwen2.5:0.5b")
     parser.add_argument("--benchmark", nargs="+", default=["all"], help="Benchmarks to run: all, c2c, cache, repl")
     parser.add_argument("--runs", type=int, default=50)

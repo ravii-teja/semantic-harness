@@ -7,14 +7,34 @@ class AnthropicProvider(BaseProvider):
     """Anthropic provider adapter. Requires: pip install semantic-harness[anthropic]"""
 
     def __init__(self, api_key: str | None = None, **kwargs: Any):
-        try:
-            import anthropic as _anthropic
-        except ImportError:
-            raise ImportError(
-                "Anthropic provider requires: pip install semantic-harness[anthropic]"
-            )
-        self._client = _anthropic.Anthropic(api_key=api_key, **kwargs)
-        self._async_client = _anthropic.AsyncAnthropic(api_key=api_key, **kwargs)
+        self.api_key = api_key
+        self._kwargs = kwargs
+        self._client_instance = None
+        self._async_client_instance = None
+
+    @property
+    def _client(self):
+        if self._client_instance is None:
+            try:
+                import anthropic as _anthropic
+            except ImportError:
+                raise ImportError(
+                    "Anthropic provider requires: pip install semantic-harness[anthropic]"
+                )
+            self._client_instance = _anthropic.Anthropic(api_key=self.api_key, **self._kwargs)
+        return self._client_instance
+
+    @property
+    def _async_client(self):
+        if self._async_client_instance is None:
+            try:
+                import anthropic as _anthropic
+            except ImportError:
+                raise ImportError(
+                    "Anthropic provider requires: pip install semantic-harness[anthropic]"
+                )
+            self._async_client_instance = _anthropic.AsyncAnthropic(api_key=self.api_key, **self._kwargs)
+        return self._async_client_instance
 
     async def complete(
         self,

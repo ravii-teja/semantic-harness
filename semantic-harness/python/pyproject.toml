@@ -37,7 +37,9 @@ dependencies = [
 openai = ["openai>=1.30"]
 anthropic = ["anthropic>=0.28"]
 ollama = ["ollama>=0.2"]
-all = ["openai>=1.30", "anthropic>=0.28", "ollama>=0.2"]
+huggingface = ["huggingface_hub>=0.20"]
+mlx = ["mlx>=0.16; sys_platform == 'darwin'", "mlx-lm>=0.16; sys_platform == 'darwin'"]
+all = ["openai>=1.30", "anthropic>=0.28", "ollama>=0.2", "huggingface_hub>=0.20"]
 dev = [
   "pytest>=8.0",
   "pytest-asyncio>=0.23",

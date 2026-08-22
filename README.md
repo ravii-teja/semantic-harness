@@ -38,17 +38,45 @@
 
 Autonomous agent workflows frequently break down due to schema fragility, context blowup, and redundant reasoning loops—especially on compact SLMs (<3B parameters) and edge deployments.
 
-**Semantic Harness** provides an enterprise-grade middleware and execution runtime that sits between your agent loop and model providers (OpenAI, Anthropic, Ollama, vLLM, custom endpoints). It introduces:
+**Semantic Harness** provides an enterprise-grade middleware and execution runtime that sits between your agent loop and model providers (OpenAI, Anthropic, Ollama, Hugging Face, Apple Silicon Metal MLX, vLLM, custom endpoints). It introduces:
 
 1. **Chaos2Clarity (C2C) Semantic Validation:** Based on the [Chaos2Clarity research](https://zenodo.org/records/19414309), validates outputs against Pydantic / Zod schemas and automatically injects actionable diagnostic feedback to self-correct malformed outputs.
 2. **Procedural Memory Cache:** Memorizes successful execution traces for repeated intents. Once confidence reaches threshold (>80% over 3+ runs), subsequent identical intents bypass the LLM entirely (sub-microsecond latency, 100% token savings).
 3. **3-Tier Memory Hierarchy:**
    - **Short-Term Memory (STM):** Bounded sliding-window conversation turns.
    - **Long-Term Memory (LTM):** SQLite-backed persistent memory with cognitive ACT-R activation ranking (recency, frequency, and base importance).
-   - **Procedural Memory:** Verified intent-to-action cached workflows.
+   - **Procedural Memory:** Verified intent-to-action cached workflows with TurboQuant sub-microsecond fuzzy vector search.
 4. **Context Token Budget Engine:** Proactive context pressure estimation and automatic turn trimming before token limits are breached.
 5. **CodeAct Sandboxed REPL:** Multi-turn Python code generation and execution sandbox with variable persistence, stdout capture, and error interception.
 6. **Unified Event Bus & JSONL Audit Trails:** Comprehensive event taxonomy (`turn/start`, `step/start`, `agent/request`, `agent/response`, `step/end`, `turn/end`) with deterministic session replay.
+
+---
+
+## 🐍 Python SDK
+
+### Installation
+
+```bash
+pip install semantic-harness
+```
+
+Or with provider extras:
+```bash
+# OpenAI / Azure
+pip install "semantic-harness[openai]"
+
+# Anthropic Claude
+pip install "semantic-harness[anthropic]"
+
+# Hugging Face Inference API / TGI
+pip install "semantic-harness[huggingface]"
+
+# Apple Silicon Metal acceleration (Mac M-series unified memory)
+pip install "semantic-harness[mlx]"
+
+# All providers
+pip install "semantic-harness[all]"
+```
 
 ---
 

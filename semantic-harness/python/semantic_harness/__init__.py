@@ -24,6 +24,8 @@ from semantic_harness.providers import (
     OpenAIProvider,
     AnthropicProvider,
     OllamaProvider,
+    HuggingFaceProvider,
+    MLXProvider,
     get_provider,
 )
 
@@ -61,5 +63,7 @@ __all__ = [
     "OpenAIProvider",
     "AnthropicProvider",
     "OllamaProvider",
+    "HuggingFaceProvider",
+    "MLXProvider",
     "get_provider",
 ]
