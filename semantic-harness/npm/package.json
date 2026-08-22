@@ -28,7 +28,10 @@
     "anthropic",
     "turboquant"
   ],
-  "author": "Ravi Teja",
+  "author": {
+    "name": "Bankupalli Ravi Teja",
+    "url": "https://www.linkedin.com/in/raviiteja/"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",

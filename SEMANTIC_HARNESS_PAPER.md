@@ -1,11 +1,11 @@
 # Semantic Harness: Cognitive Middleware, Procedural Acceleration, and Layered Runtime Architecture for Autonomous AI Agents
 
-**Author:** Ravi Teja  
+**Author:** [Bankupalli Ravi Teja](https://www.linkedin.com/in/raviiteja/)  
 **Affiliation:** Independent Research / Open Source Systems  
 **Date:** August 2026  
 **Repository:** [github.com/ravii-teja/semantic-harness](https://github.com/ravii-teja/semantic-harness)  
-**Status:** Release v0.2.0 (Production-Verified)  
-**Research Citation:** [Chaos2Clarity (C2C) — Zenodo: 19414309](https://zenodo.org/records/19414309)
+**Status:** Release v0.2.2 (Production-Verified)  
+**Research DOI:** [10.5281/zenodo.19414309](https://zenodo.org/records/19414309)
 
 ---
 

@@ -2,11 +2,13 @@
 
 [![CI](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml)
 [![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.2/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19414309.svg)](https://zenodo.org/records/19414309)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-87%20passed-brightgreen.svg)]()
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)]()
 
-> **Semantic middleware for AI agents.** Validate, remember, and accelerate across any framework, loop, or model.
+> **Semantic middleware for AI agents.** Validate, remember, and accelerate across any framework, loop, or model.  
+> **Author:** [Bankupalli Ravi Teja](https://www.linkedin.com/in/raviiteja/) | **Research Paper:** [Chaos to Clarity (Zenodo: 19414309)](https://zenodo.org/records/19414309)
 
 Semantic Harness brings **Chaos2Clarity (C2C) validation** ([Zenodo: 19414309](https://zenodo.org/records/19414309)), **3-tier memory hierarchy**, **procedural workflow caching**, and **context token budget management** directly into your agent loops.
 
@@ -197,6 +199,25 @@ TurboQuant (ICLR 2026) and PolarQuant (AISTATS 2026) demonstrate that KV cache m
 
 ---
 
+## 📖 Citation
+
+If you use **Semantic Harness** in your research, please cite:
+
+```bibtex
+@software{bankupalli2026chaos2clarity,
+  author       = {Bankupalli, Ravi Teja},
+  title        = {{Chaos to Clarity: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents}},
+  month        = aug,
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {0.2.2},
+  doi          = {10.5281/zenodo.19414309},
+  url          = {https://zenodo.org/records/19414309}
+}
+```
+
+---
+
 ## 📄 License
 
-MIT License. Designed & developed by Ravi Teja.
+MIT License. Designed & developed by [Bankupalli Ravi Teja](https://www.linkedin.com/in/raviiteja/).

@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use Semantic Harness or the Chaos to Clarity (C2C) framework in your research, please cite it as below."
+authors:
+  - family-names: "Bankupalli"
+    given-names: "Ravi Teja"
+    website: "https://www.linkedin.com/in/raviiteja/"
+title: "Chaos to Clarity (C2C): Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents"
+version: 0.2.2
+doi: 10.5281/zenodo.19414309
+date-released: 2026-08-22
+url: "https://zenodo.org/records/19414309"
+repository-code: "https://github.com/ravii-teja/semantic-harness"
+license: "MIT"
+keywords:
+  - "autonomous agents"
+  - "semantic middleware"
+  - "procedural memory"
+  - "polarquant"
+  - "chaos to clarity"
+  - "llm reasoning"

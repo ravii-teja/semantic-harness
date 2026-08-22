@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml)
 [![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.2/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19414309.svg)](https://zenodo.org/records/19414309)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/semantic-harness.svg)](https://pypi.org/project/semantic-harness/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)]()
 [![Tests](https://img.shields.io/badge/tests-87%20passed-brightgreen.svg)]()
@@ -9,7 +10,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **Semantic middleware and runtime harness for autonomous AI agents.**  
-> Validate outputs, eliminate redundant LLM reasoning with procedural caching, manage 3-tier memory hierarchies, and execute CodeAct REPL loops across small (<0.5GB to 3B) and frontier models.
+> Validate outputs, eliminate redundant LLM reasoning with procedural caching, manage 3-tier memory hierarchies, and execute CodeAct REPL loops across small (<0.5GB to 3B) and frontier models.  
+> **Author:** [Bankupalli Ravi Teja](https://www.linkedin.com/in/raviiteja/) | **Research:** [Chaos to Clarity (Zenodo: 19414309)](https://zenodo.org/records/19414309)
 
 ---
 
@@ -389,6 +391,28 @@ Semantic Harness synthesizes three pioneering systems into a production-grade ag
 
 ---
 
+## 📖 Citation
+
+If you use **Semantic Harness** or the **Chaos to Clarity (C2C)** cognitive middleware runtime in your research or production systems, please cite the research paper:
+
+```bibtex
+@software{bankupalli2026chaos2clarity,
+  author       = {Bankupalli, Ravi Teja},
+  title        = {{Chaos to Clarity: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents}},
+  month        = aug,
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {0.2.2},
+  doi          = {10.5281/zenodo.19414309},
+  url          = {https://zenodo.org/records/19414309}
+}
+```
+
+**APA Format:**
+> Bankupalli, R. T. (2026). *Chaos to Clarity: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents* (Version 0.2.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.19414309
+
+---
+
 ## 📄 License
 
-MIT License. Copyright (c) 2026 Ravi Teja.
+MIT License. Copyright (c) 2026 Bankupalli Ravi Teja.

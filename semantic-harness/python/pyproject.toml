@@ -10,11 +10,11 @@ readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
 authors = [
-  { name = "Ravi Teja", email = "raviteja@example.com" }
+  { name = "Bankupalli Ravi Teja" }
 ]
 keywords = [
   "llm", "agents", "agentic", "ai", "semantic", "validation",
-  "caching", "memory", "middleware", "openai", "anthropic", "ollama", "turboquant"
+  "caching", "memory", "middleware", "openai", "anthropic", "ollama", "huggingface", "mlx", "turboquant"
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -56,6 +56,9 @@ Homepage = "https://github.com/ravii-teja/semantic-harness"
 Documentation = "https://ravii-teja.github.io/semantic-harness"
 Repository = "https://github.com/ravii-teja/semantic-harness"
 "Bug Tracker" = "https://github.com/ravii-teja/semantic-harness/issues"
+"Author (LinkedIn)" = "https://www.linkedin.com/in/raviiteja/"
+"Research Paper (Zenodo)" = "https://zenodo.org/records/19414309"
+Changelog = "https://github.com/ravii-teja/semantic-harness/blob/main/CHANGELOG.md"
 
 [tool.hatch.version]
 path = "semantic_harness/__version__.py"
