@@ -2,13 +2,18 @@
 from __future__ import annotations
 
 from typing import Any
+try:
+    import litellm
+except ImportError:
+    import types
+    litellm = types.SimpleNamespace(completion=None, acompletion=None)  # type: ignore
 
-import litellm
 from pydantic import BaseModel
 
 from semantic_harness.core.events import Event, EventType
 from semantic_harness.semantics.budget import ContextBudget
 from semantic_harness.semantics.c2c import C2CValidator, extract_json
+from semantic_harness.providers.factory import get_provider
 
 
 class AgentLoop:
@@ -79,14 +84,25 @@ class AgentLoop:
             self.agent.events.emit(Event(EventType.AGENT_REQUEST, data={"model": self.agent.config.model}, source="loop"))
 
             try:
-                response = litellm.completion(
-                    model=self.agent.config.model,
-                    messages=messages,
-                    max_tokens=self.agent.config.max_tokens,
-                    temperature=self.agent.config.temperature,
-                    **self._tool_kwargs(),
-                )
-                message = response.choices[0].message
+                if getattr(litellm, "completion", None) is not None:
+                    response = litellm.completion(
+                        model=self.agent.config.model,
+                        messages=messages,
+                        max_tokens=self.agent.config.max_tokens,
+                        temperature=self.agent.config.temperature,
+                        **self._tool_kwargs(),
+                    )
+                    message = response.choices[0].message
+                else:
+                    provider = get_provider(self.agent.config.model)
+                    resp = provider.complete_sync(
+                        messages=messages,
+                        model=self.agent.config.model,
+                        max_tokens=self.agent.config.max_tokens,
+                        temperature=self.agent.config.temperature,
+                    )
+                    from types import SimpleNamespace
+                    message = SimpleNamespace(content=resp.content, tool_calls=None)
             except Exception as e:
                 had_error = True
                 result = f"Error: {e}"
@@ -195,14 +211,25 @@ class AgentLoop:
             self.agent.events.emit(Event(EventType.AGENT_REQUEST, data={"model": self.agent.config.model}, source="loop"))
 
             try:
-                response = await litellm.acompletion(
-                    model=self.agent.config.model,
-                    messages=messages,
-                    max_tokens=self.agent.config.max_tokens,
-                    temperature=self.agent.config.temperature,
-                    **self._tool_kwargs(),
-                )
-                message = response.choices[0].message
+                if litellm is not None:
+                    response = await litellm.acompletion(
+                        model=self.agent.config.model,
+                        messages=messages,
+                        max_tokens=self.agent.config.max_tokens,
+                        temperature=self.agent.config.temperature,
+                        **self._tool_kwargs(),
+                    )
+                    message = response.choices[0].message
+                else:
+                    provider = get_provider(self.agent.config.model)
+                    resp = await provider.complete(
+                        messages=messages,
+                        model=self.agent.config.model,
+                        max_tokens=self.agent.config.max_tokens,
+                        temperature=self.agent.config.temperature,
+                    )
+                    from types import SimpleNamespace
+                    message = SimpleNamespace(content=resp.content, tool_calls=None)
             except Exception as e:
                 result = f"Error: {e}"
                 self.agent.events.emit(Event(

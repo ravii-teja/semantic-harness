@@ -8,13 +8,14 @@ from __future__ import annotations
 
 import re
 from typing import Any
+from semantic_harness.core.loop import litellm
 
-import litellm
 from pydantic import BaseModel
 
 from semantic_harness.core.events import Event, EventType
 from semantic_harness.execution.repl import ExecutionResult, PythonREPL
 from semantic_harness.semantics.c2c import C2CValidator, extract_json
+from semantic_harness.providers.factory import get_provider
 
 _CODE_FENCE_RE = re.compile(r"```(?:python|py)?\s*\n(.*?)```", re.DOTALL)
 
@@ -75,13 +76,23 @@ class CodeActStrategy:
                 ))
 
                 try:
-                    response = litellm.completion(
-                        model=config.model,
-                        messages=messages,
-                        max_tokens=config.max_tokens,
-                        temperature=config.temperature,
-                    )
-                    text = response.choices[0].message.content or ""
+                    if getattr(litellm, "completion", None) is not None:
+                        response = litellm.completion(
+                            model=config.model,
+                            messages=messages,
+                            max_tokens=config.max_tokens,
+                            temperature=config.temperature,
+                        )
+                        text = response.choices[0].message.content or ""
+                    else:
+                        provider = get_provider(config.model)
+                        resp = provider.complete_sync(
+                            messages=messages,
+                            model=config.model,
+                            max_tokens=config.max_tokens,
+                            temperature=config.temperature,
+                        )
+                        text = resp.content
                 except Exception as e:
                     had_error = True
                     result = f"Error: {e}"
@@ -144,13 +155,23 @@ class CodeActStrategy:
                 ))
 
                 try:
-                    response = await litellm.acompletion(
-                        model=config.model,
-                        messages=messages,
-                        max_tokens=config.max_tokens,
-                        temperature=config.temperature,
-                    )
-                    text = response.choices[0].message.content or ""
+                    if litellm is not None:
+                        response = await litellm.acompletion(
+                            model=config.model,
+                            messages=messages,
+                            max_tokens=config.max_tokens,
+                            temperature=config.temperature,
+                        )
+                        text = response.choices[0].message.content or ""
+                    else:
+                        provider = get_provider(config.model)
+                        resp = await provider.complete(
+                            messages=messages,
+                            model=config.model,
+                            max_tokens=config.max_tokens,
+                            temperature=config.temperature,
+                        )
+                        text = resp.content
                 except Exception as e:
                     result = f"Error: {e}"
                     events.emit(Event(EventType.STEP_ERROR, data={"step": step_num, "error": str(e)}, source="codeact"))
