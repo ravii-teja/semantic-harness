@@ -1,7 +1,9 @@
 # ⚡ Semantic Harness
 
-[![Tests](https://img.shields.io/badge/tests-70%20passed-brightgreen.svg)]()
+[![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.0/)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/semantic-harness.svg)](https://pypi.org/project/semantic-harness/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)]()
+[![Tests](https://img.shields.io/badge/tests-87%20passed-brightgreen.svg)]()
 [![TypeScript](https://img.shields.io/badge/typescript-5.0+-3178C6.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -13,54 +15,36 @@
 ## 📑 Table of Contents
 
 - [Overview](#-overview)
+- [📦 Installation & Verification](#-installation--quick-verification)
 - [Enterprise Workflow & Adoption Guide (WORKFLOW.md)](./WORKFLOW.md)
 - [Why Semantic Harness?](#-why-semantic-harness)
 - [Architecture](#-architecture)
 - [Monorepo Structure](#-monorepo-structure)
-- [Python SDK](#-python-sdk)
-  - [Installation](#installation)
-  - [Quickstart: `@step` Decorator Middleware](#1-drop-in-step-decorator)
-  - [Object-Oriented Agent with Memory Tiers](#2-object-oriented-agent-harness)
-  - [Chaos2Clarity (C2C) Self-Correction](#3-chaos2clarity-c2c-self-correction)
-  - [Procedural Memory Caching](#4-procedural-workflow-caching)
-  - [CodeAct Python REPL Execution](#5-codeact-python-repl-execution)
+- [Python SDK: How to Use](#-python-sdk)
+  - [1. Drop-in `@step` Decorator Middleware](#1-drop-in-step-decorator)
+  - [2. Object-Oriented Agent with Memory Tiers](#2-object-oriented-agent-harness)
+  - [3. Auto-Routing Provider Factory](#3-provider-factory-openai-anthropic-ollama-hf-metal-mlx)
+  - [4. Chaos2Clarity (C2C) Self-Correction](#4-chaos2clarity-c2c-self-correction)
+  - [5. TurboQuant Procedural Memory Caching](#5-turboquant-procedural-memory-caching)
+  - [6. CodeAct Sandboxed REPL](#6-codeact-sandboxed-repl-execution)
 - [TypeScript / Node SDK](#-typescript--node-sdk)
-  - [Installation](#typescript-installation)
-  - [TypeScript Quickstart](#typescript-quickstart)
-- [Feature Comparison](#-feature-comparison)
-- [Verification & Tests](#-verification--tests)
+- [Verification & Benchmarks](#-verification--benchmarks)
 - [Research Foundations](#-research-foundations)
 - [License](#-license)
 
 ---
 
-## 💡 Overview
+## 📦 Installation & Quick Verification
 
-Autonomous agent workflows frequently break down due to schema fragility, context blowup, and redundant reasoning loops—especially on compact SLMs (<3B parameters) and edge deployments.
+### 1. Install via pip
 
-**Semantic Harness** provides an enterprise-grade middleware and execution runtime that sits between your agent loop and model providers (OpenAI, Anthropic, Ollama, Hugging Face, Apple Silicon Metal MLX, vLLM, custom endpoints). It introduces:
-
-1. **Chaos2Clarity (C2C) Semantic Validation:** Based on the [Chaos2Clarity research](https://zenodo.org/records/19414309), validates outputs against Pydantic / Zod schemas and automatically injects actionable diagnostic feedback to self-correct malformed outputs.
-2. **Procedural Memory Cache:** Memorizes successful execution traces for repeated intents. Once confidence reaches threshold (>80% over 3+ runs), subsequent identical intents bypass the LLM entirely (sub-microsecond latency, 100% token savings).
-3. **3-Tier Memory Hierarchy:**
-   - **Short-Term Memory (STM):** Bounded sliding-window conversation turns.
-   - **Long-Term Memory (LTM):** SQLite-backed persistent memory with cognitive ACT-R activation ranking (recency, frequency, and base importance).
-   - **Procedural Memory:** Verified intent-to-action cached workflows with TurboQuant sub-microsecond fuzzy vector search.
-4. **Context Token Budget Engine:** Proactive context pressure estimation and automatic turn trimming before token limits are breached.
-5. **CodeAct Sandboxed REPL:** Multi-turn Python code generation and execution sandbox with variable persistence, stdout capture, and error interception.
-6. **Unified Event Bus & JSONL Audit Trails:** Comprehensive event taxonomy (`turn/start`, `step/start`, `agent/request`, `agent/response`, `step/end`, `turn/end`) with deterministic session replay.
-
----
-
-## 🐍 Python SDK
-
-### Installation
+Install the package directly from [**PyPI**](https://pypi.org/project/semantic-harness/0.2.0/):
 
 ```bash
 pip install semantic-harness
 ```
 
-Or with provider extras:
+Or install with specific LLM provider extras:
 ```bash
 # OpenAI / Azure
 pip install "semantic-harness[openai]"
@@ -71,11 +55,46 @@ pip install "semantic-harness[anthropic]"
 # Hugging Face Inference API / TGI
 pip install "semantic-harness[huggingface]"
 
-# Apple Silicon Metal acceleration (Mac M-series unified memory)
+# Apple Silicon Metal hardware acceleration (Mac M1/M2/M3/M4)
 pip install "semantic-harness[mlx]"
 
 # All providers
 pip install "semantic-harness[all]"
+```
+
+### 2. Verify Post-Installation
+
+Run this one-liner in your terminal to verify installation:
+
+```bash
+python -c "import semantic_harness; print(f'⚡ Semantic Harness v{semantic_harness.__version__} is ready!')"
+```
+
+---
+
+## 💡 Quickstart: How to Use Post-Installation
+
+### Minimal 3-Line Middleware Example
+
+```python
+from pydantic import BaseModel
+from semantic_harness import step
+
+class SentimentResult(BaseModel):
+    sentiment: str  # "positive" | "negative" | "neutral"
+    confidence: float
+
+# Wrap ANY existing function with @step for schema validation & zero-token caching
+@step(validates=SentimentResult, cache=True)
+def analyze_review(text: str) -> dict:
+    # Your LLM call (OpenAI, Anthropic, Ollama, HuggingFace, MLX, etc.)
+    return {"sentiment": "positive", "confidence": 0.98}
+
+# Turn 1: Validated against SentimentResult schema
+res1 = analyze_review("Fast delivery and amazing customer support!")
+
+# Turn 2: Exact same intent? Procedural cache serves result in 0.60 µs with 0 tokens!
+res2 = analyze_review("Fast delivery and amazing customer support!")
 ```
 
 ---

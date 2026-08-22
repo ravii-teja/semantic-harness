@@ -1,8 +1,8 @@
 # ⚡ Semantic Harness
 
-[![PyPI version](https://img.shields.io/badge/pypi-v0.1.0-blue.svg)](https://pypi.org/project/semantic-harness/)
+[![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.0/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-31%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-87%20passed-brightgreen.svg)]()
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)]()
 
 > **Semantic middleware for AI agents.** Validate, remember, and accelerate across any framework, loop, or model.

@@ -309,7 +309,8 @@ if fuzzy_hit and fuzzy_hit.is_reliable:
 ---
 
 ## 🧪 Verification & System Status
-- **Unit Tests:** **78 passed** (100% test suite verification).
+- **PyPI Live Package:** [`semantic-harness` v0.2.0](https://pypi.org/project/semantic-harness/0.2.0/)
+- **Unit Tests:** **87 passed** (100% test suite verification).
 - **Runnable End-to-End Examples:** **5 passed** verified via `bash check.sh`.
 - **TypeScript Typecheck:** `npx tsc --noEmit` passed with **0 errors**.
 - **Research Citation:** [Chaos2Clarity (C2C) — Zenodo: 19414309](https://zenodo.org/records/19414309)

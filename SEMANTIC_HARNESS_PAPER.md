@@ -433,9 +433,10 @@ Semantic Harness establishes a robust, highly optimized cognitive middleware for
 ## References
 
 1. **Teja, Ravi.** *Chaos2Clarity (C2C): Deterministic Semantic Validation and Remediation for Autonomous Agent Systems.* Zenodo (2026). DOI / URL: [https://zenodo.org/records/19414309](https://zenodo.org/records/19414309).
-2. **NVIDIA Labs.** *Object-Oriented Agents: A Class-Based Agent Framework.* (2025).
-3. **DeepSeek AI.** *DeepSeek Harness (dsh): Plugin-First Agent Runtime Architecture.* (2026).
-4. **Google Research.** *TurboQuant: Redefining AI Efficiency with Extreme Compression.* ICLR (2026). [arXiv:2504.19874](https://arxiv.org/abs/2504.19874).
-5. **Google Research.** *PolarQuant: Lossless KV Cache Compression via Random Polar Transforms.* AISTATS (2026). [arXiv:2502.02617](https://arxiv.org/abs/2502.02617).
-6. **Anderson, John R.** *Rules of the Mind.* Carnegie Mellon University, ACT-R Cognitive Architecture Theory (1993).
-7. **Wang, G. et al.** *CodeAct: Executable Code as Unified Action Space for Autonomous LLM Agents.* (2024).
+2. **Semantic Harness Package Repository.** *Semantic Harness Python Package Index (PyPI) Release v0.2.0.* (2026). URL: [https://pypi.org/project/semantic-harness/0.2.0/](https://pypi.org/project/semantic-harness/0.2.0/).
+3. **NVIDIA Labs.** *Object-Oriented Agents: A Class-Based Agent Framework.* (2025).
+4. **DeepSeek AI.** *DeepSeek Harness (dsh): Plugin-First Agent Runtime Architecture.* (2026).
+5. **Google Research.** *TurboQuant: Redefining AI Efficiency with Extreme Compression.* ICLR (2026). [arXiv:2504.19874](https://arxiv.org/abs/2504.19874).
+6. **Google Research.** *PolarQuant: Lossless KV Cache Compression via Random Polar Transforms.* AISTATS (2026). [arXiv:2502.02617](https://arxiv.org/abs/2502.02617).
+7. **Anderson, John R.** *Rules of the Mind.* Carnegie Mellon University, ACT-R Cognitive Architecture Theory (1993).
+8. **Wang, G. et al.** *CodeAct: Executable Code as Unified Action Space for Autonomous LLM Agents.* (2024).
