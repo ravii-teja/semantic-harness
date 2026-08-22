@@ -1,147 +1,207 @@
-"""Sandboxed Python REPL for executing LLM-written code (CodeAct strategy).
-
-Security note: this is a best-effort in-process sandbox. It restricts the
-builtin namespace and captures `print()` output, but it cannot guarantee full
-isolation from the host process (a determined escape via reflection is
-possible). Run untrusted workloads in a container/subprocess for hard
-isolation. A timed-out execution abandons its thread — the REPL namespace
-should be considered corrupted afterwards; create a fresh PythonREPL.
-"""
 from __future__ import annotations
-
 import ast
-import builtins as _builtin_mod
 import io
-import threading
+import time
 import traceback
-from concurrent.futures import ThreadPoolExecutor  # noqa: F401 (re-export convenience)
+import threading
+import queue
+import builtins
+from contextlib import redirect_stdout, redirect_stderr
 from dataclasses import dataclass
 from typing import Any
 
-_REAL_PRINT = _builtin_mod.print
-
-_SAFE_BUILTINS: dict[str, Any] = {
-    "abs": abs, "all": all, "any": any, "ascii": ascii, "bin": bin,
-    "bool": bool, "bytes": bytes, "callable": callable, "chr": chr,
-    "complex": complex, "dict": dict, "divmod": divmod, "enumerate": enumerate,
-    "filter": filter, "float": float, "format": format, "frozenset": frozenset,
-    "hasattr": hasattr, "hash": hash, "hex": hex, "int": int,
-    "isinstance": isinstance, "issubclass": issubclass, "iter": iter, "len": len,
-    "list": list, "map": map, "max": max, "min": min, "next": next,
-    "oct": oct, "ord": ord, "pow": pow, "range": range, "repr": repr,
-    "reversed": reversed, "round": round, "set": set, "slice": slice,
-    "sorted": sorted, "str": str, "sum": sum, "tuple": tuple, "type": type,
-    "zip": zip,
-    # Common exceptions so LLM-written code can raise/catch normally
-    "ArithmeticError": ArithmeticError, "AssertionError": AssertionError,
-    "AttributeError": AttributeError, "Exception": Exception,
-    "IndexError": IndexError, "KeyError": KeyError, "LookupError": LookupError,
-    "NameError": NameError, "RuntimeError": RuntimeError, "StopIteration": StopIteration,
-    "TypeError": TypeError, "ValueError": ValueError, "ZeroDivisionError": ZeroDivisionError,
+# Default safe allowed builtins
+_SAFE_BUILTINS = {
+    name: getattr(builtins, name)
+    for name in [
+        "abs", "all", "any", "ascii", "bin", "bool", "bytearray", "bytes",
+        "chr", "complex", "dict", "dir", "divmod", "enumerate", "filter",
+        "float", "format", "frozenset", "getattr", "hasattr", "hash", "hex",
+        "id", "int", "isinstance", "issubclass", "iter", "len", "list",
+        "map", "max", "min", "next", "oct", "ord", "pow", "print", "range",
+        "repr", "reversed", "round", "set", "slice", "sorted", "str", "sum",
+        "tuple", "type", "vars", "zip",
+        "ArithmeticError", "AssertionError", "AttributeError", "BaseException",
+        "BufferError", "BytesWarning", "DeprecationWarning", "EOFError",
+        "Exception", "FloatingPointError", "FutureWarning", "GeneratorExit",
+        "ImportError", "ImportWarning", "IndexError", "KeyError",
+        "KeyboardInterrupt", "LookupError", "MemoryError", "NameError",
+        "NotImplementedError", "OSError", "OverflowError", "PendingDeprecationWarning",
+        "ReferenceError", "RuntimeError", "RuntimeWarning", "StopIteration",
+        "SyntaxError", "SyntaxWarning", "SystemError", "SystemExit",
+        "TabError", "TypeError", "UnboundLocalError", "UnicodeDecodeError",
+        "UnicodeEncodeError", "UnicodeError", "UnicodeTranslateError",
+        "UnicodeWarning", "UserWarning", "ValueError", "Warning", "ZeroDivisionError",
+        "True", "False", "None",
+    ]
+    if hasattr(builtins, name)
 }
 
 
 @dataclass
-class ExecutionResult:
-    """Outcome of one REPL execution."""
+class REPLResult:
+    code: str
+    output: str
+    error: str | None
+    return_value: Any
+    execution_time_ms: float
     success: bool
-    output: str = ""
-    error: str = ""
-    value: Any = None
+
+    @property
+    def value(self) -> Any:
+        return self.return_value
+
+
+# Alias for backward compatibility
+ExecutionResult = REPLResult
 
 
 class PythonREPL:
     """
-    A persistent, restricted Python namespace.
+    Stateful, sandboxed Python REPL for CodeAct agent execution.
 
-    The same globals dict survives across execute() calls, so variables
-    defined in one step are visible in the next — exactly what CodeAct loops
-    need. Pass `locals` to expose agent state / tools to generated code.
-
-    Output capture is thread-safe: we never touch process-global sys.stdout.
-    Instead, the sandbox gets its own `print` bound to a per-run buffer.
+    Security & execution model:
+    - AST-level import checking against allowed whitelist
+    - Restricted builtins in sandbox mode
+    - Timeout-protected execution
+    - Return value capture for expressions
     """
+
+    ALLOWED_IMPORTS = {
+        "json", "math", "re", "datetime", "collections",
+        "itertools", "functools", "typing", "dataclasses",
+        "decimal", "fractions", "statistics", "random",
+        "string", "textwrap", "unicodedata", "hashlib",
+        "base64", "urllib.parse",
+    }
 
     def __init__(
         self,
         locals: dict[str, Any] | None = None,
-        *,
+        default_timeout: float = 5.0,
+        timeout: float | None = None,
         restrict_builtins: bool = True,
-        default_timeout: float = 10.0,
+        sandbox: bool | None = None,
+        allowed_imports: set[str] | None = None,
     ):
-        self._globals: dict[str, Any] = {"__name__": "__repl__"}
-        if restrict_builtins:
-            sandbox_builtins = dict(_SAFE_BUILTINS)
+        self.default_timeout = timeout if timeout is not None else default_timeout
+        self.restrict_builtins = sandbox if sandbox is not None else restrict_builtins
+        self.allowed_imports = allowed_imports or self.ALLOWED_IMPORTS
+        self._namespace: dict[str, Any] = {}
+        if self.restrict_builtins:
+            self._namespace["__builtins__"] = dict(_SAFE_BUILTINS)
         else:
-            sandbox_builtins = {n: getattr(_builtin_mod, n) for n in dir(_builtin_mod)}
-        # Sandbox-local print: writes to the active run buffer, never to sys.stdout
-        sandbox_builtins["print"] = self._capture_print
-        self._globals["__builtins__"] = sandbox_builtins
+            self._namespace["__builtins__"] = builtins
+
         if locals:
-            self._globals.update(locals)
+            self._namespace.update(locals)
+        self._history: list[REPLResult] = []
 
-        self.default_timeout = default_timeout
-        self._active_buffer: io.StringIO | None = None
-
-    def _capture_print(self, *args: Any, sep: str = " ", end: str = "\n", **_: Any) -> None:
-        buf = self._active_buffer
-        text = sep.join(str(arg) for arg in args) + end
-        if buf is not None:
-            buf.write(text)
-        else:
-            _REAL_PRINT(text, end="")
-
-    def execute(self, code: str, timeout: float | None = None) -> ExecutionResult:
-        """
-        Execute a block of code. Returns stdout (captured from `print`), the
-        value of a trailing bare expression (if any), and error text on failure.
-        """
-        timeout = timeout or self.default_timeout
-        result: dict[str, ExecutionResult] = {}
-
-        worker = threading.Thread(
-            target=self._run_code, args=(code, result), daemon=True
-        )
-        worker.start()
-        worker.join(timeout)
-
-        if worker.is_alive():
-            return ExecutionResult(
-                success=False,
-                error=f"Execution timed out after {timeout}s "
-                      f"(thread abandoned; namespace may be corrupted)",
-            )
-        return result.get("res", ExecutionResult(success=False, error="no result"))
-
-    def _run_code(self, code: str, out: dict[str, ExecutionResult]):
-        buf = io.StringIO()
-        previous_buffer = self._active_buffer
-        self._active_buffer = buf
+    def _check_ast(self, code: str) -> str | None:
+        """Returns error string if code contains blocked constructs."""
+        if not self.restrict_builtins:
+            return None
         try:
             tree = ast.parse(code)
-            value = None
-            # Capture a trailing bare expression like an interactive REPL
-            last = tree.body[-1] if tree.body else None
-            if isinstance(last, ast.Expr):
-                prefix = tree.body[:-1]
-                if prefix:
-                    exec(
-                        compile(ast.Module(body=prefix, type_ignores=[]), "<repl>", "exec"),
-                        self._globals,
-                    )
-                value = eval(compile(ast.Expression(last.value), "<repl>", "eval"), self._globals)
-            else:
-                exec(compile(tree, "<repl>", "exec"), self._globals)
+        except SyntaxError as e:
+            return f"SyntaxError: {e}"
 
-            out["res"] = ExecutionResult(success=True, output=buf.getvalue(), value=value)
-        except Exception:
-            out["res"] = ExecutionResult(
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    root = alias.name.split(".")[0]
+                    if root not in self.allowed_imports:
+                        return f"SecurityError: import '{alias.name}' is not allowed in sandbox mode. Allowed: {sorted(self.allowed_imports)}"
+            elif isinstance(node, ast.ImportFrom):
+                module = node.module or ""
+                root = module.split(".")[0]
+                if root not in self.allowed_imports:
+                    return f"SecurityError: 'from {module} import ...' is not allowed in sandbox mode."
+        return None
+
+    def execute(self, code: str, timeout: float | None = None) -> REPLResult:
+        """Execute code in the stateful namespace with timeout protection."""
+        # AST check
+        if self.restrict_builtins:
+            err = self._check_ast(code)
+            if err:
+                result = REPLResult(
+                    code=code,
+                    output="",
+                    error=err,
+                    return_value=None,
+                    execution_time_ms=0.0,
+                    success=False,
+                )
+                self._history.append(result)
+                return result
+
+        timeout_val = timeout or self.default_timeout
+        q: queue.Queue[tuple[str, str | None, Any, float, bool]] = queue.Queue()
+
+        def _worker():
+            stdout_buf = io.StringIO()
+            stderr_buf = io.StringIO()
+            return_val = None
+            error_str = None
+            t_start = time.perf_counter()
+
+            try:
+                with redirect_stdout(stdout_buf), redirect_stderr(stderr_buf):
+                    try:
+                        # Try eval (expression mode to capture value)
+                        compiled = compile(code, "<repl>", "eval")
+                        return_val = eval(compiled, self._namespace)
+                    except SyntaxError:
+                        # Fall back to exec
+                        compiled = compile(code, "<repl>", "exec")
+                        exec(compiled, self._namespace)
+            except Exception:
+                error_str = traceback.format_exc()
+
+            t_elapsed = (time.perf_counter() - t_start) * 1000
+            out_str = stdout_buf.getvalue()
+            if stderr_buf.getvalue():
+                out_str += stderr_buf.getvalue()
+
+            q.put((out_str, error_str, return_val, t_elapsed, error_str is None))
+
+        th = threading.Thread(target=_worker, daemon=True)
+        th.start()
+        th.join(timeout_val)
+
+        if th.is_alive():
+            result = REPLResult(
+                code=code,
+                output="",
+                error=f"Execution timed out after {timeout_val:.1f}s",
+                return_value=None,
+                execution_time_ms=timeout_val * 1000,
                 success=False,
-                output=buf.getvalue(),
-                error=traceback.format_exc(limit=3),
             )
-        finally:
-            self._active_buffer = previous_buffer
+        else:
+            out_str, error_str, return_val, t_elapsed, is_success = q.get()
+            result = REPLResult(
+                code=code,
+                output=out_str,
+                error=error_str,
+                return_value=return_val,
+                execution_time_ms=t_elapsed,
+                success=is_success,
+            )
 
-    def get(self, name: str, default: Any = None) -> Any:
-        return self._globals.get(name, default)
+        self._history.append(result)
+        return result
+
+    def reset(self) -> None:
+        """Clear namespace and history."""
+        self._namespace = {}
+        if self.restrict_builtins:
+            self._namespace["__builtins__"] = dict(_SAFE_BUILTINS)
+        else:
+            self._namespace["__builtins__"] = builtins
+        self._history = []
+
+    @property
+    def history(self) -> list[REPLResult]:
+        return list(self._history)

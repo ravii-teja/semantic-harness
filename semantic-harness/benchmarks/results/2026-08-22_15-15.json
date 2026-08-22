@@ -1,0 +1,14 @@
+[
+  {
+    "name": "CodeAct REPL Sandbox (correctness + security)",
+    "provider": "local",
+    "model": "none",
+    "total_runs": 48,
+    "pass_count": 40,
+    "fail_count": 8,
+    "pass_rate": 0.8333333333333334,
+    "avg_latency_ms": 0.11272047777310945,
+    "c2c_retries_needed": 0,
+    "notes": ""
+  }
+]

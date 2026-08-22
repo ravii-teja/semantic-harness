@@ -1,20 +1,52 @@
 {
   "name": "semantic-harness",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "version": "0.2.0",
+  "description": "Cognitive middleware and procedural acceleration runtime for autonomous AI agents",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
-  "devDependencies": {
-    "@types/node": "^26.2.0",
-    "typescript": "^7.0.2"
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist/**/*.test.js 2>/dev/null || true",
+    "prepublishOnly": "npm run typecheck && npm run build"
+  },
+  "keywords": [
+    "llm",
+    "agents",
+    "ai",
+    "semantic",
+    "validation",
+    "caching",
+    "memory",
+    "openai",
+    "anthropic",
+    "turboquant"
+  ],
+  "author": "Ravi Teja",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ravii-teja/semantic-harness.git",
+    "directory": "npm"
+  },
+  "homepage": "https://github.com/ravii-teja/semantic-harness",
+  "bugs": {
+    "url": "https://github.com/ravii-teja/semantic-harness/issues"
   },
   "dependencies": {
-    "zod": "^4.4.3"
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Procedural Memory Cache Hit Latency",
+    "provider": "local",
+    "model": "none",
+    "total_runs": 10000,
+    "pass_count": 10000,
+    "fail_count": 0,
+    "pass_rate": 1.0,
+    "avg_latency_ms": 0.000596264326304663,
+    "c2c_retries_needed": 0,
+    "notes": "Avg cache latency: 0.60\u00b5s | Speedup vs LLM (1.5s): 2,515,663x | Token savings: 100%"
+  },
+  {
+    "name": "CodeAct REPL Sandbox (correctness + security)",
+    "provider": "local",
+    "model": "none",
+    "total_runs": 48,
+    "pass_count": 40,
+    "fail_count": 8,
+    "pass_rate": 0.8333333333333334,
+    "avg_latency_ms": 0.10443570893888439,
+    "c2c_retries_needed": 0,
+    "notes": ""
+  }
+]

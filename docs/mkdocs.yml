@@ -1,0 +1,48 @@
+site_name: Semantic Harness
+site_description: Cognitive middleware and procedural acceleration for autonomous AI agents
+site_url: https://ravii-teja.github.io/semantic-harness
+repo_url: https://github.com/ravii-teja/semantic-harness
+repo_name: ravii-teja/semantic-harness
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: purple
+  features:
+    - navigation.tabs
+    - navigation.instant
+    - content.code.copy
+    - search.suggest
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+
+nav:
+  - Home: index.md
+  - Enterprise Workflow: WORKFLOW.md
+  - Research Paper: SEMANTIC_HARNESS_PAPER.md
+  - Python SDK:
+      - Quickstart: python/quickstart.md
+      - API Reference: python/api.md
+      - Providers: python/providers.md
+      - Memory: python/memory.md
+  - TypeScript SDK:
+      - Quickstart: typescript/quickstart.md
+      - API Reference: typescript/api.md
+  - Changelog: changelog.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - tables

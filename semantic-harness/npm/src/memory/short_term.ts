@@ -1,19 +1,30 @@
+export interface TurnItem {
+  role: string;
+  content: string;
+  timestamp?: number;
+  metadata?: Record<string, any>;
+}
+
 export class ShortTermMemory {
-  private workingMemory: any[] = [];
+  private workingMemory: TurnItem[] = [];
   private maxItems: number;
 
   constructor(maxItems: number = 10) {
     this.maxItems = maxItems;
   }
 
-  add(item: any): void {
+  add(item: TurnItem): void {
     if (this.workingMemory.length >= this.maxItems) {
       this.workingMemory.shift();
     }
     this.workingMemory.push(item);
   }
 
-  getContext(): any[] {
+  getContext(): TurnItem[] {
+    return [...this.workingMemory];
+  }
+
+  getWindow(): TurnItem[] {
     return [...this.workingMemory];
   }
 

@@ -54,6 +54,9 @@ class ValidationResult(BaseModel):
     errors: list[str] = []
     retry_prompt: str = ""
 
+# Alias for backwards compatibility
+C2CValidationResult = ValidationResult
+
 
 class C2CValidator:
     """

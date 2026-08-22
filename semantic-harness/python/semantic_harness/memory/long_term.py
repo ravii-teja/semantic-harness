@@ -35,6 +35,9 @@ class Memory:
         )
 
 
+MemoryItem = Memory
+
+
 class LongTermMemory:
     """
     Persistent fact memory backed by SQLite.
