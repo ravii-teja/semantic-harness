@@ -57,4 +57,4 @@ jobs:
       - name: Install
         run: pip install -e "./semantic-harness/python[dev,bench]"
       - name: Run local benchmarks
-        run: python3 semantic-harness/benchmarks/run_benchmark.py --benchmark cache --benchmark repl
+        run: python3 semantic-harness/benchmarks/run_benchmark.py --benchmark cache repl
