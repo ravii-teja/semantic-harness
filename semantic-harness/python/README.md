@@ -204,7 +204,7 @@ TurboQuant (ICLR 2026) and PolarQuant (AISTATS 2026) demonstrate that KV cache m
 If you use **Semantic Harness** in your research, please cite:
 
 ```bibtex
-@software{bankupalli2026chaos2clarity,
+@software{semantic-harness,
   author       = {Bankupalli, Ravi Teja},
   title        = {{Chaos to Clarity: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents}},
   month        = aug,

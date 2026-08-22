@@ -396,7 +396,7 @@ Semantic Harness synthesizes three pioneering systems into a production-grade ag
 If you use **Semantic Harness** or the **Chaos to Clarity (C2C)** cognitive middleware runtime in your research or production systems, please cite the research paper:
 
 ```bibtex
-@software{bankupalli2026chaos2clarity,
+@software{semantic-harness,
   author       = {Bankupalli, Ravi Teja},
   title        = {{Chaos to Clarity: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents}},
   month        = aug,
