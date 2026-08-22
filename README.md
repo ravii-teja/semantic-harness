@@ -13,6 +13,7 @@
 ## 📑 Table of Contents
 
 - [Overview](#-overview)
+- [Enterprise Workflow & Adoption Guide (WORKFLOW.md)](./WORKFLOW.md)
 - [Why Semantic Harness?](#-why-semantic-harness)
 - [Architecture](#-architecture)
 - [Monorepo Structure](#-monorepo-structure)
@@ -20,7 +21,7 @@
   - [Installation](#installation)
   - [Quickstart: `@step` Decorator Middleware](#1-drop-in-step-decorator)
   - [Object-Oriented Agent with Memory Tiers](#2-object-oriented-agent-harness)
-  - [Concept-to-Concept (C2C) Self-Correction](#3-concept-to-concept-c2c-self-correction)
+  - [Chaos2Clarity (C2C) Self-Correction](#3-chaos2clarity-c2c-self-correction)
   - [Procedural Memory Caching](#4-procedural-workflow-caching)
   - [CodeAct Python REPL Execution](#5-codeact-python-repl-execution)
 - [TypeScript / Node SDK](#-typescript--node-sdk)

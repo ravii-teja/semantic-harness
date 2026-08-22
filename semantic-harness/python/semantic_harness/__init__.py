@@ -13,6 +13,13 @@ from semantic_harness.execution.repl import ExecutionResult, PythonREPL
 from semantic_harness.memory.long_term import LongTermMemory
 from semantic_harness.memory.procedural import ProceduralMemory
 from semantic_harness.memory.short_term import ShortTermMemory
+from semantic_harness.memory.turbo_quant import (
+    PolarQuantizer,
+    QuantizedVector,
+    SearchResult,
+    SemanticFeatureEmbedder,
+    TurboQuantVectorIndex,
+)
 from semantic_harness.middleware import SemanticLayer, step
 from semantic_harness.semantics.budget import ContextBudget
 from semantic_harness.semantics.c2c import C2CValidator, ValidationResult, extract_json
@@ -31,6 +38,11 @@ __all__ = [
     "ShortTermMemory",
     "LongTermMemory",
     "ProceduralMemory",
+    "PolarQuantizer",
+    "TurboQuantVectorIndex",
+    "QuantizedVector",
+    "SemanticFeatureEmbedder",
+    "SearchResult",
     "C2CValidator",
     "ValidationResult",
     "extract_json",
