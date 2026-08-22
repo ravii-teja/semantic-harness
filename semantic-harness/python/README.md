@@ -1,7 +1,7 @@
 # ⚡ Semantic Harness
 
 [![CI](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.0/)
+[![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.1/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://img.shields.io/badge/tests-87%20passed-brightgreen.svg)]()
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)]()

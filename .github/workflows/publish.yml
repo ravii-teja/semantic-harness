@@ -38,6 +38,9 @@ jobs:
   publish-npm:
     name: Publish to npm
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # Trusted Publishing with Provenance
+      contents: read
     defaults:
       run:
         working-directory: semantic-harness/npm
@@ -45,12 +48,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           registry-url: "https://registry.npmjs.org"
       - run: npm install
       - run: npm run typecheck
       - run: npm run build
-      - run: npm publish --access public
+      - name: Publish with Provenance
+        run: npm publish --access public --provenance || npm publish --access public
         continue-on-error: true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
