@@ -7,7 +7,7 @@
 
 > **Semantic middleware for AI agents.** Validate, remember, and accelerate across any framework, loop, or model.
 
-Semantic Harness brings **Concept-to-Concept (C2C) validation**, **3-tier memory hierarchy**, **procedural workflow caching**, and **context token budget management** directly into your agent loops.
+Semantic Harness brings **Chaos2Clarity (C2C) validation** ([Zenodo: 19414309](https://zenodo.org/records/19414309)), **3-tier memory hierarchy**, **procedural workflow caching**, and **context token budget management** directly into your agent loops.
 
 ---
 
@@ -133,8 +133,8 @@ print(result)
 
 ## 🛠️ Architecture Highlights
 
-### 1. Concept-to-Concept (C2C) Validation
-When small models fail schema validation, `C2CValidator` generates actionable, LLM-friendly diagnostic feedback that is fed back into the prompt for immediate self-correction.
+### 1. Chaos2Clarity (C2C) Validation
+When small models fail schema validation, `C2CValidator` (based on [Chaos2Clarity research](https://zenodo.org/records/19414309)) generates actionable, LLM-friendly diagnostic feedback that is fed back into the prompt for immediate self-correction.
 
 ### 2. Procedural Memory
 Caches verified workflows based on semantic intent. Once a procedure proves reliable (>80% success across 3+ runs), subsequent identical intents bypass the LLM entirely, cutting costs to zero and latency to sub-millisecond.

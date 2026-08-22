@@ -39,7 +39,7 @@ Autonomous agent workflows frequently break down due to schema fragility, contex
 
 **Semantic Harness** provides an enterprise-grade middleware and execution runtime that sits between your agent loop and model providers (OpenAI, Anthropic, Ollama, vLLM, custom endpoints). It introduces:
 
-1. **Concept-to-Concept (C2C) Semantic Validation:** Validates outputs against Pydantic / Zod schemas and automatically injects actionable diagnostic feedback to self-correct malformed outputs.
+1. **Chaos2Clarity (C2C) Semantic Validation:** Based on the [Chaos2Clarity research](https://zenodo.org/records/19414309), validates outputs against Pydantic / Zod schemas and automatically injects actionable diagnostic feedback to self-correct malformed outputs.
 2. **Procedural Memory Cache:** Memorizes successful execution traces for repeated intents. Once confidence reaches threshold (>80% over 3+ runs), subsequent identical intents bypass the LLM entirely (sub-microsecond latency, 100% token savings).
 3. **3-Tier Memory Hierarchy:**
    - **Short-Term Memory (STM):** Bounded sliding-window conversation turns.
@@ -189,7 +189,7 @@ response = agent.run("Summarize NVIDIA's latest quarterly performance.")
 print(response)
 ```
 
-### 3. Concept-to-Concept (C2C) Self-Correction
+### 3. Chaos2Clarity (C2C) Self-Correction
 
 ```python
 from semantic_harness.semantics import C2CValidator
@@ -328,7 +328,9 @@ npx tsc --noEmit
 
 ---
 
-## 📚 Research Foundations
+## 📚 Research Paper & Foundations
+
+Read the full technical paper: [**Semantic Harness: Cognitive Middleware and Procedural Acceleration for Agentic Systems**](./SEMANTIC_HARNESS_PAPER.md)
 
 Semantic Harness synthesizes three pioneering systems into a production-grade agent harness:
 

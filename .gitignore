@@ -1,7 +1,5 @@
-# Root Workspace Exclusions (Push only semantic-harness)
+# Root Workspace Exclusions (Push only semantic-harness and paper)
 GAP_ANALYSIS.md
-SEMANTIC_HARNESS_PAPER.md
-docs/
 implementation-plan.md
 openharness-unified-design.md
 research/

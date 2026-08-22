@@ -1,4 +1,7 @@
-"""C2C Validator — Concept-to-Concept semantic validation between workflow steps."""
+"""C2C Validator — Chaos2Clarity semantic validation between workflow steps.
+
+Based on Chaos2Clarity (C2C) research: https://zenodo.org/records/19414309
+"""
 from __future__ import annotations
 
 import json

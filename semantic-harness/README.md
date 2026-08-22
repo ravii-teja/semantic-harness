@@ -58,6 +58,9 @@ cd python && pytest -v
 cd npm && npx tsc --noEmit
 ```
 
+## 📚 Research Paper
+Read the complete technical paper: [`docs/SEMANTIC_HARNESS_PAPER.md`](./docs/SEMANTIC_HARNESS_PAPER.md)
+
 ---
 
 ## 📄 License
