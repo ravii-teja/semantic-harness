@@ -1,6 +1,6 @@
 {
   "name": "semantic-harness",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Cognitive middleware and procedural acceleration runtime for autonomous AI agents",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

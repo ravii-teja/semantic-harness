@@ -2,6 +2,12 @@
 
 All notable changes to **Semantic Harness** follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] — 2026-08-22
+
+### Added
+- **PyPI Trusted Publishing (OIDC)**: Automated zero-token passwordless release via GitHub Actions.
+- **Continuous Integration Matrix**: Multi-Python (3.10–3.13) & TypeScript build workflow.
+
 ## [0.2.0] — 2026-08-22
 
 ### Added
