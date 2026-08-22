@@ -206,7 +206,7 @@ If you use **Semantic Harness** in your research, please cite:
 ```bibtex
 @software{semantic-harness,
   author       = {Bankupalli, Ravi Teja},
-  title        = {{Chaos to Clarity: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents}},
+  title        = {{semantic-harness: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents}},
   month        = aug,
   year         = 2026,
   publisher    = {Zenodo},

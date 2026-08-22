@@ -398,7 +398,7 @@ If you use **Semantic Harness** or the **Chaos to Clarity (C2C)** cognitive midd
 ```bibtex
 @software{semantic-harness,
   author       = {Bankupalli, Ravi Teja},
-  title        = {{Chaos to Clarity: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents}},
+  title        = {{semantic-harness: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents}},
   month        = aug,
   year         = 2026,
   publisher    = {Zenodo},
@@ -409,7 +409,7 @@ If you use **Semantic Harness** or the **Chaos to Clarity (C2C)** cognitive midd
 ```
 
 **APA Format:**
-> Bankupalli, R. T. (2026). *Chaos to Clarity: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents* (Version 0.2.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.19414309
+> Bankupalli, R. T. (2026). *semantic-harness: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents* (Version 0.2.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.19414309
 
 ---
 
