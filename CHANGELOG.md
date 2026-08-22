@@ -2,6 +2,13 @@
 
 All notable changes to **Semantic Harness** follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] — 2026-08-22
+
+### Added
+- **Node.js 22 LTS & Provenance**: Modernized CI runtime and added signed build provenance to npm packages.
+- **PyPI Release Environment**: Aligned OIDC trusted publishing environment claims.
+- **Clean CI Environment Isolation**: Decoupled test execution from optional LLM client installations with native adapter fallback.
+
 ## [0.2.1] — 2026-08-22
 
 ### Added
