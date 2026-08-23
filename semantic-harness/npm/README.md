@@ -10,7 +10,7 @@
 ## 📦 Installation
 
 ```bash
-npm install
+npm install @ravii-teja/semantic-harness
 ```
 
 ---

@@ -1,7 +1,10 @@
 {
-  "name": "semantic-harness",
+  "name": "@ravii-teja/semantic-harness",
   "version": "0.2.2",
   "description": "Cognitive middleware and procedural acceleration runtime for autonomous AI agents",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",

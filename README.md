@@ -304,8 +304,7 @@ print(res2.output)  # 25.0
 ### TypeScript Installation
 
 ```bash
-cd semantic-harness/npm
-npm install
+npm install @ravii-teja/semantic-harness
 ```
 
 ### TypeScript Quickstart
