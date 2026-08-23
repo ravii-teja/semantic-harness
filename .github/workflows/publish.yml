@@ -4,10 +4,11 @@ on:
   push:
     tags:
       - "v*.*.*"
+  workflow_dispatch:
 
 jobs:
-  publish-python:
-    name: Publish to PyPI
+  deploy-python-pypi:
+    name: "Python Build & Deploy (PyPI: semantic-harness)"
     runs-on: ubuntu-latest
     environment: release
     permissions:
@@ -17,27 +18,35 @@ jobs:
       run:
         working-directory: semantic-harness/python
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install build tools
-        run: pip install hatch
-      - name: Run unit tests
+
+      - name: Install Python build tools & dependencies
         run: |
+          python -m pip install --upgrade pip
+          pip install hatch build
           pip install -e ".[dev]"
-          pytest -v
-      - name: Build wheel and sdist
+
+      - name: Run Python pre-flight unit tests
+        run: pytest -v
+
+      - name: Python Build (Wheel & sdist via hatch)
         run: hatch build
-      - name: Publish to PyPI
+
+      - name: Deploy Python Package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: semantic-harness/python/dist/
           password: ${{ secrets.PYPI_API_TOKEN }}
           skip-existing: true
 
-  publish-npm:
-    name: Publish to npm
+  deploy-npm-registry:
+    name: "NPM Build & Deploy (npm: @ravii-teja/semantic-harness)"
     runs-on: ubuntu-latest
     permissions:
       id-token: write   # Trusted Publishing with Provenance
@@ -46,15 +55,28 @@ jobs:
       run:
         working-directory: semantic-harness/npm
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
-      - run: npm install
-      - run: npm run typecheck
-      - run: npm run build
-      - name: Publish with Provenance
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: NPM Typecheck (tsc --noEmit)
+        run: npm run typecheck
+
+      - name: NPM Build (tsc -> dist/)
+        run: npm run build
+
+      - name: Run NPM test suite
+        run: npm test
+
+      - name: Deploy NPM Package to npmjs (with Provenance)
         run: npm publish --access public --provenance || npm publish --access public
         continue-on-error: true
         env:
