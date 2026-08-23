@@ -175,3 +175,23 @@ class ProceduralMemory:
     def size(self) -> int:
         return len(self._cache)
 
+    def to_mermaid(self, title: str = "Semantic Procedural Memory Graph") -> str:
+        """Render current procedural memory graph as a Mermaid diagram."""
+        from semantic_harness.visualization.graph import ProceduralGraphVisualizer
+        return ProceduralGraphVisualizer.to_mermaid(self.get_all(), title=title)
+
+    def to_interactive_html(
+        self,
+        title: str = "Semantic Procedural Memory Knowledge Graph",
+        height: str = "600px",
+    ) -> str:
+        """Render current procedural memory graph as an interactive HTML page."""
+        from semantic_harness.visualization.graph import ProceduralGraphVisualizer
+        return ProceduralGraphVisualizer.to_interactive_html(
+            self.get_all(), title=title, height=height
+        )
+
+
+# Canonical research alias for 100% nomenclature consistency
+SemanticProceduralMemory = ProceduralMemory
+

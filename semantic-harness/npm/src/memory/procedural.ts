@@ -102,3 +102,7 @@ export class ProceduralMemory<T = any> {
     return this.cacheMap.size;
   }
 }
+
+// Canonical research alias for 100% nomenclature consistency
+export const SemanticProceduralMemory = ProceduralMemory;
+export type SemanticProceduralMemory<T = any> = ProceduralMemory<T>;

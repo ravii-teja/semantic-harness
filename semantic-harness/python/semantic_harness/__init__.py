@@ -7,7 +7,11 @@ from semantic_harness.core.events import Event, EventBus, EventType
 from semantic_harness.core.persistence import JSONLSessionLog
 from semantic_harness.tools import ToolRegistry, tool, function_to_schema
 from semantic_harness.semantics.c2c import C2CValidator, C2CValidationResult, extract_json
-from semantic_harness.memory.procedural import ProceduralMemory, CachedProcedure
+from semantic_harness.memory.procedural import (
+    ProceduralMemory,
+    SemanticProceduralMemory,
+    CachedProcedure,
+)
 from semantic_harness.memory.long_term import LongTermMemory, MemoryItem
 from semantic_harness.memory.short_term import ShortTermMemory
 from semantic_harness.memory.turbo_quant import (
@@ -18,6 +22,10 @@ from semantic_harness.memory.turbo_quant import (
 )
 from semantic_harness.execution.repl import PythonREPL, REPLResult, ExecutionResult
 from semantic_harness.execution.codeact import extract_code, CodeActStrategy
+from semantic_harness.visualization import (
+    ProceduralGraphVisualizer,
+    render_procedural_graph,
+)
 from semantic_harness.providers import (
     BaseProvider,
     ProviderResponse,
@@ -45,6 +53,7 @@ __all__ = [
     "C2CValidationResult",
     "extract_json",
     "ProceduralMemory",
+    "SemanticProceduralMemory",
     "CachedProcedure",
     "LongTermMemory",
     "MemoryItem",
@@ -58,6 +67,8 @@ __all__ = [
     "ExecutionResult",
     "extract_code",
     "CodeActStrategy",
+    "ProceduralGraphVisualizer",
+    "render_procedural_graph",
     "BaseProvider",
     "ProviderResponse",
     "OpenAIProvider",
