@@ -1,260 +1,285 @@
 /* ==========================================================================
-   SEMANTIC HARNESS - INTERACTIVE SHOWCASE APPLICATION
+   SEMANTIC HARNESS - HIGHLY INTERACTIVE SIMULATION ENGINE
+   Google Design Standard compliant
    ========================================================================== */
 
-// SIMULATION DATASETS
-const SIMULATION_SCENARIOS = {
-  param_na: {
-    badge: "Turn 1: Cold Start",
-    b1: { tokens: 260, latency: "9,120 ms", cost: "$0.0039", status: "Success (Slow)" },
-    b4: { tokens: 260, latency: "9,120 ms", accuracy: "Cold Cache Miss (100%)" },
-    s0: { tokens: 260, latency: "9,120 ms", accuracy: "100% (AST Compiled & Cached)" },
-    expected: "$44,410,000 (North America Revenue)",
-    vectorVal: "$44,410,000 (Initial Cold Write)",
-    harnessVal: "$44,410,000 (Compiled to AST: crm_revenue)",
-    trace: `# Turn 1: Cold Start Reasoning
-query = "Calculate total closed won revenue for North America region"
-
-# Step 1: Procedural Cache Check -> MISS (Cold)
-# Step 2: Full Neural LLM Invocation (Qwen-2.5-Coder-3B via Ollama)
-raw_sql = """SELECT SUM(amount) AS revenue FROM salesforce_opportunities 
-             WHERE region = 'North America' AND stage = 'Closed Won';"""
-
-# Step 3: Chaos2Clarity (C2C) Semantic Verification
-# >> Pydantic Contract: Validated against 'RevenueReport' schema
-
-# Step 4: Procedural AST Compilation & Promotion (Beta-Bernoulli Prior)
-proc_ast = compile_to_ast(raw_sql, params=['region', 'stage'])
-procedural_memory.promote('crm_revenue_by_region', proc_ast)
-
-# Step 5: Initial Execution Result: $44,410,000
-# >> Billed Tokens: 260 | Latency: 9,120 ms`
+// INTENT KNOWLEDGE BASE & REGIONAL DATA
+const WORKLOAD_DATABASE = {
+  revenue: {
+    title: "Enterprise Sales Revenue",
+    paramName: "Region",
+    options: ["North America", "Europe", "APAC", "LATAM"],
+    goldValues: {
+      "North America": { amount: "$44,410,000", records: 412, rawSql: "SELECT SUM(amount) FROM salesforce_opportunities WHERE region='North America' AND stage='Closed Won';" },
+      "Europe": { amount: "$300,000", records: 14, rawSql: "SELECT SUM(amount) FROM salesforce_opportunities WHERE region='Europe' AND stage='Closed Won';" },
+      "APAC": { amount: "$1,850,000", records: 58, rawSql: "SELECT SUM(amount) FROM salesforce_opportunities WHERE region='APAC' AND stage='Closed Won';" },
+      "LATAM": { amount: "$620,000", records: 22, rawSql: "SELECT SUM(amount) FROM salesforce_opportunities WHERE region='LATAM' AND stage='Closed Won';" }
+    },
+    vectorStale: "$44,410,000", // The classic vector cache staleness trap
+    astName: "crm_closed_won_revenue(region: str)"
   },
-
-  param_eu: {
-    badge: "Turn 2: Parameter Variant (The Signature Experiment)",
-    b1: { tokens: 258, latency: "9,081 ms", cost: "$0.0038", status: "Full Re-inference" },
-    b4: { tokens: 0, latency: "915 ms", accuracy: "❌ STALE DATA ERROR (62.5%)" },
-    s0: { tokens: 0, latency: "1.12 ms (80.3 µs)", accuracy: "✅ 100.0% Correct (Live AST)" },
-    expected: "$300,000 (Europe Revenue)",
-    vectorVal: "$44,410,000 (❌ Stale North America Data)",
-    harnessVal: "$300,000 (✅ Live AST REPL Execution)",
-    trace: `# Turn 2: Parameter Variant Query
-query = "Calculate total closed won revenue for Europe region"
-
-# Step 1: TurboQuant PolarQuant Intent Lookup
-proc = procedural_memory.lookup(query, similarity_threshold=0.80)
-# >> HIT on Procedure 'crm_revenue_by_region' (Sim: 0.94, Confidence: 0.92 >= 0.85)
-
-# Step 2: AST Parameter Extraction & Type Binding (0 Model Tokens)
-# >> Bound Parameters: {'region': 'Europe', 'stage': 'Closed Won'}
-
-# Step 3: Deterministic Sandboxed Python CodeAct REPL Re-Execution
-result = execute_ast_in_sandbox(proc.ast_bytecode, params={'region': 'Europe'})
-# >> Result: {"revenue": 300000.0, "region": "Europe", "records_aggregated": 14}
-# >> Model Tokens: 0 ($0.00) | Latency: 1.12 ms | False Reuse Rate: 0.00%`
+  churn: {
+    title: "Customer Churn & LTV",
+    paramName: "Segment",
+    options: ["Enterprise", "Mid-Market", "SMB", "Startups"],
+    goldValues: {
+      "Enterprise": { amount: "1.2% Churn ($84,000 LTV)", records: 120, rawSql: "SELECT AVG(churn), AVG(ltv) FROM accounts WHERE segment='Enterprise';" },
+      "Mid-Market": { amount: "3.8% Churn ($32,000 LTV)", records: 450, rawSql: "SELECT AVG(churn), AVG(ltv) FROM accounts WHERE segment='Mid-Market';" },
+      "SMB": { amount: "7.4% Churn ($8,500 LTV)", records: 1200, rawSql: "SELECT AVG(churn), AVG(ltv) FROM accounts WHERE segment='SMB';" },
+      "Startups": { amount: "9.1% Churn ($4,200 LTV)", records: 800, rawSql: "SELECT AVG(churn), AVG(ltv) FROM accounts WHERE segment='Startups';" }
+    },
+    vectorStale: "1.2% Churn ($84,000 LTV)",
+    astName: "compute_churn_ltv_by_segment(segment: str)"
   },
-
-  param_apac: {
-    badge: "Turn 3: Parameter Variant (Territory Re-query)",
-    b1: { tokens: 264, latency: "8,950 ms", cost: "$0.0039", status: "Full Re-inference" },
-    b4: { tokens: 0, latency: "890 ms", accuracy: "❌ STALE DATA ERROR (62.5%)" },
-    s0: { tokens: 0, latency: "1.08 ms (79.1 µs)", accuracy: "✅ 100.0% Correct (Live AST)" },
-    expected: "$1,850,000 (APAC Revenue)",
-    vectorVal: "$44,410,000 (❌ Stale North America Data)",
-    harnessVal: "$1,850,000 (✅ Live AST REPL Execution)",
-    trace: `# Turn 3: Parameter Variant Query (APAC)
-query = "What is total closed won revenue in APAC territory?"
-
-# Step 1: TurboQuant PolarQuant Intent Lookup
-proc = procedural_memory.lookup(query, similarity_threshold=0.80)
-# >> HIT on Procedure 'crm_revenue_by_region' (Sim: 0.91, Confidence: 0.95)
-
-# Step 2: Ingest Extracted Entity -> AST Parameter
-bound_args = {'region': 'APAC', 'stage': 'Closed Won'}
-
-# Step 3: Sandboxed Python REPL Query
-result = execute_ast_in_sandbox(proc.ast_bytecode, params=bound_args)
-# >> Result: {"revenue": 1850000.0, "region": "APAC"}
-# >> Model Tokens: 0 | Latency: 1.08 ms | 0 Stale Data Errors`
-  },
-
-  c2c_heal: {
-    badge: "Turn 4: Small Model (SLM) Auto-Remediation",
-    b1: { tokens: 340, latency: "14,200 ms", cost: "$0.0051", status: "Crashes Downstream API" },
-    b4: { tokens: 340, latency: "14,200 ms", accuracy: "Unusable String Error" },
-    s0: { tokens: 380, latency: "2,150 ms", accuracy: "✅ 100% Healed on 1st Retry Turn" },
-    expected: '{"user_id": 101, "email": "alice@corp.com"}',
-    vectorVal: 'user_id="101A" (❌ Unhandled String Syntax Error)',
-    harnessVal: '{"user_id": 101, "email": "alice@corp.com"} (✅ C2C Healed)',
-    trace: `# Turn 4: Compact Model (<0.5GB) Schema Violation
-prompt = "Generate user profile for ID 101 Alice"
-
-# Model Turn 1 Output:
-# >> {"user_id": "101A", "name": "Alice"} (Missing email, stringified integer)
-
-# Step 1: Chaos2Clarity (C2C) Validator Intercepts Violation:
-# >> Error 1: Field 'user_id': Input should be valid integer, got '101A'
-# >> Error 2: Field 'email': Required field missing
-
-# Step 2: C2C Synthesizes Differential Feedback Prompt (No stack traces!)
-# >> Retry Prompt: "Please fix: user_id must be int, email is required."
-
-# Step 3: Model Converges on 1st Retry:
-# >> Output: {"user_id": 101, "name": "Alice", "email": "alice@corp.com"}
-# >> Schema Pass Rate lifted from 41.2% -> 96.8%`
-  },
-
-  exact_repeat: {
-    badge: "Turn 5: Exact Hash Repeat",
-    b1: { tokens: 260, latency: "9,081 ms", cost: "$0.0039", status: "Full Re-inference" },
-    b4: { tokens: 0, latency: "800 ms", accuracy: "Exact Hit (String)" },
-    s0: { tokens: 0, latency: "0.08 ms (80.3 µs)", accuracy: "✅ Exact SHA-256 Hit (0 Tokens)" },
-    expected: "$44,410,000 (North America Revenue)",
-    vectorVal: "$44,410,000 (Exact String Hit)",
-    harnessVal: "$44,410,000 (O(1) SHA-256 Microsecond Hit)",
-    trace: `# Turn 5: Exact Repeat Prompt
-query = "Calculate total closed won revenue for North America region"
-
-# Step 1: TurboQuant Exact SHA-256 Hash Lookup -> O(1) HIT
-# >> Key: sha256("Calculate total closed won revenue for North America region")
-# >> Sub-Millisecond Direct Memory Access
-# >> Result: {"revenue": 44410000.0, "region": "North America"}
-# >> Model Tokens: 0 | Latency: 0.08 ms (80.3 µs) | Cost: $0.00`
+  logistics: {
+    title: "Carrier Delay & Returns",
+    paramName: "Carrier",
+    options: ["FedEx", "DHL", "UPS", "USPS"],
+    goldValues: {
+      "FedEx": { amount: "4.2 hrs delay (1.8% Returns)", records: 980, rawSql: "SELECT AVG(delay_hrs), AVG(return_rate) FROM logistics WHERE carrier='FedEx';" },
+      "DHL": { amount: "1.9 hrs delay (0.9% Returns)", records: 640, rawSql: "SELECT AVG(delay_hrs), AVG(return_rate) FROM logistics WHERE carrier='DHL';" },
+      "UPS": { amount: "3.1 hrs delay (1.4% Returns)", records: 1100, rawSql: "SELECT AVG(delay_hrs), AVG(return_rate) FROM logistics WHERE carrier='UPS';" },
+      "USPS": { amount: "8.5 hrs delay (4.2% Returns)", records: 420, rawSql: "SELECT AVG(delay_hrs), AVG(return_rate) FROM logistics WHERE carrier='USPS';" }
+    },
+    vectorStale: "4.2 hrs delay (1.8% Returns)",
+    astName: "carrier_delay_vs_returns(carrier: str)"
   }
 };
 
-// RUN SIMULATION
-function runSimulation() {
-  const select = document.getElementById("query-preset");
-  const key = select.value;
-  const data = SIMULATION_SCENARIOS[key];
-  if (!data) return;
+// PRESET CHANGE HANDLER
+function onPresetChange() {
+  const presetKey = document.getElementById("intent-preset").value;
+  const customRow = document.getElementById("custom-row");
+  const paramGroup = document.getElementById("param-group");
+  const paramSelect = document.getElementById("param-region");
+  const paramLabel = document.getElementById("param-name-label");
 
-  // Update Badges & Counters
-  document.getElementById("sim-scenario-badge").textContent = data.badge;
-
-  // Stateless LLM (B1)
-  document.getElementById("b1-tokens").textContent = data.b1.tokens;
-  document.getElementById("b1-lat").textContent = data.b1.latency;
-  document.getElementById("b1-cost").textContent = data.b1.cost;
-
-  // Vector Cache (B4)
-  document.getElementById("b4-tokens").textContent = data.b4.tokens;
-  document.getElementById("b4-lat").textContent = data.b4.latency;
-  document.getElementById("b4-acc").textContent = data.b4.accuracy;
-  document.getElementById("b4-acc").className = data.b4.accuracy.includes("ERROR") ? "text-error" : "text-green";
-
-  // Semantic Harness (S0)
-  document.getElementById("s0-tokens").textContent = data.s0.tokens;
-  document.getElementById("s0-lat").textContent = data.s0.latency;
-  document.getElementById("s0-acc").textContent = data.s0.accuracy;
-
-  // Diff lines
-  document.getElementById("diff-expected").textContent = data.expected;
-  document.getElementById("diff-vector").textContent = data.vectorVal;
-  document.getElementById("diff-vector").className = data.vectorVal.includes("❌") ? "diff-val text-error" : "diff-val text-green";
-  document.getElementById("diff-harness").textContent = data.harnessVal;
-
-  // Trace code
-  document.getElementById("trace-output").textContent = data.trace;
-}
-
-// TOGGLE ARCHITECTURE LAYERS
-function toggleLayer(layerNum) {
-  const details = document.getElementById(`layer-details-${layerNum}`);
-  const parent = details.closest('.layer-item');
-  
-  if (details.classList.contains('open')) {
-    details.classList.remove('open');
-    parent.classList.remove('active');
+  if (presetKey === "custom") {
+    customRow.style.display = "flex";
+    paramGroup.style.display = "none";
   } else {
-    details.classList.add('open');
-    parent.classList.add('active');
+    customRow.style.display = "none";
+    paramGroup.style.display = "flex";
+
+    const config = WORKLOAD_DATABASE[presetKey];
+    paramLabel.textContent = config.paramName;
+    paramSelect.innerHTML = "";
+    
+    config.options.forEach((opt, idx) => {
+      const optionEl = document.createElement("option");
+      optionEl.value = opt;
+      optionEl.textContent = `${opt} ${idx === 0 ? "(Turn 1: Initial Comp.)" : `(Turn ${idx + 1}: Param Variant)`}`;
+      if (idx === 1) optionEl.selected = true; // default to Europe / variant
+      paramSelect.appendChild(optionEl);
+    });
+  }
+
+  triggerSimRun();
+}
+
+// SIMULATION RUNNER WITH ANIMATED PIPELINE
+function triggerSimRun() {
+  const runBtn = document.getElementById("run-btn");
+  runBtn.disabled = true;
+  runBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Executing...';
+
+  // Reset pipeline steps animation
+  const steps = [
+    document.getElementById("step-1"),
+    document.getElementById("step-2"),
+    document.getElementById("step-3"),
+    document.getElementById("step-4"),
+    document.getElementById("step-5")
+  ];
+  steps.forEach(s => s.classList.remove("active-step"));
+
+  const presetKey = document.getElementById("intent-preset").value;
+  let chosenParam = "Europe";
+  let targetConfig = WORKLOAD_DATABASE.revenue;
+
+  if (presetKey === "custom") {
+    const customPrompt = document.getElementById("custom-input").value;
+    chosenParam = customPrompt.includes("EMEA") || customPrompt.includes("Europe") ? "Europe" : "North America";
+  } else {
+    targetConfig = WORKLOAD_DATABASE[presetKey] || WORKLOAD_DATABASE.revenue;
+    chosenParam = document.getElementById("param-region").value;
+  }
+
+  const isColdStart = (chosenParam === targetConfig.options[0]);
+  const gold = targetConfig.goldValues[chosenParam] || { amount: "$300,000", records: 14, rawSql: "SELECT 300000;" };
+
+  // Animate Step-by-Step
+  let currentStep = 0;
+  const interval = setInterval(() => {
+    if (currentStep < steps.length) {
+      steps[currentStep].classList.add("active-step");
+      currentStep++;
+    } else {
+      clearInterval(interval);
+      finalizeSimulation(presetKey, chosenParam, targetConfig, gold, isColdStart);
+      runBtn.disabled = false;
+      runBtn.innerHTML = '<i class="fa-solid fa-play"></i> Run Query';
+    }
+  }, 120);
+}
+
+// UPDATE TELEMETRY & RESULTS
+function finalizeSimulation(presetKey, chosenParam, targetConfig, gold, isColdStart) {
+  // Column 1: Stateless LLM
+  document.getElementById("llm-tokens").textContent = "258 tokens";
+  document.getElementById("llm-latency").textContent = "9,081 ms";
+  document.getElementById("llm-cost").textContent = "$0.0038";
+  document.getElementById("llm-val").textContent = gold.amount;
+
+  // Column 2: Vector Cache
+  const cacheTokens = document.getElementById("cache-tokens");
+  const cacheLatency = document.getElementById("cache-latency");
+  const cacheAcc = document.getElementById("cache-acc");
+  const cacheVal = document.getElementById("cache-val");
+  const cacheStatus = document.getElementById("cache-status");
+  const colCache = document.getElementById("col-cache");
+
+  if (isColdStart) {
+    cacheTokens.textContent = "258 tokens";
+    cacheLatency.textContent = "9,120 ms";
+    cacheAcc.textContent = "Cold Miss (100%)";
+    cacheAcc.className = "tel-val text-green";
+    cacheVal.textContent = gold.amount;
+    cacheVal.className = "card-val text-green";
+    cacheStatus.textContent = "✅ Initial Cache Store";
+    cacheStatus.className = "card-status status-ok";
+  } else {
+    cacheTokens.textContent = "0 tokens";
+    cacheLatency.textContent = "915 ms";
+    cacheAcc.textContent = "62.5% (STALE)";
+    cacheAcc.className = "tel-val text-error";
+    cacheVal.textContent = targetConfig.vectorStale;
+    cacheVal.className = "card-val text-error";
+    cacheStatus.textContent = "❌ STALE DATA ERROR (Hit Wrong Arg)";
+    cacheStatus.className = "card-status status-error";
+  }
+
+  // Column 3: Semantic Harness
+  const harnessTokens = document.getElementById("harness-tokens");
+  const harnessLatency = document.getElementById("harness-latency");
+  const harnessAcc = document.getElementById("harness-acc");
+  const harnessVal = document.getElementById("harness-val");
+
+  if (isColdStart) {
+    harnessTokens.textContent = "258 tokens (Turn 1)";
+    harnessLatency.textContent = "9,120 ms";
+    harnessAcc.textContent = "100.0% (Compiled AST)";
+    harnessVal.textContent = gold.amount;
+  } else {
+    harnessTokens.textContent = "0 tokens ($0.00)";
+    harnessLatency.textContent = "1.12 ms (80.3 µs)";
+    harnessAcc.textContent = "100.0% Verified (Live)";
+    harnessVal.textContent = gold.amount;
+  }
+
+  // Update Code Trace
+  const traceEl = document.getElementById("code-trace");
+  if (isColdStart) {
+    traceEl.textContent = `# Turn 1 (Cold Start): Intent JIT Program Synthesis
+query = "Calculate ${targetConfig.title} for ${chosenParam}"
+# >> 1. Cache Miss -> Invoke LLM (Qwen-2.5-Coder-3B)
+# >> 2. C2C Validation -> Pydantic Schema Verified ✅
+# >> 3. AST Compilation -> Compiled to '${targetConfig.astName}'
+# >> 4. Promoted to Procedural Memory (Prior: Beta(2, 1), Conf: 0.88)
+# >> Latency: 9,120 ms | Billed Tokens: 258`;
+  } else {
+    traceEl.textContent = `# Turn (Warm): Parameter Variant Query
+query = "Calculate ${targetConfig.title} for ${chosenParam}"
+# >> 1. TurboQuant PolarQuant Intent Hit -> '${targetConfig.astName}' (Sim: 0.94, Conf: 0.95 >= 0.85)
+# >> 2. AST Parameter Binder -> bound_args = {'${targetConfig.paramName.toLowerCase()}': '${chosenParam}'}
+# >> 3. Sandboxed Python REPL -> execute_ast(proc, params=bound_args)
+# >> 4. Live DB Execution -> ${gold.amount} (${gold.records} rows aggregated in DuckDB)
+# >> Latency: 1.12 ms (80.3 µs) | Model Tokens: 0 | False Reuse Rate: 0.00% ✅`;
   }
 }
 
-// SWITCH BENCHMARK GALLERY TABS
-function switchTab(tabId) {
-  // Update Buttons
-  const tabs = document.querySelectorAll('.gallery-tab');
-  tabs.forEach(tab => tab.classList.remove('active'));
-  
-  event.currentTarget.classList.add('active');
+// BENCHMARK FIGURE TAB SWITCHER
+function showFigTab(index) {
+  const tabs = document.querySelectorAll(".tab-btn");
+  const panes = document.querySelectorAll(".fig-panel");
 
-  // Update Panes
-  const panes = document.querySelectorAll('.tab-pane');
-  panes.forEach(pane => pane.classList.remove('active'));
+  tabs.forEach((t, i) => {
+    t.classList.toggle("active", i === index);
+  });
 
-  const targetPane = document.getElementById(`tab-${tabId}`);
-  if (targetPane) {
-    targetPane.classList.add('active');
-  }
+  panes.forEach((p, i) => {
+    p.classList.toggle("active", i === index);
+  });
 }
 
-// SWITCH CODE RECIPES TABS
-function switchCodeTab(paneId) {
-  const tabs = document.querySelectorAll('.code-tab');
-  tabs.forEach(tab => tab.classList.remove('active'));
+// CODE RECIPES TAB SWITCHER
+function showCodePane(index) {
+  const tabs = document.querySelectorAll(".code-tab-btn");
+  const boxes = document.querySelectorAll(".code-box");
 
-  event.currentTarget.classList.add('active');
+  tabs.forEach((t, i) => {
+    t.classList.toggle("active", i === index);
+  });
 
-  const panes = document.querySelectorAll('.code-pane');
-  panes.forEach(pane => pane.classList.remove('active'));
+  boxes.forEach((b, i) => {
+    b.classList.toggle("active", i === index);
+  });
+}
 
-  const target = document.getElementById(`pane-${paneId}`);
-  if (target) {
-    target.classList.add('active');
-  }
+// ACCORDION STACK ITEM TOGGLE
+function toggleStackItem(row) {
+  const allRows = document.querySelectorAll(".stack-row");
+  allRows.forEach(r => {
+    if (r !== row) r.classList.remove("active");
+  });
+  row.classList.toggle("active");
 }
 
 // COPY UTILITIES
-function copyText(text, btn) {
-  navigator.clipboard.writeText(text).then(() => {
-    const icon = btn.querySelector('i');
-    if (icon) {
-      icon.className = "fa-solid fa-check text-green";
-      setTimeout(() => {
-        icon.className = "fa-regular fa-copy";
-      }, 2000);
-    }
+function copyInstallCmd(btn) {
+  const cmd = document.getElementById("install-cmd").innerText;
+  navigator.clipboard.writeText(cmd).then(() => {
+    const icon = btn.querySelector("i");
+    icon.className = "fa-solid fa-check text-green";
+    setTimeout(() => { icon.className = "fa-regular fa-copy"; }, 2000);
   });
 }
 
-function copyCode(btn) {
-  const pane = btn.closest('.code-pane');
-  const code = pane.querySelector('code').innerText;
-  copyText(code, btn);
+function copySnippet(btn) {
+  const pre = btn.closest(".code-box").querySelector("code");
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.innerHTML = '<i class="fa-solid fa-check text-green"></i> Copied!';
+    setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy Code'; }, 2000);
+  });
 }
 
 function copyBibtex(btn) {
-  const code = document.getElementById('bibtex-text').innerText;
-  copyText(code, btn);
+  const bib = document.getElementById("bibtex-val").innerText;
+  navigator.clipboard.writeText(bib).then(() => {
+    btn.innerHTML = '<i class="fa-solid fa-check text-green"></i> Copied!';
+    setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy'; }, 2000);
+  });
 }
 
-// THEME TOGGLE
-const themeToggleBtn = document.getElementById('theme-toggle');
-if (themeToggleBtn) {
-  themeToggleBtn.addEventListener('click', () => {
-    const isDark = document.body.classList.toggle('dark-theme');
-    const icon = themeToggleBtn.querySelector('i');
-    if (isDark) {
-      icon.className = 'fa-solid fa-sun';
-      localStorage.setItem('theme', 'dark');
-    } else {
-      icon.className = 'fa-solid fa-moon';
-      localStorage.setItem('theme', 'light');
-    }
-  });
-
-  // Restore saved theme
-  if (localStorage.getItem('theme') === 'dark') {
-    document.body.classList.add('dark-theme');
-    themeToggleBtn.querySelector('i').className = 'fa-solid fa-sun';
+// THEME TOGGLE (LIGHT / DARK)
+function toggleTheme() {
+  const isDark = document.body.classList.toggle("dark-theme");
+  const icon = document.querySelector("#theme-btn i");
+  if (isDark) {
+    icon.className = "fa-regular fa-sun";
+    localStorage.setItem("sh_theme", "dark");
+  } else {
+    icon.className = "fa-regular fa-moon";
+    localStorage.setItem("sh_theme", "light");
   }
 }
 
-// INITIALIZE ON LOAD
-document.addEventListener('DOMContentLoaded', () => {
-  runSimulation();
+// INIT ON LOAD
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("sh_theme") === "dark") {
+    document.body.classList.add("dark-theme");
+    const icon = document.querySelector("#theme-btn i");
+    if (icon) icon.className = "fa-regular fa-sun";
+  }
+  triggerSimRun();
 });

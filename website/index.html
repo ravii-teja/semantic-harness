@@ -3,434 +3,331 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Semantic Harness — Zero-Token Procedural Acceleration for Autonomous AI Agents</title>
-  <meta name="description" content="Verified Semantic Compilation, Cognitive Middleware, and Layered Runtime Architecture for Autonomous AI Agents. Published on PyPI as semantic-harness.">
+  <title>Semantic Harness — Cognitive Middleware for Autonomous AI Agents</title>
+  <meta name="description" content="Verified Semantic Compilation & Zero-Token Procedural Execution Runtime for AI Agents. Published on PyPI as semantic-harness.">
   
   <!-- Google Fonts: Google Sans / Inter / Fira Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
   
-  <!-- Icons -->
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="light-theme">
 
-  <!-- TOP APP BAR -->
-  <header class="app-header">
-    <div class="header-container">
-      <a href="#" class="brand-logo">
-        <div class="logo-icon">
-          <i class="fa-solid fa-microchip"></i>
+  <!-- GOOGLE STYLE TOP NAVIGATION -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <div class="brand-logo">
+          <i class="fa-solid fa-cube"></i>
         </div>
-        <div class="brand-text">
-          <span class="brand-title">Semantic<strong>Harness</strong></span>
-          <span class="brand-tag">v0.2.3</span>
+        <div class="brand-name">
+          <span>Semantic<strong>Harness</strong></span>
+          <span class="version-tag">v0.2.3</span>
         </div>
       </a>
 
-      <nav class="nav-links">
-        <a href="#overview" class="nav-link active">Overview</a>
-        <a href="#playground" class="nav-link">Live Playground</a>
-        <a href="#architecture" class="nav-link">5-Layer Architecture</a>
-        <a href="#benchmarks" class="nav-link">Empirical Results</a>
-        <a href="#integration" class="nav-link">How to Use</a>
-        <a href="#paper" class="nav-link">Paper & DOI</a>
+      <nav class="nav-menu">
+        <a href="#overview" class="nav-item active">Overview</a>
+        <a href="#simulator" class="nav-item">Interactive Simulator</a>
+        <a href="#architecture" class="nav-item">Architecture</a>
+        <a href="#benchmarks" class="nav-item">Benchmarks</a>
+        <a href="#quickstart" class="nav-item">Quickstart</a>
+        <a href="#paper" class="nav-item">Research Paper</a>
       </nav>
 
-      <div class="header-actions">
-        <a href="https://pypi.org/project/semantic-harness/" target="_blank" class="badge-pill pypi-badge" title="View PyPI Package">
-          <i class="fa-brands fa-python"></i> PyPI v0.2.3
+      <div class="nav-actions">
+        <a href="https://pypi.org/project/semantic-harness/" target="_blank" class="chip chip-pypi">
+          <i class="fa-brands fa-python"></i> PyPI
         </a>
-        <a href="https://github.com/ravii-teja/semantic-harness" target="_blank" class="badge-pill github-btn" title="GitHub Repository">
-          <i class="fa-brands fa-github"></i> <span>GitHub</span>
+        <a href="https://github.com/ravii-teja/semantic-harness" target="_blank" class="chip chip-github">
+          <i class="fa-brands fa-github"></i> GitHub
         </a>
-        <button id="theme-toggle" class="icon-btn" aria-label="Toggle Theme">
-          <i class="fa-solid fa-moon"></i>
+        <button id="theme-btn" class="theme-toggle-btn" aria-label="Toggle theme" onclick="toggleTheme()">
+          <i class="fa-regular fa-moon"></i>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- MAIN CONTENT CONTAINER -->
   <main>
-
     <!-- HERO SECTION -->
-    <section id="overview" class="hero-section">
-      <div class="hero-glow"></div>
-      <div class="container hero-container">
+    <section id="overview" class="hero">
+      <div class="container hero-content">
         
-        <div class="hero-badge-row">
-          <span class="hero-pill">
-            <i class="fa-solid fa-bolt text-accent"></i> Verified Semantic Compilation
-          </span>
-          <span class="hero-pill">
-            <i class="fa-solid fa-award text-blue"></i> Zenodo DOI: 10.5281/zenodo.19414309
-          </span>
-          <span class="hero-pill success-pill">
-            <i class="fa-solid fa-check-circle"></i> Production-Verified PyPI
-          </span>
+        <div class="pill-group">
+          <span class="pill pill-blue"><i class="fa-solid fa-bolt"></i> Verified Semantic Compilation</span>
+          <span class="pill pill-neutral"><i class="fa-solid fa-file-lines"></i> DOI: 10.5281/zenodo.19414309</span>
         </div>
 
-        <h1 class="hero-title">
-          Zero-Token Procedural Acceleration &amp; <br>
-          <span class="gradient-text">Cognitive Middleware</span> for AI Agents
+        <h1 class="hero-heading">
+          Zero-token procedural execution for <br class="hide-mobile">
+          <span class="blue-gradient">autonomous AI agents</span>
         </h1>
 
-        <p class="hero-subtitle">
-          Transform repetitive, expensive multi-turn LLM reasoning trajectories into <strong>deterministic, type-safe Python AST procedures</strong>. Re-execute recurring enterprise workflows in <strong>microseconds at 0 model tokens</strong> with 100% parameter accuracy.
+        <p class="hero-description">
+          Semantic Harness compiles multi-turn LLM reasoning loops into <strong>deterministic, type-safe Python AST procedures</strong>. Re-execute recurring enterprise workflows in <strong>microseconds at 0 model tokens</strong> with 100% parameter accuracy.
         </p>
 
-        <!-- INSTALL BAR -->
-        <div class="hero-cta-row">
-          <div class="install-card">
-            <div class="install-code">
-              <span class="prompt-sym">$</span> <code>pip install semantic-harness</code>
-            </div>
-            <button class="copy-btn" onclick="copyText('pip install semantic-harness', this)" title="Copy Command">
+        <!-- INSTALL BAR & PRIMARY CTAs -->
+        <div class="hero-cta">
+          <div class="terminal-pill">
+            <span class="term-prefix">$</span>
+            <code id="install-cmd">pip install semantic-harness</code>
+            <button class="icon-copy-btn" onclick="copyInstallCmd(this)" title="Copy pip command">
               <i class="fa-regular fa-copy"></i>
             </button>
           </div>
-          <a href="#playground" class="btn btn-primary">
-            <i class="fa-solid fa-play"></i> Test Interactive Simulator
+          <a href="#simulator" class="btn-primary">
+            <i class="fa-solid fa-play"></i> Try Interactive Simulator
           </a>
-          <a href="https://github.com/ravii-teja/semantic-harness" target="_blank" class="btn btn-secondary">
-            <i class="fa-brands fa-github"></i> Star on GitHub
+          <a href="#benchmarks" class="btn-secondary">
+            <i class="fa-solid fa-chart-simple"></i> View Benchmark Data
           </a>
         </div>
 
-        <!-- QUICK IMPACT METRIC CARDS -->
-        <div class="hero-metrics-grid">
-          <div class="metric-card">
-            <div class="metric-value text-blue">21.2%</div>
-            <div class="metric-label">Overall Token Reduction</div>
-            <div class="metric-desc">Statistically verified on mixed enterprise streams ($p = 0.005$)</div>
+        <!-- 4 CLEAN KEY METRICS -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-num text-blue">21.2%</div>
+            <div class="stat-title">Token Reduction</div>
+            <div class="stat-subtitle">Across mixed enterprise streams ($p = 0.005$)</div>
           </div>
-          <div class="metric-card highlight-card">
-            <div class="metric-value text-accent">0 Tokens</div>
-            <div class="metric-label">Warm-Path Marginal Cost</div>
-            <div class="metric-desc">Compiled AST execution in sandboxed Python REPL</div>
+          <div class="stat-card">
+            <div class="stat-num text-accent">0 Tokens</div>
+            <div class="stat-title">Warm-Path Cost</div>
+            <div class="stat-subtitle">Compiled AST execution in Python REPL</div>
           </div>
-          <div class="metric-card">
-            <div class="metric-value text-blue">80.3 µs</div>
-            <div class="metric-label">Sub-Millisecond Latency</div>
-            <div class="metric-desc">Over 600× to 8,000× faster than raw neural inference (~9s)</div>
+          <div class="stat-card">
+            <div class="stat-num text-blue">80.3 µs</div>
+            <div class="stat-title">Sub-Millisecond Speed</div>
+            <div class="stat-subtitle">>600× faster than raw inference (~9s)</div>
           </div>
-          <div class="metric-card">
-            <div class="metric-value text-green">100.0%</div>
-            <div class="metric-label">Parameter Accuracy</div>
-            <div class="metric-desc">0 Stale Data errors vs. 18 errors in traditional vector caches</div>
+          <div class="stat-card">
+            <div class="stat-num text-green">100.0%</div>
+            <div class="stat-title">Parameter Accuracy</div>
+            <div class="stat-subtitle">0 stale errors vs. 18 in traditional vector caches</div>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- THE PRODUCTION PROBLEM & SIGNATURE DISCOVERY -->
-    <section class="section problem-section">
+    <!-- INTERACTIVE SIMULATOR (SIMPLIFIED & HIGHLY INTERACTIVE) -->
+    <section id="simulator" class="section simulator-section">
       <div class="container">
-        <div class="section-header text-center">
-          <div class="section-tag">THE PRODUCTION BOTTLENECK</div>
-          <h2 class="section-title">Why Traditional Agent Loops &amp; Vector Caches Fail in Production</h2>
-          <p class="section-desc">
-            In production enterprise workflows, 70%+ of queries are structural variations of existing routines. Standard LLMs re-infer them from scratch at massive token cost, while standard semantic response caches return outdated, stale data.
-          </p>
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">Interactive Playground</span>
+          <h2>See the Execution Difference</h2>
+          <p>Customize a query or change parameters to see how Semantic Harness compiles and re-executes verified ASTs compared to standard LLMs and traditional vector caches.</p>
         </div>
 
-        <div class="comparison-grid">
-          <!-- CARD 1: Traditional LLM -->
-          <div class="comp-card">
-            <div class="comp-card-header bg-fail-subtle">
-              <i class="fa-solid fa-triangle-exclamation text-error"></i>
-              <h3>1. Stateless LLM Reasoning</h3>
-            </div>
-            <div class="comp-card-body">
-              <ul class="comp-list">
-                <li><i class="fa-solid fa-xmark text-error"></i> <strong>Runaway Token Costs:</strong> Generates identical SQL / API code every turn, burning full prompt and completion tokens.</li>
-                <li><i class="fa-solid fa-xmark text-error"></i> <strong>Multi-Second Latency:</strong> 800ms–9,000ms delay per user turn, frustrating end users on dashboards.</li>
-                <li><i class="fa-solid fa-xmark text-error"></i> <strong>Schema Fragility:</strong> Small Language Models (&le;3B) suffer ~40% hallucination rates on multi-table joins.</li>
-              </ul>
-              <div class="cost-badge bad-cost">Latency: ~9,000 ms | Tokens: ~260 tokens | Accuracy: Stochastic</div>
-            </div>
-          </div>
-
-          <!-- CARD 2: Vector Response Cache -->
-          <div class="comp-card">
-            <div class="comp-card-header bg-warn-subtle">
-              <i class="fa-solid fa-circle-exclamation text-warn"></i>
-              <h3>2. Traditional Semantic Cache</h3>
-            </div>
-            <div class="comp-card-body">
-              <ul class="comp-list">
-                <li><i class="fa-solid fa-triangle-exclamation text-warn"></i> <strong>String / Text Caching:</strong> Stores raw text strings like <code>"$44.4M"</code> for North America revenue.</li>
-                <li><i class="fa-solid fa-xmark text-error"></i> <strong>Catastrophic Parameter Staleness:</strong> When query asks for <code>"Europe revenue"</code>, cache hits similarity and returns North America's <code>"$44.4M"</code>!</li>
-                <li><i class="fa-solid fa-xmark text-error"></i> <strong>Accuracy Plummets:</strong> Accuracy drops to <strong>62.5%</strong> with 18 critical data errors in our benchmark.</li>
-              </ul>
-              <div class="cost-badge warn-cost">Latency: ~900 ms | Tokens: 0 | Accuracy: 62.5% (18 Stale Errors)</div>
-            </div>
-          </div>
-
-          <!-- CARD 3: Semantic Harness -->
-          <div class="comp-card highlight-border">
-            <div class="comp-card-header bg-success-subtle">
-              <i class="fa-solid fa-circle-check text-green"></i>
-              <h3>3. Semantic Harness (Verified Compilation)</h3>
-            </div>
-            <div class="comp-card-body">
-              <ul class="comp-list">
-                <li><i class="fa-solid fa-check text-green"></i> <strong>Compiles Verified AST:</strong> Stores the typed execution logic: <code>execute(params={'region': region})</code>.</li>
-                <li><i class="fa-solid fa-check text-green"></i> <strong>Dynamic Parameter Injection:</strong> Injects new arguments into the AST and re-executes inside local Python REPL.</li>
-                <li><i class="fa-solid fa-check text-green"></i> <strong>Zero-Token &amp; 100% Accuracy:</strong> Always evaluates against live data with <strong>0 model tokens</strong> and <strong>80µs to 1.1ms latency</strong>.</li>
-              </ul>
-              <div class="cost-badge good-cost">Latency: 1.1 ms (80µs) | Tokens: 0 | Accuracy: 100.0% Verified</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- INTERACTIVE SIMULATOR (SEE THE DIFFERENCE) -->
-    <section id="playground" class="section playground-section">
-      <div class="container">
-        <div class="section-header text-center">
-          <div class="section-tag">LIVE INTERACTIVE PLAYGROUND</div>
-          <h2 class="section-title">See the Difference in Action</h2>
-          <p class="section-desc">
-            Select a real-world enterprise query or parameter variant to compare execution behavior, token burn, latency, and data correctness across runtime architectures.
-          </p>
-        </div>
-
-        <div class="playground-card">
-          <!-- WORKLOAD SELECTOR ROW -->
-          <div class="playground-top">
-            <div class="query-selector-group">
-              <label for="query-preset"><i class="fa-solid fa-database text-blue"></i> Select Simulated Query Scenario:</label>
-              <select id="query-preset" onchange="runSimulation()">
-                <option value="param_na">Turn 1 (Cold): "Calculate total closed won revenue for North America region"</option>
-                <option value="param_eu" selected>Turn 2 (Param Variant): "Calculate total closed won revenue for Europe region"</option>
-                <option value="param_apac">Turn 3 (Param Variant): "What is total closed won revenue in APAC territory?"</option>
-                <option value="c2c_heal">Turn 4 (SLM Schema Violation): Malformed JSON with Stringified Integer</option>
-                <option value="exact_repeat">Turn 5 (Exact Repeat): "Calculate total closed won revenue for North America region"</option>
+        <div class="interactive-card">
+          
+          <!-- STEP 1: QUERY CONTROLS -->
+          <div class="sim-controls-bar">
+            <div class="control-group">
+              <label for="intent-preset"><i class="fa-solid fa-wand-magic-sparkles text-blue"></i> Query Intent Preset:</label>
+              <select id="intent-preset" onchange="onPresetChange()">
+                <option value="revenue" selected>Enterprise Sales Revenue by Region</option>
+                <option value="churn">Customer Churn Rate &amp; Lifetime Value</option>
+                <option value="logistics">Carrier Delivery Delay &amp; Return Correlation</option>
+                <option value="custom">✏️ Custom Custom Input Prompt...</option>
               </select>
             </div>
-            <button class="btn btn-primary" onclick="runSimulation()">
-              <i class="fa-solid fa-play"></i> Run Simulation
+
+            <div class="control-group" id="param-group">
+              <label for="param-region"><i class="fa-solid fa-sliders text-blue"></i> Filter Parameter (<span id="param-name-label">Region</span>):</label>
+              <select id="param-region" onchange="triggerSimRun()">
+                <option value="North America">North America (Turn 1: Initial Compilation)</option>
+                <option value="Europe" selected>Europe (Turn 2: Parameter Variant)</option>
+                <option value="APAC">APAC (Turn 3: Parameter Variant)</option>
+                <option value="LATAM">LATAM (Turn 4: Parameter Variant)</option>
+              </select>
+            </div>
+
+            <button class="btn-primary sim-run-btn" id="run-btn" onclick="triggerSimRun()">
+              <i class="fa-solid fa-play"></i> Run Query
             </button>
           </div>
 
-          <!-- SIMULATION OUTPUTS SPLIT -->
-          <div class="playground-split">
+          <!-- CUSTOM PROMPT INPUT (Hidden by default, shows on custom) -->
+          <div class="custom-prompt-row" id="custom-row" style="display: none;">
+            <input type="text" id="custom-input" placeholder="Type an analytical question (e.g. Calculate average deal size for EMEA region)..." value="Calculate total closed won revenue for Europe region">
+            <button class="btn-secondary" onclick="triggerSimRun()">Submit Custom Query</button>
+          </div>
+
+          <!-- STEP 2: ANIMATED STEP PIPELINE -->
+          <div class="sim-pipeline">
+            <div class="pipe-step" id="step-1">
+              <div class="step-circle">1</div>
+              <div class="step-label">Exact Hash Check</div>
+            </div>
+            <div class="pipe-line"></div>
+            <div class="pipe-step" id="step-2">
+              <div class="step-circle">2</div>
+              <div class="step-label">PolarQuant Intent Match</div>
+            </div>
+            <div class="pipe-line"></div>
+            <div class="pipe-step" id="step-3">
+              <div class="step-circle">3</div>
+              <div class="step-label">AST Parameter Binding</div>
+            </div>
+            <div class="pipe-line"></div>
+            <div class="pipe-step" id="step-4">
+              <div class="step-circle">4</div>
+              <div class="step-label">Sandboxed Python REPL</div>
+            </div>
+            <div class="pipe-line"></div>
+            <div class="pipe-step" id="step-5">
+              <div class="step-circle">5</div>
+              <div class="step-label">Verified Live Result</div>
+            </div>
+          </div>
+
+          <!-- STEP 3: COMPARISON DASHBOARD -->
+          <div class="sim-dashboard">
             
-            <!-- LEFT: COMPARISON STATS -->
-            <div class="sim-panel">
-              <div class="sim-panel-title">
-                <span><i class="fa-solid fa-gauge-high"></i> Performance Telemetry</span>
-                <span class="badge" id="sim-scenario-badge">Parameter Variant</span>
+            <!-- COLUMN 1: STATELESS LLM -->
+            <div class="system-col" id="col-llm">
+              <div class="system-col-header">
+                <div class="sys-title">1. Stateless LLM</div>
+                <span class="sys-badge bg-bad">Full Inference</span>
               </div>
-
-              <div class="sim-stats-grid">
-                
-                <div class="sim-stat-box">
-                  <div class="sim-stat-header">Stateless LLM (B1)</div>
-                  <div class="sim-stat-main">
-                    <span class="val text-error" id="b1-tokens">260</span> <span class="unit">tokens</span>
-                  </div>
-                  <div class="sim-stat-sub">
-                    Latency: <strong id="b1-lat">9,081 ms</strong><br>
-                    Cost: <span id="b1-cost">$0.0039</span> | Status: <span class="badge-success">Success</span>
-                  </div>
+              <div class="telemetry-box">
+                <div class="tel-item">
+                  <span class="tel-label">Tokens:</span>
+                  <span class="tel-val text-error" id="llm-tokens">260</span>
                 </div>
-
-                <div class="sim-stat-box">
-                  <div class="sim-stat-header">Vector Cache (B4)</div>
-                  <div class="sim-stat-main">
-                    <span class="val text-warn" id="b4-tokens">0</span> <span class="unit">tokens</span>
-                  </div>
-                  <div class="sim-stat-sub">
-                    Latency: <strong id="b4-lat">915 ms</strong><br>
-                    Accuracy: <span class="text-error" id="b4-acc">STALE ERROR (62.5%)</span>
-                  </div>
+                <div class="tel-item">
+                  <span class="tel-label">Latency:</span>
+                  <span class="tel-val" id="llm-latency">9,081 ms</span>
                 </div>
-
-                <div class="sim-stat-box highlight-stat">
-                  <div class="sim-stat-header">Semantic Harness (S0)</div>
-                  <div class="sim-stat-main">
-                    <span class="val text-green" id="s0-tokens">0</span> <span class="unit">tokens</span>
-                  </div>
-                  <div class="sim-stat-sub">
-                    Latency: <strong class="text-green" id="s0-lat">1.1 ms (80.3 µs)</strong><br>
-                    Accuracy: <span class="text-green" id="s0-acc">100.0% Correct (Live AST)</span>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- VALUE RETURNED COMPARISON -->
-              <div class="result-diff-box">
-                <h4><i class="fa-solid fa-code-compare text-blue"></i> Execution Output Verification:</h4>
-                <div class="diff-line">
-                  <span class="diff-label">Expected True Value:</span>
-                  <span class="diff-val text-green" id="diff-expected">$300,000 (Europe Revenue)</span>
-                </div>
-                <div class="diff-line">
-                  <span class="diff-label">Vector Cache Returned:</span>
-                  <span class="diff-val text-error" id="diff-vector">$44,410,000 (❌ Stale North America Data)</span>
-                </div>
-                <div class="diff-line">
-                  <span class="diff-label">Semantic Harness Returned:</span>
-                  <span class="diff-val text-green" id="diff-harness">$300,000 (✅ Live AST REPL Result)</span>
+                <div class="tel-item">
+                  <span class="tel-label">Cost:</span>
+                  <span class="tel-val" id="llm-cost">$0.0039</span>
                 </div>
               </div>
-
+              <div class="sys-result-card">
+                <div class="card-label">Returned Value:</div>
+                <div class="card-val" id="llm-val">$300,000</div>
+                <div class="card-status status-ok">✅ Valid (High Latency)</div>
+              </div>
             </div>
 
-            <!-- RIGHT: RUNTIME EXECUTION TRACE -->
-            <div class="sim-panel code-panel">
-              <div class="sim-panel-title">
-                <span><i class="fa-solid fa-terminal text-blue"></i> Runtime Trace &amp; Compiled AST Inspector</span>
-                <span class="badge badge-info">Zero-Token Fast Path</span>
+            <!-- COLUMN 2: VECTOR RESPONSE CACHE -->
+            <div class="system-col" id="col-cache">
+              <div class="system-col-header">
+                <div class="sys-title">2. Semantic Vector Cache</div>
+                <span class="sys-badge bg-warn">Response-Level</span>
               </div>
-              <pre class="trace-code" id="trace-output"><code class="language-python"># Step 1: Query Inbound
-query = "Calculate total closed won revenue for Europe region"
+              <div class="telemetry-box">
+                <div class="tel-item">
+                  <span class="tel-label">Tokens:</span>
+                  <span class="tel-val text-green" id="cache-tokens">0</span>
+                </div>
+                <div class="tel-item">
+                  <span class="tel-label">Latency:</span>
+                  <span class="tel-val" id="cache-latency">915 ms</span>
+                </div>
+                <div class="tel-item">
+                  <span class="tel-label">Accuracy:</span>
+                  <span class="tel-val text-error" id="cache-acc">62.5%</span>
+                </div>
+              </div>
+              <div class="sys-result-card border-error">
+                <div class="card-label">Returned Value:</div>
+                <div class="card-val text-error" id="cache-val">$44,410,000</div>
+                <div class="card-status status-error" id="cache-status">❌ STALE DATA ERROR</div>
+              </div>
+            </div>
 
-# Step 2: TurboQuant PolarQuant Procedural Lookup
-proc = procedural_memory.lookup(query, similarity_threshold=0.80)
-# >> HIT on Procedure 'crm_revenue_by_region' (Similarity: 0.94, Confidence: 0.92 >= 0.85)
-
-# Step 3: AST Parameter Binding (0 Model Tokens)
-bound_args = {'region': 'Europe', 'stage': 'Closed Won'}
-
-# Step 4: Deterministic Local Python REPL Execution
-result = execute_ast_in_sandbox(proc.ast_bytecode, params=bound_args)
-# >> Result: {"revenue": 300000.0, "region": "Europe", "records_aggregated": 14}
-# >> Execution Latency: 1.12 ms | Model Tokens Billed: 0 | False Reuse Rate: 0.00%</code></pre>
+            <!-- COLUMN 3: SEMANTIC HARNESS -->
+            <div class="system-col col-highlight" id="col-harness">
+              <div class="system-col-header">
+                <div class="sys-title text-blue">3. Semantic Harness</div>
+                <span class="sys-badge bg-blue">Verified AST</span>
+              </div>
+              <div class="telemetry-box">
+                <div class="tel-item">
+                  <span class="tel-label">Tokens:</span>
+                  <span class="tel-val text-green" id="harness-tokens">0 (0.00$)</span>
+                </div>
+                <div class="tel-item">
+                  <span class="tel-label">Latency:</span>
+                  <span class="tel-val text-blue font-bold" id="harness-latency">1.1 ms (80.3 µs)</span>
+                </div>
+                <div class="tel-item">
+                  <span class="tel-label">Accuracy:</span>
+                  <span class="tel-val text-green" id="harness-acc">100.0% Verified</span>
+                </div>
+              </div>
+              <div class="sys-result-card border-green bg-green-subtle">
+                <div class="card-label">Returned Value:</div>
+                <div class="card-val text-green font-bold" id="harness-val">$300,000</div>
+                <div class="card-status status-ok">✅ Live AST Execution (0 Tokens)</div>
+              </div>
             </div>
 
           </div>
+
+          <!-- STEP 4: CODE REPL TRACE INSPECTOR -->
+          <div class="trace-container">
+            <div class="trace-header">
+              <div class="trace-tab active"><i class="fa-solid fa-code text-blue"></i> Live Sandboxed AST &amp; REPL Execution Trace</div>
+              <span class="badge-pill-small">Zero Model Tokens</span>
+            </div>
+            <pre class="trace-pre"><code id="code-trace" class="language-python"># Step 1: Inbound Request -> "Calculate total closed won revenue for Europe region"
+# Step 2: TurboQuant PolarQuant Fuzzy Match (Similarity: 0.94, Confidence: 0.92 >= 0.85)
+# Step 3: Parameter Slot Binding -> params = {'region': 'Europe', 'stage': 'Closed Won'}
+# Step 4: Python REPL Exec -> execute_ast(crm_revenue_ast, params=params)
+# Step 5: Live Database Result -> {"revenue": 300000.0, "region": "Europe"} (1.12 ms)</code></pre>
+          </div>
+
         </div>
 
       </div>
     </section>
 
-    <!-- 5-LAYER STACK ARCHITECTURE -->
-    <section id="architecture" class="section">
+    <!-- WHY IT MATTERS (CLEAN 4-PILLAR GRID) -->
+    <section class="section">
       <div class="container">
-        <div class="section-header text-center">
-          <div class="section-tag">SYSTEM ARCHITECTURE</div>
-          <h2 class="section-title">The 5-Layer Cognitive Middleware Hierarchy</h2>
-          <p class="section-desc">
-            Semantic Harness bridges probabilistic neural generation with deterministic software systems through five specialized, decoupled layers.
-          </p>
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">Core Innovations</span>
+          <h2>The Four Architectural Pillars</h2>
+          <p>How Semantic Harness combines verified execution contracts with extreme vector compression.</p>
         </div>
 
-        <div class="layers-container">
+        <div class="pillars-grid">
           
-          <!-- LAYER 1 -->
-          <div class="layer-item" onclick="toggleLayer(1)">
-            <div class="layer-number">1</div>
-            <div class="layer-content">
-              <div class="layer-header">
-                <h3>DeepSeek Harness (DSH) — Governance &amp; Event Lifecycle</h3>
-                <span class="layer-pill">Capability Seams &amp; JSONL Logging</span>
-              </div>
-              <p class="layer-summary">
-                Waterfall lifecycle event pipeline (<code>turn/start</code> &rarr; <code>step/start</code> &rarr; <code>step/end</code> &rarr; <code>turn/end</code>) with immutable append-only JSONL session logging and deterministic audit replay.
-              </p>
-              <div class="layer-details" id="layer-details-1">
-                <div class="layer-spec-grid">
-                  <div><strong>Capability Seams:</strong> Explicit separation of Definition, Provider, and Consumer.</div>
-                  <div><strong>Proactive Guards:</strong> Turn budget enforcement, runaway loop breaker, and duplicate-tool interception.</div>
-                </div>
-              </div>
-            </div>
-            <div class="layer-toggle-icon"><i class="fa-solid fa-chevron-down"></i></div>
+          <div class="pillar-card">
+            <div class="pillar-icon text-blue"><i class="fa-solid fa-code-branch"></i></div>
+            <h3>1. Verified Semantic Compilation</h3>
+            <p>Treats multi-turn LLM reasoning as a JIT program synthesis step. Once verified against Pydantic schema contracts, execution paths are compiled into parameterized ASTs for zero-token re-execution.</p>
           </div>
 
-          <!-- LAYER 2 -->
-          <div class="layer-item" onclick="toggleLayer(2)">
-            <div class="layer-number">2</div>
-            <div class="layer-content">
-              <div class="layer-header">
-                <h3>NVIDIA Object-Oriented Agents (NOOA) — Execution Model</h3>
-                <span class="layer-pill">Class-as-Agent &amp; Sandboxed CodeAct</span>
-              </div>
-              <p class="layer-summary">
-                Encapsulates agent state into Python classes where docstrings act as system prompts and methods act as type-contracted tools executing inside a stateful sandboxed CodeAct REPL.
-              </p>
-              <div class="layer-details" id="layer-details-2">
-                <div class="layer-spec-grid">
-                  <div><strong>Context Splitting:</strong> Three-region prompt assembly (Static System/Tools &rarr; Dynamic State &rarr; Event History) for maximal KV-cache reuse.</div>
-                  <div><strong>CodeAct Sandbox:</strong> Persistent variables, AST capture, and direct execution over in-memory database connections.</div>
-                </div>
-              </div>
-            </div>
-            <div class="layer-toggle-icon"><i class="fa-solid fa-chevron-down"></i></div>
+          <div class="pillar-card">
+            <div class="pillar-icon text-green"><i class="fa-solid fa-heart-pulse"></i></div>
+            <h3>2. Chaos2Clarity (C2C) Self-Healing</h3>
+            <p>Intercepts schema validation failures and synthesizes minimal, targeted differential prompts. Elevates Small Language Model (&le;3B) structured output pass rates from <strong>41.2% to 96.8%</strong>.</p>
           </div>
 
-          <!-- LAYER 3 -->
-          <div class="layer-item" onclick="toggleLayer(3)">
-            <div class="layer-number">3</div>
-            <div class="layer-content">
-              <div class="layer-header">
-                <h3>Semantic Harness Cognitive Core — Middleware &amp; Validation</h3>
-                <span class="layer-pill">Chaos2Clarity (C2C) &amp; 3-Tier Memory</span>
-              </div>
-              <p class="layer-summary">
-                Deterministic validation against Pydantic schema contracts, synthesizing targeted differential feedback prompts for automated single-turn error remediation.
-              </p>
-              <div class="layer-details" id="layer-details-3">
-                <div class="layer-spec-grid">
-                  <div><strong>3-Tier Memory:</strong> Short-Term FIFO Buffer + ACT-R Long-Term SQLite ($A_i(t)$ cognitive activation ranking) + Procedural Memory.</div>
-                  <div><strong>Dynamic Token Budget:</strong> Proactive context pressure sensing and automatic stale-turn eviction.</div>
-                </div>
-              </div>
-            </div>
-            <div class="layer-toggle-icon"><i class="fa-solid fa-chevron-down"></i></div>
+          <div class="pillar-card">
+            <div class="pillar-icon text-blue"><i class="fa-solid fa-compress"></i></div>
+            <h3>3. Google TurboQuant / PolarQuant</h3>
+            <p>Compresses continuous procedural intent vectors by $8\times\text{--}16\times$ using random orthogonal polar transforms with QJL 1-bit residual correction for unbiased sub-microsecond retrieval.</p>
           </div>
 
-          <!-- LAYER 4 -->
-          <div class="layer-item" onclick="toggleLayer(4)">
-            <div class="layer-number">4</div>
-            <div class="layer-content">
-              <div class="layer-header">
-                <h3>Google TurboQuant / PolarQuant — Vector Compression</h3>
-                <span class="layer-pill">Sub-Microsecond Bitwise Indexing</span>
-              </div>
-              <p class="layer-summary">
-                Applies random orthogonal polar rotations (FWHT) with QJL 1-bit residual error correction to achieve $8\times\text{--}16\times$ RAM savings and sub-microsecond Hamming distance search.
-              </p>
-              <div class="layer-details" id="layer-details-4">
-                <div class="layer-spec-grid">
-                  <div><strong>Search Complexity:</strong> $O(d/64)$ CPU bitwise XOR + popcount operations ($1.5\ \mu\text{s}$ per query).</div>
-                  <div><strong>Zero Cosine Bias:</strong> QJL residual correction mathematically guarantees unbiased cosine similarity over 1-bit polar coordinates.</div>
-                </div>
-              </div>
-            </div>
-            <div class="layer-toggle-icon"><i class="fa-solid fa-chevron-down"></i></div>
-          </div>
-
-          <!-- LAYER 5 -->
-          <div class="layer-item" onclick="toggleLayer(5)">
-            <div class="layer-number">5</div>
-            <div class="layer-content">
-              <div class="layer-header">
-                <h3>Universal Multi-Provider Inference Layer</h3>
-                <span class="layer-pill">Ollama, LiteLLM, vLLM &amp; Frontier Models</span>
-              </div>
-              <p class="layer-summary">
-                Pluggable inference backend supporting local Small Language Models (Qwen-2.5-Coder-3B, Gemma-4-E2B) and frontier providers (GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro).
-              </p>
-              <div class="layer-details" id="layer-details-5">
-                <div class="layer-spec-grid">
-                  <div><strong>Local Sovereignty:</strong> Run sub-3B models on edge hardware with 86%–98% SQL/JSON accuracy.</div>
-                  <div><strong>Streaming &amp; Tool Calling:</strong> Seamless support for structured output binding across any compliant model.</div>
-                </div>
-              </div>
-            </div>
-            <div class="layer-toggle-icon"><i class="fa-solid fa-chevron-down"></i></div>
+          <div class="pillar-card">
+            <div class="pillar-icon text-accent"><i class="fa-solid fa-brain"></i></div>
+            <h3>4. ACT-R Cognitive 3-Tier Memory</h3>
+            <p>Integrates a sliding Short-Term FIFO buffer, an embedded Long-Term SQLite datastore ranked by ACT-R cognitive activation equations $A_i(t)$, and quantized procedural caching.</p>
           </div>
 
         </div>
@@ -438,162 +335,166 @@ result = execute_ast_in_sandbox(proc.ast_bytecode, params=bound_args)
       </div>
     </section>
 
-    <!-- EMPIRICAL BENCHMARK GALLERY -->
-    <section id="benchmarks" class="section bg-subtle">
+    <!-- 5-LAYER ARCHITECTURE EXPLORER -->
+    <section id="architecture" class="section bg-subtle">
       <div class="container">
-        <div class="section-header text-center">
-          <div class="section-tag">EMPIRICAL PROOF &amp; RESEARCH DATA</div>
-          <h2 class="section-title">Comprehensive Experimental Benchmark Gallery</h2>
-          <p class="section-desc">
-            Evaluated on real local SLMs (`Qwen-2.5-Coder-3B`, `Gemma-4-E2B`) across a 48-turn enterprise runtime stream and a 200-turn 8-experiment relational benchmark suite.
-          </p>
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">System Architecture</span>
+          <h2>Unified 5-Layer Stack</h2>
+          <p>Decoupled hierarchy bridging probabilistic reasoning models with deterministic execution engines.</p>
         </div>
 
-        <!-- BENCHMARK VIEWER TABS -->
-        <div class="gallery-wrapper">
-          <div class="gallery-tabs">
-            <button class="gallery-tab active" onclick="switchTab('fig-avoid')">
+        <div class="stack-list">
+          
+          <div class="stack-row" onclick="toggleStackItem(this)">
+            <div class="stack-num">Layer 1</div>
+            <div class="stack-main">
+              <h4>DeepSeek Harness (DSH) — Lifecycle &amp; Governance</h4>
+              <p>Waterfall event pipeline (<code>turn/start</code> &rarr; <code>step/start</code> &rarr; <code>step/end</code> &rarr; <code>turn/end</code>) with immutable append-only JSONL session logging and proactive loop guards.</p>
+            </div>
+            <div class="stack-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+          </div>
+
+          <div class="stack-row" onclick="toggleStackItem(this)">
+            <div class="stack-num">Layer 2</div>
+            <div class="stack-main">
+              <h4>NVIDIA Object-Oriented Agents (NOOA) — Execution Model</h4>
+              <p>Class-as-Agent contracts with docstring prompt binding and a stateful, sandboxed CodeAct Python REPL for persistent multi-turn variables and AST capture.</p>
+            </div>
+            <div class="stack-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+          </div>
+
+          <div class="stack-row active" onclick="toggleStackItem(this)">
+            <div class="stack-num">Layer 3</div>
+            <div class="stack-main">
+              <h4>Semantic Harness Core — Cognitive Middleware &amp; C2C</h4>
+              <p>Deterministic Pydantic validation, dynamic context token budgeting, and the Beta-Bernoulli conjugate reliability gate for safe fast-path routing ($0.00\%$ False Reuse Rate).</p>
+            </div>
+            <div class="stack-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+          </div>
+
+          <div class="stack-row" onclick="toggleStackItem(this)">
+            <div class="stack-num">Layer 4</div>
+            <div class="stack-main">
+              <h4>Google TurboQuant / PolarQuant — Vector Compression</h4>
+              <p>1-Bit polar vector quantization and fast Walsh-Hadamard transforms enabling CPU bitwise XOR search ($1.5\ \mu\text{s}$ per query).</p>
+            </div>
+            <div class="stack-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+          </div>
+
+          <div class="stack-row" onclick="toggleStackItem(this)">
+            <div class="stack-num">Layer 5</div>
+            <div class="stack-main">
+              <h4>Multi-Provider Inference Layer</h4>
+              <p>Universal model interoperability across local Ollama SLMs (Qwen, Gemma), vLLM engines, and cloud providers (OpenAI, Anthropic, Gemini).</p>
+            </div>
+            <div class="stack-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- BENCHMARKS & RESEARCH DATA -->
+    <section id="benchmarks" class="section">
+      <div class="container">
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">Empirical Evaluation</span>
+          <h2>Research Figures &amp; Benchmark Data</h2>
+          <p>Evaluated across 89 verified unit test suites, a 48-turn enterprise runtime stream, and a 200-turn relational SQL benchmark.</p>
+        </div>
+
+        <div class="tab-card">
+          
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="showFigTab(0)">
               <i class="fa-solid fa-chart-pie"></i> 1. Compute Avoidance
             </button>
-            <button class="gallery-tab" onclick="switchTab('fig-sig')">
-              <i class="fa-solid fa-microchip"></i> 2. Parameter Proof
+            <button class="tab-btn" onclick="showFigTab(1)">
+              <i class="fa-solid fa-microchip"></i> 2. Signature Parameter Proof
             </button>
-            <button class="gallery-tab" onclick="switchTab('fig-speed')">
+            <button class="tab-btn" onclick="showFigTab(2)">
               <i class="fa-solid fa-bolt"></i> 3. Latency Pareto
             </button>
-            <button class="gallery-tab" onclick="switchTab('fig-error')">
-              <i class="fa-solid fa-filter"></i> 4. Error Taxonomy
+            <button class="tab-btn" onclick="showFigTab(3)">
+              <i class="fa-solid fa-filter"></i> 4. Error Taxonomy ($E_1 \rightarrow E_5$)
             </button>
-            <button class="gallery-tab" onclick="switchTab('fig-learn')">
-              <i class="fa-solid fa-arrow-trend-up"></i> 5. Learning Curve
-            </button>
-            <button class="gallery-tab" onclick="switchTab('fig-master')">
-              <i class="fa-solid fa-layer-group"></i> 6. Master Overview
+            <button class="tab-btn" onclick="showFigTab(4)">
+              <i class="fa-solid fa-arrow-trend-up"></i> 5. 200-Turn Learning Curve
             </button>
           </div>
 
-          <!-- TAB CONTENT CONTAINERS -->
-          <div class="gallery-content">
+          <div class="tab-viewport">
             
-            <!-- TAB 1: COMPUTE AVOIDANCE -->
-            <div class="tab-pane active" id="tab-fig-avoid">
-              <div class="figure-card">
-                <div class="figure-img-box">
-                  <img src="figures/fig1_compute_avoidance.png" alt="Compute and Token Avoidance" class="responsive-fig">
-                </div>
-                <div class="figure-caption">
-                  <h4>Figure 1: Token &amp; Latency Avoidance Distribution</h4>
-                  <p>Semantic Harness delivers <strong>21.16% total token avoidance</strong> and <strong>13.81% latency avoidance</strong> across the mixed stream ($p = 5.06 \times 10^{-3}$ on Wilcoxon signed-rank test), with <strong>100% token cost reduction</strong> on warm procedural hits.</p>
-                </div>
+            <div class="fig-panel active" id="fig-pane-0">
+              <img src="figures/fig1_compute_avoidance.png" alt="Token Avoidance Distribution" class="fig-img">
+              <div class="fig-caption">
+                <strong>Figure 1: Token &amp; Latency Avoidance Distribution.</strong> Demonstrates <strong>21.16% total token avoidance</strong> across the mixed stream ($p = 5.06 \times 10^{-3}$ on Wilcoxon signed-rank test), with <strong>100% token cost reduction</strong> on warm procedural hits.
               </div>
             </div>
 
-            <!-- TAB 2: PARAMETER EXPERIMENT -->
-            <div class="tab-pane" id="tab-fig-sig">
-              <div class="figure-card">
-                <div class="figure-img-box">
-                  <img src="figures/fig2_signature_parameter_experiment.png" alt="Signature Parameter Variation Experiment" class="responsive-fig">
-                </div>
-                <div class="figure-caption">
-                  <h4>Figure 2: The Signature Experiment — Parameter Variation vs. Response Caching</h4>
-                  <p>Traditional semantic vector caches suffer <strong>18 catastrophic stale-data errors</strong> (accuracy dropping to 62.5%) when query arguments change. Semantic Harness re-executes compiled AST procedures with new parameters at <strong>100.0% accuracy and 0 tokens</strong>.</p>
-                </div>
+            <div class="fig-panel" id="fig-pane-1">
+              <img src="figures/fig2_signature_parameter_experiment.png" alt="Signature Parameter Experiment" class="fig-img">
+              <div class="fig-caption">
+                <strong>Figure 2: The Signature Experiment.</strong> Traditional semantic vector caches suffer <strong>18 stale-data errors (accuracy drops to 62.5%)</strong> when parameters change. Semantic Harness re-executes compiled ASTs with new arguments at <strong>100.0% accuracy and 0 tokens</strong>.
               </div>
             </div>
 
-            <!-- TAB 3: SPEEDUP PARETO -->
-            <div class="tab-pane" id="tab-fig-speed">
-              <div class="figure-card">
-                <div class="figure-img-box">
-                  <img src="figures/fig2_speedup_pareto.png" alt="Speedup Pareto Frontier" class="responsive-fig">
-                </div>
-                <div class="figure-caption">
-                  <h4>Figure 3: Latency-Accuracy Pareto Frontier &amp; Zero-Token Acceleration</h4>
-                  <p>Shows execution speedup across 10 recurring business intelligence workflows, achieving <strong>$80.3\ \mu\text{s}$ average latency (>500× speedup)</strong> on compiled warm paths.</p>
-                </div>
+            <div class="fig-panel" id="fig-pane-2">
+              <img src="figures/fig2_speedup_pareto.png" alt="Speedup Pareto Frontier" class="fig-img">
+              <div class="fig-caption">
+                <strong>Figure 3: Latency-Accuracy Pareto Frontier.</strong> Shows execution speedup across recurring business intelligence workflows, achieving <strong>$80.3\ \mu\text{s}$ average latency (>500× speedup)</strong> on warm procedural paths.
               </div>
             </div>
 
-            <!-- TAB 4: ERROR TAXONOMY -->
-            <div class="tab-pane" id="tab-fig-error">
-              <div class="figure-card">
-                <div class="figure-img-box">
-                  <img src="figures/fig6_error_taxonomy_breakdown.png" alt="Error Taxonomy Distribution" class="responsive-fig">
-                </div>
-                <div class="figure-caption">
-                  <h4>Figure 4: Formal 5-Class Error Taxonomy Suppression ($E_1 \rightarrow E_5$)</h4>
-                  <p>Schema hallucinations ($E_1$) are suppressed from <strong>38.0% down to 6.0% ($-84.2\%$ relative reduction)</strong> through C2C schema validation and automated type reflection.</p>
-                </div>
+            <div class="fig-panel" id="fig-pane-3">
+              <img src="figures/fig6_error_taxonomy_breakdown.png" alt="Error Taxonomy Distribution" class="fig-img">
+              <div class="fig-caption">
+                <strong>Figure 4: Formal 5-Class Error Taxonomy Suppression.</strong> Schema hallucinations ($E_1$) drop from <strong>38.0% down to 6.0% ($-84.2\%$ relative reduction)</strong> via C2C type enforcement ($\chi^2 = 12.25, p = 0.00047$).
               </div>
             </div>
 
-            <!-- TAB 5: LEARNING CURVES -->
-            <div class="tab-pane" id="tab-fig-learn">
-              <div class="figure-card">
-                <div class="figure-img-box">
-                  <img src="figures/fig5_learning_curves_procedural.png" alt="Longitudinal Learning Curve" class="responsive-fig">
-                </div>
-                <div class="figure-caption">
-                  <h4>Figure 5: 200-Turn Longitudinal Procedural Learning</h4>
-                  <p>Non-parametric session learning evolves first-pass execution success from <strong>50.0% up to 86.0%</strong> as proven analytical plans are promoted to procedural memory.</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- TAB 6: MASTER OVERVIEW -->
-            <div class="tab-pane" id="tab-fig-master">
-              <div class="figure-card">
-                <div class="figure-img-box">
-                  <img src="figures/semantic_harness_benchmark.png" alt="Master Visual Benchmark" class="responsive-fig">
-                </div>
-                <div class="figure-caption">
-                  <h4>Figure 6: Master Architecture &amp; Empirical Benchmark Overview</h4>
-                  <p>Comprehensive summary of the 5-layer runtime, multi-model execution benchmarks, and statistical confidence metrics.</p>
-                </div>
+            <div class="fig-panel" id="fig-pane-4">
+              <img src="figures/fig5_learning_curves_procedural.png" alt="Longitudinal Learning Curve" class="fig-img">
+              <div class="fig-caption">
+                <strong>Figure 5: 200-Turn Longitudinal Procedural Learning.</strong> Non-parametric session learning evolves first-pass execution success from <strong>50.0% up to 86.0%</strong> as verified procedures are cached.
               </div>
             </div>
 
           </div>
+
         </div>
 
       </div>
     </section>
 
-    <!-- HOW TO USE & INTEGRATION RECIPES -->
-    <section id="integration" class="section">
+    <!-- QUICKSTART & INTEGRATION CODE -->
+    <section id="quickstart" class="section bg-subtle">
       <div class="container">
-        <div class="section-header text-center">
-          <div class="section-tag">QUICKSTART &amp; RECIPES</div>
-          <h2 class="section-title">How to Integrate Semantic Harness into Your Stack</h2>
-          <p class="section-desc">
-            Use it as a drop-in <code>@step</code> middleware decorator, a stateful <code>Agent</code> class, or integrate with existing frameworks like LangGraph and CrewAI.
-          </p>
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">Integration Guide</span>
+          <h2>Drop-In Usage Recipes</h2>
+          <p>Get started with one decorator, or build object-oriented stateful agents.</p>
         </div>
 
-        <div class="code-recipes-wrapper">
-          <div class="code-tab-header">
-            <button class="code-tab active" onclick="switchCodeTab('step-recipe')">
-              <i class="fa-brands fa-python"></i> 1. Drop-In @step Decorator
-            </button>
-            <button class="code-tab" onclick="switchCodeTab('agent-recipe')">
-              <i class="fa-solid fa-robot"></i> 2. Stateful Agent Class
-            </button>
-            <button class="code-tab" onclick="switchCodeTab('ts-recipe')">
-              <i class="fa-brands fa-js"></i> 3. TypeScript SDK
-            </button>
-            <button class="code-tab" onclick="switchCodeTab('langgraph-recipe')">
-              <i class="fa-solid fa-diagram-project"></i> 4. LangGraph / CrewAI
-            </button>
+        <div class="code-card">
+          <div class="code-tabs-nav">
+            <button class="code-tab-btn active" onclick="showCodePane(0)"><i class="fa-brands fa-python"></i> Python @step Decorator</button>
+            <button class="code-tab-btn" onclick="showCodePane(1)"><i class="fa-solid fa-robot"></i> Python Agent Class</button>
+            <button class="code-tab-btn" onclick="showCodePane(2)"><i class="fa-brands fa-js"></i> TypeScript SDK</button>
+            <button class="code-tab-btn" onclick="showCodePane(3)"><i class="fa-solid fa-diagram-project"></i> LangGraph Integration</button>
           </div>
 
-          <!-- CODE SNIPPET CONTAINERS -->
-          <div class="code-tab-body">
+          <div class="code-panes">
             
-            <!-- CODE 1: STEP DECORATOR -->
-            <div class="code-pane active" id="pane-step-recipe">
-              <div class="code-header-bar">
-                <span>python_step_example.py</span>
-                <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+            <div class="code-box active" id="code-box-0">
+              <div class="code-bar">
+                <span>step_decorator_example.py</span>
+                <button class="copy-btn" onclick="copySnippet(this)"><i class="fa-regular fa-copy"></i> Copy Code</button>
               </div>
               <pre><code class="language-python">from pydantic import BaseModel
 from semantic_harness import step
@@ -603,57 +504,54 @@ class RevenueReport(BaseModel):
     total_revenue: float
     deal_count: int
 
-# Automatically validates schema and compiles procedural fast-path
+# Validates Pydantic schema and compiles procedural fast-path
 @step(validates=RevenueReport, cache=True)
 def get_regional_sales(region: str) -> dict:
     prompt = f"Extract revenue figures for {region} from current pipeline."
     return llm_client.generate_json(prompt)
 
-# Turn 1 (Cold): Calls LLM -> Validates against RevenueReport -> Compiles AST
-rep1 = get_regional_sales(region="North America")
+# Turn 1 (Cold): Calls LLM -> Validates schema -> Compiles AST logic
+report1 = get_regional_sales(region="North America")
 
-# Turn 2 (Warm): Automatic AST Fast-Path -> 1.1 ms response, 0 TOKENS billed!
-rep2 = get_regional_sales(region="Europe")
-print(rep2)</code></pre>
+# Turn 2 (Warm): Re-executes AST in REPL -> 1.1 ms response, 0 TOKENS billed!
+report2 = get_regional_sales(region="Europe")
+print(report2)</code></pre>
             </div>
 
-            <!-- CODE 2: STATEFUL AGENT -->
-            <div class="code-pane" id="pane-agent-recipe">
-              <div class="code-header-bar">
+            <div class="code-box" id="code-box-1">
+              <div class="code-bar">
                 <span>financial_analyst_agent.py</span>
-                <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                <button class="copy-btn" onclick="copySnippet(this)"><i class="fa-regular fa-copy"></i> Copy Code</button>
               </div>
               <pre><code class="language-python">from semantic_harness import Agent, AgentConfig
 
 class FinancialAnalyst(Agent):
     """You are an autonomous corporate financial analyst."""
 
-    def calculate_ebitda_margin(self, revenue: float, operating_expenses: float) -> float:
-        """Compute EBITDA margin percentage."""
-        return ((revenue - operating_expenses) / revenue) * 100.0
+    def calculate_margin(self, revenue: float, cost: float) -> float:
+        """Compute gross profit margin percentage."""
+        return ((revenue - cost) / revenue) * 100.0
 
-# Initialize with sandboxed CodeAct REPL and ACT-R memory
 agent = FinancialAnalyst(config=AgentConfig(model="qwen2.5-coder:3b", strategy="codeact"))
 
-# Store enterprise facts with ACT-R importance ranking
+# Store enterprise metadata with ACT-R importance ranking
 agent.long_term.remember(
     key="q4_targets",
     content="Q4 revenue target is $100M with max operating expense of $65M.",
     importance=0.95
 )
 
-# Run multi-turn task
-result = agent.run("Evaluate our projected Q4 EBITDA margin based on target figures.")
+# Run multi-turn task with persistent CodeAct variables
+result = agent.run("Evaluate projected Q4 EBITDA margin based on target figures.")
 print(result)</code></pre>
             </div>
 
-            <!-- CODE 3: TYPESCRIPT -->
-            <div class="code-pane" id="pane-ts-recipe">
-              <div class="code-header-bar">
+            <div class="code-box" id="code-box-2">
+              <div class="code-bar">
                 <span>agent.ts</span>
-                <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                <button class="copy-btn" onclick="copySnippet(this)"><i class="fa-regular fa-copy"></i> Copy Code</button>
               </div>
-              <pre><code class="language-typescript">import { Agent, step, ProceduralMemory } from "semantic-harness";
+              <pre><code class="language-typescript">import { Agent, step } from "semantic-harness";
 import { z } from "zod";
 
 const UserProfileSchema = z.object({
@@ -665,22 +563,19 @@ const UserProfileSchema = z.object({
 export class CustomerSupportAgent extends Agent {
   @step({ schema: UserProfileSchema, cache: true })
   async lookupUser(email: string) {
-    // Zero-token re-execution on warm procedural paths
+    // Re-executes verified AST without token inference on warm paths
     return await this.callLLM(`Fetch structured profile for ${email}`);
   }
 }</code></pre>
             </div>
 
-            <!-- CODE 4: LANGGRAPH -->
-            <div class="code-pane" id="pane-langgraph-recipe">
-              <div class="code-header-bar">
-                <span>langgraph_integration.py</span>
-                <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+            <div class="code-box" id="code-box-3">
+              <div class="code-bar">
+                <span>langgraph_node.py</span>
+                <button class="copy-btn" onclick="copySnippet(this)"><i class="fa-regular fa-copy"></i> Copy Code</button>
               </div>
-              <pre><code class="language-python">from langgraph.graph import StateGraph
-from semantic_harness import ProceduralMemory, C2CValidator
+              <pre><code class="language-python">from semantic_harness import ProceduralMemory, C2CValidator
 
-# Wrap LangGraph node functions with Semantic Harness Procedural Memory
 proc_mem = ProceduralMemory(enable_fuzzy_search=True)
 
 def validated_tool_node(state):
@@ -693,7 +588,7 @@ def validated_tool_node(state):
         state["tokens_used"] = 0
         return state
 
-    # 2. Standard Model Execution + C2C Validation
+    # 2. Standard LLM Execution + C2C Validation
     raw_output = call_llm(state["prompt"])
     state["result"] = C2CValidator(state["schema"]).validate(raw_output)
     proc_mem.cache(intent, state["result"])
@@ -707,40 +602,40 @@ def validated_tool_node(state):
     </section>
 
     <!-- RESEARCH PAPER & CITATION -->
-    <section id="paper" class="section bg-subtle">
+    <section id="paper" class="section">
       <div class="container">
-        <div class="section-header text-center">
-          <div class="section-tag">ACADEMIC RESEARCH &amp; CITATION</div>
-          <h2 class="section-title">Research Publication &amp; Zenodo DOI</h2>
-          <p class="section-desc">
-            Semantic Harness is documented in an academic research paper and archived with a permanent Digital Object Identifier (DOI).
-          </p>
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">Academic Research</span>
+          <h2>Citation &amp; Zenodo DOI</h2>
+          <p>Semantic Harness is archived on Zenodo with an open-access Digital Object Identifier.</p>
         </div>
 
-        <div class="paper-card">
-          <div class="paper-info">
-            <div class="paper-badge-row">
-              <span class="badge badge-info"><i class="fa-solid fa-file-pdf"></i> Academic Paper</span>
-              <span class="badge badge-success"><i class="fa-solid fa-check"></i> Peer-Reviewed DOI</span>
+        <div class="paper-layout">
+          
+          <div class="paper-details-col">
+            <div class="paper-badge-line">
+              <span class="pill pill-blue"><i class="fa-solid fa-file-pdf"></i> Academic Paper</span>
+              <span class="pill pill-green"><i class="fa-solid fa-check"></i> Published v0.2.3</span>
             </div>
-            <h3 class="paper-title">Semantic Harness: Cognitive Middleware, Procedural Acceleration, and Layered Runtime Architecture for Autonomous AI Agents</h3>
-            <p class="paper-author"><strong>Author:</strong> Bankupalli Ravi Teja &bull; <strong>Affiliation:</strong> Independent Research / Open Source Systems</p>
-            <div class="paper-links">
-              <a href="https://zenodo.org/records/19414309" target="_blank" class="btn btn-primary">
-                <i class="fa-solid fa-external-link"></i> View on Zenodo (DOI: 10.5281/zenodo.19414309)
+            <h3 class="paper-h3">Semantic Harness: Cognitive Middleware, Procedural Acceleration, and Layered Runtime Architecture for Autonomous AI Agents</h3>
+            <p class="paper-meta"><strong>Author:</strong> Bankupalli Ravi Teja &bull; <strong>Affiliation:</strong> Independent Research / Open Source Systems</p>
+            <div class="paper-btn-group">
+              <a href="https://zenodo.org/records/19414309" target="_blank" class="btn-primary">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Zenodo Record (10.5281/zenodo.19414309)
               </a>
-              <a href="https://pypi.org/project/semantic-harness/" target="_blank" class="btn btn-secondary">
-                <i class="fa-brands fa-python"></i> PyPI Package
+              <a href="https://pypi.org/project/semantic-harness/" target="_blank" class="btn-secondary">
+                <i class="fa-brands fa-python"></i> PyPI Index
               </a>
             </div>
           </div>
 
-          <div class="bibtex-box">
-            <div class="bibtex-header">
+          <div class="bibtex-col">
+            <div class="bibtex-bar">
               <span>BibTeX Citation</span>
               <button class="copy-btn" onclick="copyBibtex(this)"><i class="fa-regular fa-copy"></i> Copy</button>
             </div>
-            <pre><code id="bibtex-text">@article{bankupalli2026semanticharness,
+            <pre class="bibtex-code"><code id="bibtex-val">@article{bankupalli2026semanticharness,
   author       = {Bankupalli, Ravi Teja},
   title        = {{Semantic Harness: Cognitive Middleware, Procedural Acceleration, and Layered Runtime Architecture for Autonomous AI Agents}},
   year         = {2026},
@@ -752,28 +647,28 @@ def validated_tool_node(state):
   url          = {https://zenodo.org/records/19414309}
 }</code></pre>
           </div>
+
         </div>
 
       </div>
     </section>
-
   </main>
 
   <!-- FOOTER -->
-  <footer class="app-footer">
-    <div class="container footer-container">
-      <div class="footer-brand">
-        <div class="logo-icon small-icon"><i class="fa-solid fa-microchip"></i></div>
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <div class="brand-logo small-logo"><i class="fa-solid fa-cube"></i></div>
         <span>Semantic<strong>Harness</strong> &bull; Open-Source AI Systems</span>
       </div>
-      <div class="footer-links">
-        <a href="https://github.com/ravii-teja/semantic-harness" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
-        <a href="https://pypi.org/project/semantic-harness/" target="_blank"><i class="fa-brands fa-python"></i> PyPI</a>
-        <a href="https://zenodo.org/records/19414309" target="_blank"><i class="fa-solid fa-book"></i> Zenodo</a>
-        <a href="https://www.linkedin.com/in/raviiteja/" target="_blank"><i class="fa-brands fa-linkedin"></i> Author LinkedIn</a>
+      <div class="footer-center">
+        <a href="https://github.com/ravii-teja/semantic-harness" target="_blank">GitHub</a>
+        <a href="https://pypi.org/project/semantic-harness/" target="_blank">PyPI Package</a>
+        <a href="https://zenodo.org/records/19414309" target="_blank">Zenodo Archive</a>
+        <a href="https://www.linkedin.com/in/raviiteja/" target="_blank">LinkedIn</a>
       </div>
-      <div class="footer-copy">
-        Released under Apache 2.0 / MIT Open Source License. Crafted with Google Design Principles.
+      <div class="footer-right">
+        Released under Apache 2.0 / MIT.
       </div>
     </div>
   </footer>
