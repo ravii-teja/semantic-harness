@@ -72,7 +72,7 @@ class PythonREPL:
         "itertools", "functools", "typing", "dataclasses",
         "decimal", "fractions", "statistics", "random",
         "string", "textwrap", "unicodedata", "hashlib",
-        "base64", "urllib.parse",
+        "base64", "urllib.parse", "duckdb", "pandas", "numpy",
     }
 
     def __init__(
@@ -119,8 +119,25 @@ class PythonREPL:
                     return f"SecurityError: 'from {module} import ...' is not allowed in sandbox mode."
         return None
 
-    def execute(self, code: str, timeout: float | None = None) -> REPLResult:
+    def execute(
+        self,
+        code: str,
+        timeout: float | dict[str, Any] | None = None,
+        locals: dict[str, Any] | None = None,
+    ) -> REPLResult:
         """Execute code in the stateful namespace with timeout protection."""
+        if isinstance(timeout, dict):
+            if locals is None:
+                locals = timeout
+            else:
+                locals = {**timeout, **locals}
+            timeout_val = self.default_timeout
+        else:
+            timeout_val = timeout or self.default_timeout
+
+        if locals:
+            self._namespace.update(locals)
+
         # AST check
         if self.restrict_builtins:
             err = self._check_ast(code)
@@ -135,8 +152,6 @@ class PythonREPL:
                 )
                 self._history.append(result)
                 return result
-
-        timeout_val = timeout or self.default_timeout
         q: queue.Queue[tuple[str, str | None, Any, float, bool]] = queue.Queue()
 
         def _worker():

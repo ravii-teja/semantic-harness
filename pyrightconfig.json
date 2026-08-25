@@ -1,0 +1,11 @@
+{
+  "include": [
+    "semantic-harness/python",
+    "experiments"
+  ],
+  "extraPaths": [
+    "semantic-harness/python"
+  ],
+  "venvPath": "experiments",
+  "venv": ".venv"
+}

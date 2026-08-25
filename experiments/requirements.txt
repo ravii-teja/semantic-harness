@@ -1,0 +1,9 @@
+# Experiments & Benchmark Evaluation Suite Dependencies
+duckdb>=1.1.0
+numpy>=1.26.0
+pandas>=2.2.0
+matplotlib>=3.8.0
+scipy>=1.12.0
+nbformat>=5.9.0
+ipykernel>=6.29.0
+jupyter>=1.0.0

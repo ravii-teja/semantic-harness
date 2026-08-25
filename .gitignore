@@ -4,6 +4,11 @@ implementation-plan.md
 openharness-unified-design.md
 research/
 
+# Docs Folder Exclusions (Track ONLY CHANGELOG.md and SEMANTIC_HARNESS_PAPER.md)
+docs/*
+!docs/CHANGELOG.md
+!docs/SEMANTIC_HARNESS_PAPER.md
+
 # macOS / OS / IDE
 .DS_Store
 .AppleDouble
