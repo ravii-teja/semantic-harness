@@ -46,6 +46,38 @@ const WORKLOAD_DATABASE = {
   }
 };
 
+// QUICK SCENARIOS SELECTOR
+function selectQuickScenario(scenarioKey) {
+  const chips = document.querySelectorAll(".scenario-chip");
+  chips.forEach(c => c.classList.remove("active"));
+  if (event && event.currentTarget) {
+    event.currentTarget.classList.add("active");
+  }
+
+  const presetSelect = document.getElementById("intent-preset");
+  const paramSelect = document.getElementById("param-region");
+
+  if (scenarioKey === "cold") {
+    presetSelect.value = "revenue";
+    onPresetChange();
+    paramSelect.value = "North America";
+  } else if (scenarioKey === "param_eu") {
+    presetSelect.value = "revenue";
+    onPresetChange();
+    paramSelect.value = "Europe";
+  } else if (scenarioKey === "param_apac") {
+    presetSelect.value = "revenue";
+    onPresetChange();
+    paramSelect.value = "APAC";
+  } else if (scenarioKey === "churn_mid") {
+    presetSelect.value = "churn";
+    onPresetChange();
+    paramSelect.value = "Mid-Market";
+  }
+
+  triggerSimRun();
+}
+
 // PRESET CHANGE HANDLER
 function onPresetChange() {
   const presetKey = document.getElementById("intent-preset").value;

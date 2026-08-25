@@ -124,30 +124,47 @@
         <div class="section-title-box text-center">
           <span class="subheading">Interactive Playground</span>
           <h2>See the Execution Difference</h2>
-          <p>Customize a query or change parameters to see how Semantic Harness compiles and re-executes verified ASTs compared to standard LLMs and traditional vector caches.</p>
+          <p>Click any quick scenario or customize parameters to see how Semantic Harness compiles and re-executes verified ASTs compared to standard LLMs and traditional vector caches.</p>
         </div>
 
         <div class="interactive-card">
           
-          <!-- STEP 1: QUERY CONTROLS -->
+          <!-- QUICK SCENARIO CHIPS ROW -->
+          <div class="scenario-chips-row">
+            <span class="chips-label"><i class="fa-solid fa-bolt text-blue"></i> Quick Scenarios:</span>
+            <button class="scenario-chip" onclick="selectQuickScenario('cold')">
+              <span>❄️ Turn 1: Cold Start (NA)</span>
+            </button>
+            <button class="scenario-chip active" onclick="selectQuickScenario('param_eu')">
+              <span>🎯 Turn 2: Param Variant (Europe)</span>
+            </button>
+            <button class="scenario-chip" onclick="selectQuickScenario('param_apac')">
+              <span>🌏 Turn 3: Param Variant (APAC)</span>
+            </button>
+            <button class="scenario-chip" onclick="selectQuickScenario('churn_mid')">
+              <span>📊 Turn 4: Customer Churn (Mid-Market)</span>
+            </button>
+          </div>
+
+          <!-- CONTROLS BAR -->
           <div class="sim-controls-bar">
             <div class="control-group">
-              <label for="intent-preset"><i class="fa-solid fa-wand-magic-sparkles text-blue"></i> Query Intent Preset:</label>
+              <label for="intent-preset"><i class="fa-solid fa-wand-magic-sparkles text-blue"></i> Query Intent:</label>
               <select id="intent-preset" onchange="onPresetChange()">
                 <option value="revenue" selected>Enterprise Sales Revenue by Region</option>
                 <option value="churn">Customer Churn Rate &amp; Lifetime Value</option>
                 <option value="logistics">Carrier Delivery Delay &amp; Return Correlation</option>
-                <option value="custom">✏️ Custom Custom Input Prompt...</option>
+                <option value="custom">✏️ Custom Input Prompt...</option>
               </select>
             </div>
 
             <div class="control-group" id="param-group">
-              <label for="param-region"><i class="fa-solid fa-sliders text-blue"></i> Filter Parameter (<span id="param-name-label">Region</span>):</label>
+              <label for="param-region"><i class="fa-solid fa-sliders text-blue"></i> Filter (<span id="param-name-label">Region</span>):</label>
               <select id="param-region" onchange="triggerSimRun()">
-                <option value="North America">North America (Turn 1: Initial Compilation)</option>
-                <option value="Europe" selected>Europe (Turn 2: Parameter Variant)</option>
-                <option value="APAC">APAC (Turn 3: Parameter Variant)</option>
-                <option value="LATAM">LATAM (Turn 4: Parameter Variant)</option>
+                <option value="North America">North America (Turn 1: Cold Start)</option>
+                <option value="Europe" selected>Europe (Turn 2: Param Variant)</option>
+                <option value="APAC">APAC (Turn 3: Param Variant)</option>
+                <option value="LATAM">LATAM (Turn 4: Param Variant)</option>
               </select>
             </div>
 
@@ -158,39 +175,39 @@
 
           <!-- CUSTOM PROMPT INPUT (Hidden by default, shows on custom) -->
           <div class="custom-prompt-row" id="custom-row" style="display: none;">
-            <input type="text" id="custom-input" placeholder="Type an analytical question (e.g. Calculate average deal size for EMEA region)..." value="Calculate total closed won revenue for Europe region">
-            <button class="btn-secondary" onclick="triggerSimRun()">Submit Custom Query</button>
+            <input type="text" id="custom-input" placeholder="Type an analytical question (e.g. Calculate total sales in Europe)..." value="Calculate total closed won revenue for Europe region">
+            <button class="btn-secondary" onclick="triggerSimRun()">Run Custom</button>
           </div>
 
-          <!-- STEP 2: ANIMATED STEP PIPELINE -->
+          <!-- ANIMATED STEP PIPELINE -->
           <div class="sim-pipeline">
             <div class="pipe-step" id="step-1">
               <div class="step-circle">1</div>
-              <div class="step-label">Exact Hash Check</div>
+              <div class="step-label">Exact Hash</div>
             </div>
             <div class="pipe-line"></div>
             <div class="pipe-step" id="step-2">
               <div class="step-circle">2</div>
-              <div class="step-label">PolarQuant Intent Match</div>
+              <div class="step-label">PolarQuant Match</div>
             </div>
             <div class="pipe-line"></div>
             <div class="pipe-step" id="step-3">
               <div class="step-circle">3</div>
-              <div class="step-label">AST Parameter Binding</div>
+              <div class="step-label">AST Slot Binding</div>
             </div>
             <div class="pipe-line"></div>
             <div class="pipe-step" id="step-4">
               <div class="step-circle">4</div>
-              <div class="step-label">Sandboxed Python REPL</div>
+              <div class="step-label">Python REPL Exec</div>
             </div>
             <div class="pipe-line"></div>
             <div class="pipe-step" id="step-5">
               <div class="step-circle">5</div>
-              <div class="step-label">Verified Live Result</div>
+              <div class="step-label">Live Output</div>
             </div>
           </div>
 
-          <!-- STEP 3: COMPARISON DASHBOARD -->
+          <!-- COMPARISON DASHBOARD -->
           <div class="sim-dashboard">
             
             <!-- COLUMN 1: STATELESS LLM -->
@@ -201,22 +218,22 @@
               </div>
               <div class="telemetry-box">
                 <div class="tel-item">
-                  <span class="tel-label">Tokens:</span>
-                  <span class="tel-val text-error" id="llm-tokens">260</span>
+                  <span class="tel-label">Tokens Billed:</span>
+                  <span class="tel-val text-error" id="llm-tokens">260 tokens</span>
                 </div>
                 <div class="tel-item">
-                  <span class="tel-label">Latency:</span>
+                  <span class="tel-label">Turn Latency:</span>
                   <span class="tel-val" id="llm-latency">9,081 ms</span>
                 </div>
                 <div class="tel-item">
-                  <span class="tel-label">Cost:</span>
+                  <span class="tel-label">Inference Cost:</span>
                   <span class="tel-val" id="llm-cost">$0.0039</span>
                 </div>
               </div>
               <div class="sys-result-card">
                 <div class="card-label">Returned Value:</div>
                 <div class="card-val" id="llm-val">$300,000</div>
-                <div class="card-status status-ok">✅ Valid (High Latency)</div>
+                <div class="card-status status-ok">✅ Valid Output (~9s delay)</div>
               </div>
             </div>
 
@@ -228,15 +245,15 @@
               </div>
               <div class="telemetry-box">
                 <div class="tel-item">
-                  <span class="tel-label">Tokens:</span>
-                  <span class="tel-val text-green" id="cache-tokens">0</span>
+                  <span class="tel-label">Tokens Billed:</span>
+                  <span class="tel-val text-green" id="cache-tokens">0 tokens</span>
                 </div>
                 <div class="tel-item">
-                  <span class="tel-label">Latency:</span>
+                  <span class="tel-label">Turn Latency:</span>
                   <span class="tel-val" id="cache-latency">915 ms</span>
                 </div>
                 <div class="tel-item">
-                  <span class="tel-label">Accuracy:</span>
+                  <span class="tel-label">Accuracy Rate:</span>
                   <span class="tel-val text-error" id="cache-acc">62.5%</span>
                 </div>
               </div>
@@ -255,16 +272,16 @@
               </div>
               <div class="telemetry-box">
                 <div class="tel-item">
-                  <span class="tel-label">Tokens:</span>
-                  <span class="tel-val text-green" id="harness-tokens">0 (0.00$)</span>
+                  <span class="tel-label">Tokens Billed:</span>
+                  <span class="tel-val text-green font-bold" id="harness-tokens">0 tokens ($0.00)</span>
                 </div>
                 <div class="tel-item">
-                  <span class="tel-label">Latency:</span>
+                  <span class="tel-label">Turn Latency:</span>
                   <span class="tel-val text-blue font-bold" id="harness-latency">1.1 ms (80.3 µs)</span>
                 </div>
                 <div class="tel-item">
-                  <span class="tel-label">Accuracy:</span>
-                  <span class="tel-val text-green" id="harness-acc">100.0% Verified</span>
+                  <span class="tel-label">Accuracy Rate:</span>
+                  <span class="tel-val text-green font-bold" id="harness-acc">100.0% Verified</span>
                 </div>
               </div>
               <div class="sys-result-card border-green bg-green-subtle">
@@ -276,7 +293,7 @@
 
           </div>
 
-          <!-- STEP 4: CODE REPL TRACE INSPECTOR -->
+          <!-- LIVE REPL TRACE INSPECTOR -->
           <div class="trace-container">
             <div class="trace-header">
               <div class="trace-tab active"><i class="fa-solid fa-code text-blue"></i> Live Sandboxed AST &amp; REPL Execution Trace</div>

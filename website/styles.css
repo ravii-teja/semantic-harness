@@ -512,6 +512,52 @@ body.dark-theme .navbar {
   overflow: hidden;
 }
 
+/* SCENARIO CHIPS ROW */
+.scenario-chips-row {
+  padding: 12px 20px;
+  background-color: var(--md-surface);
+  border-bottom: 1px solid var(--md-outline-variant);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.chips-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--md-text-primary);
+  margin-right: 4px;
+}
+
+.scenario-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--md-outline);
+  background-color: var(--md-surface-subtle);
+  color: var(--md-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.scenario-chip:hover {
+  border-color: var(--md-primary);
+  color: var(--md-primary);
+  background-color: var(--md-primary-container);
+}
+
+.scenario-chip.active {
+  background-color: var(--md-primary);
+  color: #fff;
+  border-color: var(--md-primary);
+  box-shadow: 0 1px 3px rgba(26, 115, 232, 0.3);
+}
+
 /* CONTROLS BAR */
 .sim-controls-bar {
   padding: 16px 20px;
