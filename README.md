@@ -1,11 +1,11 @@
 # ⚡ Semantic Harness
 
 [![CI](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.2/)
+[![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.4/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19414309.svg)](https://zenodo.org/records/19414309)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/semantic-harness.svg)](https://pypi.org/project/semantic-harness/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)]()
-[![Tests](https://img.shields.io/badge/tests-87%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-96%20passed-brightgreen.svg)]()
 [![TypeScript](https://img.shields.io/badge/typescript-5.0+-3178C6.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -35,6 +35,7 @@
 - [TypeScript / Node SDK](#-typescript--node-sdk)
 - [Verification & Benchmarks](#-verification--benchmarks)
 - [Research Foundations](#-research-foundations)
+- [Changelog (CHANGELOG.md)](./CHANGELOG.md)
 - [License](#-license)
 
 ---
@@ -429,14 +430,14 @@ If you use **Semantic Harness** or the **Chaos to Clarity (C2C)** cognitive midd
   month        = aug,
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {0.2.2},
+  version      = {0.2.4},
   doi          = {10.5281/zenodo.19414309},
   url          = {https://zenodo.org/records/19414309}
 }
 ```
 
 **APA Format:**
-> Bankupalli, R. T. (2026). *semantic-harness: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents* (Version 0.2.2) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.19414309
+> Bankupalli, R. T. (2026). *semantic-harness: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents* (Version 0.2.4) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.19414309
 
 ---
 

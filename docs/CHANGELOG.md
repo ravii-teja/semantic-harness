@@ -27,10 +27,13 @@ All notable changes to **Semantic Harness** follow [Keep a Changelog](https://ke
   - Added clean `.locals` inspection to `REPLResult` and `PythonREPL`.
   - Added explicit `-> None` return annotations across `turbo_quant.py`.
 
-## [0.2.3] — 2026-09-25
+## [0.2.3] — 2026-08-23
 
 ### Added
+- **Multi-Package CI/CD Matrix Enhancements**: Extended GitHub Actions workflows for unified dual Python (PyPI) and NPM publishing.
 - Initial scaffolding for dual-stack TypeScript Knowledge Graph and Tokenomics engine.
+
+## [0.2.2] — 2026-08-22
 
 ### Added
 - **Node.js 22 LTS & Provenance**: Modernized CI runtime and added signed build provenance to npm packages.
