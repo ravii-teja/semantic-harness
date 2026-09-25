@@ -220,3 +220,43 @@ class PythonREPL:
     @property
     def history(self) -> list[REPLResult]:
         return list(self._history)
+
+    def get_bounded_previews(self, max_str_len: int = 120, max_items: int = 5) -> dict[str, str]:
+        """Generate bounded previews of namespace variables adhering to the NOOA pass-by-reference spec.
+
+        Allows models to inspect large collections, DataFrames, and matrices by variable reference
+        without causing context window blowout.
+        """
+        previews: dict[str, str] = {}
+        for var_name, val in self._namespace.items():
+            if var_name.startswith("_") or var_name == "__builtins__":
+                continue
+
+            val_type = type(val).__name__
+
+            # Pandas / Polars DataFrame support
+            if hasattr(val, "shape") and hasattr(val, "columns"):
+                cols = list(val.columns)[:max_items]
+                previews[var_name] = f"<{val_type} shape={val.shape}, cols={cols}{'...' if len(val.columns) > max_items else ''}>"
+            # NumPy / Torch Tensor support
+            elif hasattr(val, "shape") and hasattr(val, "dtype"):
+                previews[var_name] = f"<{val_type} shape={val.shape}, dtype={val.dtype}>"
+            # Lists / Tuples / Sets
+            elif isinstance(val, (list, tuple, set)):
+                items = [str(x) for x in list(val)[:max_items]]
+                previews[var_name] = f"<{val_type} len={len(val)}, sample={items}>"
+            # Dicts
+            elif isinstance(val, dict):
+                keys = list(val.keys())[:max_items]
+                previews[var_name] = f"<dict len={len(val)}, keys={keys}>"
+            # Strings
+            elif isinstance(val, str):
+                trimmed = val[:max_str_len] + ("..." if len(val) > max_str_len else "")
+                previews[var_name] = f"<str len={len(val)}: {repr(trimmed)}>"
+            # Scalars and objects
+            else:
+                s = str(val)
+                trimmed = s[:max_str_len] + ("..." if len(s) > max_str_len else "")
+                previews[var_name] = f"<{val_type}: {trimmed}>"
+
+        return previews

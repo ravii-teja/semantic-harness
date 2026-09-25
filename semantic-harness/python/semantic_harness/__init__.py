@@ -26,6 +26,19 @@ from semantic_harness.visualization import (
     ProceduralGraphVisualizer,
     render_procedural_graph,
 )
+from semantic_harness.core.tokenomics import (
+    TokenomicsTracker,
+    AmortizationEngine,
+    DynamicCostRouter,
+    ModelTier,
+    ModelPricing,
+    TokenUsageRecord,
+)
+from semantic_harness.memory.graph import (
+    GraphMemory,
+    Entity,
+    Triplet,
+)
 from semantic_harness.providers import (
     BaseProvider,
     ProviderResponse,
@@ -77,4 +90,13 @@ __all__ = [
     "HuggingFaceProvider",
     "MLXProvider",
     "get_provider",
+    "TokenomicsTracker",
+    "AmortizationEngine",
+    "DynamicCostRouter",
+    "ModelTier",
+    "ModelPricing",
+    "TokenUsageRecord",
+    "GraphMemory",
+    "Entity",
+    "Triplet",
 ]

@@ -105,6 +105,7 @@ To evaluate the contribution of each architectural layer, we conducted an ablati
 ├───────────────────────────────────────────────────────────────────────────────────────┤
 │  LAYER 3: Semantic Harness Cognitive Middleware Core                                  │
 │  - Chaos2Clarity (C2C) Validator: Schema Enforcement & Remediation Synthesis         │
+│  - Knowledge Graph Memory: SQLite Triplets, Subgraph BFS Traversal & Context Feed     │
 │  - Procedural Memory Engine: Intent Hashing & Confidence-Gated Fast Path (≥0.8)       │
 │  - Short-Term Memory (STM): Sliding FIFO Bounded Turn Buffer                          │
 │  - Dynamic Context Token Budget: Real-time Pressure Monitoring & Proactive Trimming   │
@@ -114,6 +115,11 @@ To evaluate the contribution of each architectural layer, we conducted an ablati
 │  - PolarQuant: Polar coordinate random rotation (eliminates outlier block constants)  │
 │  - QJL 1-Bit Residual Correction: Unbiased cosine similarity over quantized vectors   │
 │  - Sub-Millisecond Quantized Procedural Intent Indexing & KV-Cache Footprint Sensing  │
+├───────────────────────────────────────────────────────────────────────────────────────┤
+│  LAYER 5: Economic Runtime & Tokenomics Amortization Engine                           │
+│  - Real-time Token Tracking: Prompt, Completion, Cache Hits, Retry Burn Monitoring    │
+│  - Amortization Analysis: Mathematical Break-Even Threshold (r*) & Multi-Session ROI  │
+│  - Dynamic Cost Router: 3-Tier Execution (Cache ➔ Local SLM ➔ Frontier Fallback)      │
 ├───────────────────────────────────────────────────────────────────────────────────────┤
 │                               INFERENCE PROVIDER LAYER                                │
 │      LiteLLM Multi-Provider  │  Ollama Local SLMs  │  vLLM High-Throughput Engine     │

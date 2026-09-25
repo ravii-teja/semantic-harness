@@ -22,5 +22,19 @@ export { C2CSemantics } from "./semantics/c2c_semantics.js";
 // Strategies
 export * from "./strategies/index.js";
 
+// Tokenomics
+export {
+  TokenomicsTracker,
+  AmortizationEngine,
+  DynamicCostRouter,
+  ModelTier,
+  DEFAULT_PRICING,
+} from "./core/tokenomics.js";
+export type { ModelPricing, TokenUsageRecord } from "./core/tokenomics.js";
+
+// Knowledge Graph
+export { GraphMemory } from "./memory/graph.js";
+export type { GraphEntity, GraphTriplet } from "./memory/graph.js";
+
 // Version
-export const VERSION = "0.2.0";
+export const VERSION = "0.2.3";
