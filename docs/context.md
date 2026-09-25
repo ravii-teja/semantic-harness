@@ -178,14 +178,24 @@ The harness turns these small models into reliable production workers through si
 * **Problem:** Running agent loops blindly without budget thresholds causes cost overruns and latency spikes.
 * **Harness Solution:** Tracks input tokens, output tokens, cache hit rates, and computes the amortization break-even factor $r^*$. Routes straightforward requests to local SLMs and only escalates to cloud frontier models if C2C validation retries exhaust the local model's budget.
 
+### 7. Hardware Auto-Detection & Silicon Engine Profiling
+* **Problem:** Configuring local inference engines manually (Apple Silicon Metal MLX, NVIDIA CUDA, or CPU threads) requires brittle hardware flags and user configuration.
+* **Harness Solution:** The `HardwareDetector` automatically probes host silicon (macOS unified memory via `sysctl`, CUDA devices via `nvidia-smi` / PyTorch, and CPU topologies via `/proc/meminfo` and `os.cpu_count()`). When `AgentConfig.model` is omitted, the agent automatically selects and initializes the fastest local engine available.
+
+### 8. Monochrome Knowledge Graph Visualizer & TurboQuant Bitstream Export
+* **Problem:** Complex agent relational memory states are opaque "black boxes," making inspection, debugging, and auditing difficult for operators.
+* **Harness Solution:** Generates high-contrast minimalist black & white (`#000000` / `#ffffff`) interactive force-directed graph web visualizations with physics stabilization. Clicking any entity node displays its degree, connected relationships, and 1-bit PolarQuant quantized bitstream representations (`010110...`), with one-click JSON export.
+
 ---
 
 ## 6. Implementation Status & Component Inventory
 
 | Component | Status | Implemented | Gaps & Next Steps |
 |---|:---:|---|---|
+| **Hardware Auto-Detection** | **✅ 100%** | Auto-detects macOS Metal (MLX/sysctl), NVIDIA CUDA GPUs (PyTorch/nvidia-smi), and host CPU core/RAM topologies. Auto-wires into `AgentConfig` and `DynamicCostRouter`. | TypeScript node-addon hardware inspection equivalent. |
+| **Monochrome KG Visualizer** | **✅ 100%** | High-contrast black & white force-directed interactive physics graph, click-to-inspect node properties, 1-bit PolarQuant bitstream export, and graph JSON export. Dual-stack. | 3D visual graph rendering for ultra-dense topologies (>10k nodes). |
 | **Tokenomics & Cost Engine** | **✅ 100%** | Per-turn prompt/completion/cache telemetry, amortization curve break-even calculation ($r^*$), multi-tier dynamic cost routing (`CACHE` ➔ `LOCAL_SLM` ➔ `CLOUD_FRONTIER`). Dual-stack Python + TypeScript. | Web dashboard / Prometheus telemetry exporter integration. |
 | **Relational Knowledge Graph** | **✅ 100%** | SQLite property graph, `(Subject, Predicate, Object)` triplets with confidence scores, 2-hop BFS subgraph traversal, prompt context injection, regex triplet extraction. Dual-stack. | Automated LLM-assisted triplet extraction pipeline on unconstrained documents. |
-| **NVIDIA NOOA Patterns** | **✅ 85%** | Class-as-agent reflection, static/dynamic context split for KV-cache reuse, ACT-R activation ranking, CodeAct REPL loop, and **pass-by-reference bounded previews for DataFrames/Tensors**. | Empirical benchmarks measuring actual KV-cache prefix hits on vLLM/Ollama. |
-| **TurboQuant & PolarQuant** | **80%** | FWHT ($O(d \log d)$), deterministic sign randomization, PolarQuant 1-bit / 2-bit quantization, QJL dimension reduction, Python + TS vector indices. | Pure Python/NumPy without SIMD bitwise popcount or Metal/C kernels; needs empirical evaluation against large-scale ANN baselines. |
+| **NVIDIA NOOA Patterns** | **✅ 90%** | Class-as-agent reflection, static/dynamic context split for KV-cache reuse, ACT-R activation ranking, CodeAct REPL loop, and **pass-by-reference bounded previews for DataFrames/Tensors**. | Empirical benchmarks measuring actual KV-cache prefix hits on vLLM/Ollama. |
+| **TurboQuant & PolarQuant** | **85%** | FWHT ($O(d \log d)$), deterministic sign randomization, PolarQuant 1-bit / 2-bit quantization, QJL dimension reduction, binary bitstream export, Python + TS vector indices. | Pure Python/NumPy without SIMD bitwise popcount or Metal/C kernels; needs empirical evaluation against large-scale ANN baselines. |
 
