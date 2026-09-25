@@ -7,7 +7,7 @@ import threading
 import queue
 import builtins
 from contextlib import redirect_stdout, redirect_stderr
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 # Default safe allowed builtins
@@ -46,6 +46,7 @@ class REPLResult:
     return_value: Any
     execution_time_ms: float
     success: bool
+    locals: dict[str, Any] = field(default_factory=dict)
 
     @property
     def value(self) -> Any:
@@ -196,6 +197,10 @@ class PythonREPL:
             )
         else:
             out_str, error_str, return_val, t_elapsed, is_success = q.get()
+            clean_locals = {
+                k: v for k, v in self._namespace.items()
+                if not k.startswith("_") and k != "__builtins__"
+            }
             result = REPLResult(
                 code=code,
                 output=out_str,
@@ -203,10 +208,19 @@ class PythonREPL:
                 return_value=return_val,
                 execution_time_ms=t_elapsed,
                 success=is_success,
+                locals=clean_locals,
             )
 
         self._history.append(result)
         return result
+
+    @property
+    def locals(self) -> dict[str, Any]:
+        """Access current user variables in REPL namespace."""
+        return {
+            k: v for k, v in self._namespace.items()
+            if not k.startswith("_") and k != "__builtins__"
+        }
 
     def reset(self) -> None:
         """Clear namespace and history."""

@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 from semantic_harness.core.context import ContextAssembler
 from semantic_harness.core.events import EventBus
+from semantic_harness.core.hardware import HardwareDetector, HardwareProfile, get_default_local_model
 from semantic_harness.memory.long_term import LongTermMemory
 from semantic_harness.memory.procedural import ProceduralMemory
 from semantic_harness.memory.short_term import ShortTermMemory
@@ -16,7 +17,7 @@ from semantic_harness.tools import ToolRegistry
 
 class AgentConfig(BaseModel):
     """Typed agent configuration."""
-    model: str = "gpt-4o-mini"
+    model: str | None = None  # None = auto-detect fastest local hardware accelerator
     max_tokens: int = 4096
     temperature: float = 0.7
     max_steps: int = 10
@@ -56,6 +57,12 @@ class Agent:
         self.config = config or AgentConfig()
         if llm_model:
             self.config.model = llm_model
+
+        # Auto-detect local accelerator if no model is explicitly specified
+        self.hardware_profile: HardwareProfile | None = None
+        if not self.config.model:
+            self.hardware_profile = HardwareDetector.detect()
+            self.config.model = self.hardware_profile.recommended_model
 
         # Core subsystems
         self.events = EventBus()

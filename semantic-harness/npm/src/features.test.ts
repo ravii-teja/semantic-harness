@@ -97,4 +97,14 @@ describe("Knowledge Graph Memory (TypeScript)", () => {
     assert.equal(extracted[0]?.predicate, "manages");
     assert.equal(extracted[0]?.targetName, "Bob");
   });
+
+  test("renders interactive HTML graph", () => {
+    const kg = new GraphMemory();
+    kg.addTriplet("NodeA", "connects", "NodeB");
+    const html = kg.renderInteractiveHtml("Test Graph");
+    assert.ok(html.includes("<!DOCTYPE html>"));
+    assert.ok(html.includes("vis.Network"));
+    assert.ok(html.includes("NodeA"));
+    assert.ok(html.includes("NodeB"));
+  });
 });

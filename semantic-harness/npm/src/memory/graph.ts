@@ -137,4 +137,66 @@ export class GraphMemory {
     }
     return extracted;
   }
+
+  public getAllEntities(): GraphEntity[] {
+    return Array.from(this.entities.values());
+  }
+
+  public getAllTriplets(): GraphTriplet[] {
+    return [...this.triplets];
+  }
+
+  public renderInteractiveHtml(title = "Relational Knowledge Graph"): string {
+    const rawNodes = this.getAllEntities().map((e) => ({
+      id: e.name,
+      label: e.name,
+      title: `Entity: ${e.name} (${e.entityType})`,
+      shape: "dot",
+      size: 18,
+      color: { background: "#ffffff", border: "#000000", highlight: { background: "#000000", border: "#000000" } },
+      font: { color: "#000000", face: "system-ui, sans-serif", size: 14, bold: true },
+      entityType: e.entityType,
+      properties: e.properties,
+    }));
+
+    const rawEdges = this.getAllTriplets().map((t, i) => ({
+      id: `e_${i}`,
+      from: t.sourceName,
+      to: t.targetName,
+      label: t.predicate,
+      confidence: t.confidence,
+      arrows: "to",
+      color: { color: "#000000", highlight: "#000000" },
+      font: { color: "#444444", size: 11, align: "middle", background: "#ffffff" },
+      width: 1.5,
+    }));
+
+    const nodesJson = JSON.stringify(rawNodes);
+    const edgesJson = JSON.stringify(rawEdges);
+
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>${title}</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; background: #fff; color: #000; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+    #container { height: 650px; border: 2px solid #000; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>${title}</h2>
+  </div>
+  <div id="container"></div>
+  <script>
+    const data = { nodes: new vis.DataSet(${nodesJson}), edges: new vis.DataSet(${edgesJson}) };
+    const options = { physics: { barnesHut: { gravitationalConstant: -3500, springLength: 130 } } };
+    new vis.Network(document.getElementById('container'), data, options);
+  </script>
+</body>
+</html>`;
+  }
 }

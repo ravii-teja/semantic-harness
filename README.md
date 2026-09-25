@@ -29,7 +29,9 @@
   - [3. Auto-Routing Provider Factory](#3-provider-factory-openai-anthropic-ollama-hf-metal-mlx)
   - [4. Chaos2Clarity (C2C) Self-Correction](#4-chaos2clarity-c2c-self-correction)
   - [5. TurboQuant Procedural Memory Caching](#5-turboquant-procedural-memory-caching)
-  - [6. CodeAct Sandboxed REPL](#6-codeact-sandboxed-repl-execution)
+  - [6. CodeAct Sandboxed REPL & Bounded Previews](#6-codeact-sandboxed-repl-execution)
+  - [7. Tokenomics & Cost Amortization Engine](#7-tokenomics--cost-amortization-engine)
+  - [8. Relational Knowledge Graph (KG) Memory](#8-relational-knowledge-graph-kg-memory)
 - [TypeScript / Node SDK](#-typescript--node-sdk)
 - [Verification & Benchmarks](#-verification--benchmarks)
 - [Research Foundations](#-research-foundations)
@@ -97,12 +99,7 @@ def analyze_review(text: str) -> dict:
 res1 = analyze_review("Fast delivery and amazing customer support!")
 
 # Turn 2: Exact same intent? Procedural cache serves result in 0.60 µs with 0 tokens!
-res2 = analyze_review("Fast delivery and amazing customer support!")
-```
-
----
-
-## 🚀 Why Semantic Harness?
+res2 = analyze_review("Fast delivery and amazing customer suppo## 🚀 Why Semantic Harness?
 
 | Problem | Without Semantic Harness | With Semantic Harness |
 |---|---|---|
@@ -115,35 +112,7 @@ res2 = analyze_review("Fast delivery and amazing customer support!")
 
 ## 🏛️ Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                             Your Agent Loop                                 │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │
-                        ┌──────────────▼──────────────┐
-                        │   Procedural Memory Cache   │ ──(Cache Hit: Skip LLM!)──┐
-                        └──────────────┬──────────────┘                           │
-                                       │ (Miss)                                   │
-                        ┌──────────────▼──────────────┐                           │
-                        │     Context Token Budget    │                           │
-                        └──────────────┬──────────────┘                           │
-                                       │                                          │
-                        ┌──────────────▼──────────────┐                           │
-                        │     LLM Execution Step      │                           │
-                        └──────────────┬──────────────┘                           │
-                                       │                                          │
-                        ┌──────────────▼──────────────┐                           │
-                        │   C2C Semantic Validator    │ ──(Invalid: Self-Correct) │
-                        └──────────────┬──────────────┘                           │
-                                       │ (Valid)                                  │
-                        ┌──────────────▼──────────────┐                           │
-                        │      Long-Term Memory       │                           │
-                        │    (ACT-R Ranked SQLite)    │                           │
-                        └──────────────┬──────────────┘                           │
-                                       │                                          │
-                                       ▼                                          ▼
-                                 Verified Output ◄────────────────────────────────┘
-```
+
 
 ---
 
@@ -283,7 +252,7 @@ if hit:
     print("Served from cache in 1.25 µs (100% token savings):", hit.result)
 ```
 
-### 5. CodeAct Python REPL Execution
+### 5. CodeAct Python REPL Execution & Bounded Previews
 
 ```python
 from semantic_harness.execution import PythonREPL
@@ -293,8 +262,64 @@ repl = PythonREPL(timeout=5.0)
 # Stateful multi-turn code execution
 res1 = repl.execute("data = [10, 20, 30, 40]")
 res2 = repl.execute("sum(data) / len(data)")
-
 print(res2.output)  # 25.0
+
+# NOOA Pass-by-reference bounded previews for large collections
+previews = repl.get_bounded_previews()
+print(previews)  # {'data': '<list len=4, sample=[10, 20, 30, 40]>'}
+```
+
+### 7. Tokenomics & Cost Amortization Engine
+
+```python
+from semantic_harness import TokenomicsTracker, AmortizationEngine, DynamicCostRouter, ModelTier
+
+tracker = TokenomicsTracker()
+tracker.set_pricing("gpt-4o", prompt_per_million=2.50, completion_per_million=10.00)
+
+# Record turn usage
+tracker.record_turn(
+    turn_id="turn_1",
+    model_name="gpt-4o",
+    prompt_tokens=1200,
+    completion_tokens=400,
+    is_cache_hit=False
+)
+
+# Break-even threshold analysis: How many times must procedure run to beat compilation cost?
+r_star = AmortizationEngine.break_even_threshold(
+    compilation_cost_usd=0.05,
+    frontier_turn_cost_usd=0.01,
+    procedural_turn_cost_usd=0.0001
+)
+print(f"Break-even threshold r*: {r_star:.1f} runs")
+
+# Dynamic Cost Router: Automatically routes between Cache, Local SLM, and Frontier
+router = DynamicCostRouter(tracker, local_model="qwen2.5-coder:3b", frontier_model="gpt-4o")
+tier, model = router.decide_tier(has_procedural_cache=False, current_retries=0)
+print(f"Selected tier: {tier.value} with model: {model}")
+```
+
+### 8. Relational Knowledge Graph (KG) Memory
+
+```python
+from semantic_harness import GraphMemory
+
+kg = GraphMemory(db_path=":memory:")
+
+# Store entities and directed relations
+kg.add_triplet("Alice", "works_at", "AcmeCorp", confidence=0.99)
+kg.add_triplet("AcmeCorp", "acquired", "BetaLabs", confidence=0.95)
+
+# Multi-hop breadth-first traversal (2 hops)
+subgraph = kg.traverse_subgraph(["Alice"], max_hops=2)
+
+# Inject clean relational markdown directly into SLM prompt context
+context = kg.render_subgraph_context(["Alice"], max_hops=2)
+print(context)
+# ### Relational Knowledge Graph Context:
+# - (Alice) --[works_at]--> (AcmeCorp) [conf: 0.99]
+# - (AcmeCorp) --[acquired]--> (BetaLabs) [conf: 0.95]
 ```
 
 ---
@@ -346,11 +371,14 @@ ltm.remember("cluster_config", "Production cluster is us-west-2", 0.9);
 |---|:---:|:---:|:---:|:---:|
 | **Drop-in `@step` Decorator** | ❌ | ❌ | ❌ | ✅ **Yes** |
 | **C2C Step Validation** | ❌ | Manual | ❌ | ✅ **Automated + Feedback** |
-| **Procedural Workflow Caching** | ❌ | ❌ | ❌ | ✅ **Yes (Skip LLMs)** |
-| **3-Tier Memory (Short/Long/Proc)** | ❌ | Partial | LTM only | ✅ **Unified Hierarchy** |
+| **Procedural Workflow Caching** | ❌ | ❌ | ❌ | ✅ **Yes (Skip LLMs in ~1µs)** |
+| **Tokenomics & Cost Tracker** | ❌ | External | ❌ | ✅ **Break-Even ($r^*$) + Router** |
+| **Relational Knowledge Graph** | ❌ | Manual RAG | ❌ | ✅ **SQLite Triplets + 2-Hop BFS** |
+| **3-Tier Memory (Short/Long/Proc)** | ❌ | Partial | LTM only | ✅ **Unified Cognitive Hierarchy** |
 | **Context Token Budget Engine** | ❌ | Manual | ❌ | ✅ **Dynamic Trimming** |
 | **CodeAct REPL Sandbox** | ❌ | External | ❌ | ✅ **Built-in Stateful** |
-| **Small Model (<3B) Optimized** | ❌ | ❌ | ❌ | ✅ **Yes** |
+| **Pass-by-Reference Previews** | ❌ | ❌ | ❌ | ✅ **NOOA Bounded Summary** |
+| **Small Model (<3B) Optimized** | ❌ | ❌ | ❌ | ✅ **Yes (Proven 96.8%)** |
 | **Deterministic JSONL Logs** | ❌ | ❌ | ❌ | ✅ **Event Bus Auditing** |
 
 ---

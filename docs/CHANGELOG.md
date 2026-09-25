@@ -2,7 +2,35 @@
 
 All notable changes to **Semantic Harness** follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.2] — 2026-08-22
+## [0.2.4] — 2026-09-25
+
+### Added
+- **Hardware Auto-Detection & Accelerator Engine (`core.hardware`)**:
+  - Automatically identifies host hardware: Apple Silicon Metal (macOS arm64 unified memory via `sysctl`), NVIDIA CUDA GPUs (PyTorch / `nvidia-smi`), and host CPU core/RAM topologies.
+  - Automatically selects and configures the optimal local quantized engine when `model` is omitted in `AgentConfig`.
+- **Tokenomics & Cost Amortization Engine (`core.tokenomics`)**:
+  - Real-time token tracking (prompt, completion, cached, and retry tokens) and exact dollar calculations across local models ($0) and commercial frontier models (GPT-4o, Claude 3.5 Sonnet, DeepSeek-V3).
+  - Mathematical break-even threshold analysis ($r^*$) evaluating the economic ROI of procedural memory compilation.
+  - Dynamic 3-tier routing: Tier 1 (Procedural Cache) $\rightarrow$ Tier 2 (Hardware-detected Local SLM) $\rightarrow$ Tier 3 (Cloud Frontier fallback upon excessive retries or high complexity).
+- **Relational Knowledge Graph Memory (`memory.graph`)**:
+  - Embedded SQLite property graph storing entities and directed relations as `(Subject, Predicate, Object)` triplets with timestamps and confidence scores.
+  - Multi-hop breadth-first search (BFS) traversal expanding relational graph neighborhoods into structured markdown prompt context for SLMs.
+  - Automated regex triplet extraction from model prose.
+- **Monochrome Knowledge Graph Visualizer & TurboQuant Export (`visualization.kg_visualizer`)**:
+  - High-contrast minimalist black & white (`#000000` / `#ffffff`) force-directed physics graph.
+  - Interactive node detail inspector displaying entity properties, degrees, and connected relations upon click.
+  - Direct 1-bit PolarQuant vector bitstream export and JSON graph export.
+- **NOOA Bounded Variable Previews (`execution.repl`)**:
+  - `PythonREPL.get_bounded_previews()` creates structural summaries for DataFrames, NumPy arrays, dicts, and lists, preventing prompt context blowout while retaining variable state in memory.
+- **Developer Ergonomics**:
+  - Added `.record(...)` alias and `.total_tokens` property to `TokenomicsTracker`.
+  - Added clean `.locals` inspection to `REPLResult` and `PythonREPL`.
+  - Added explicit `-> None` return annotations across `turbo_quant.py`.
+
+## [0.2.3] — 2026-09-25
+
+### Added
+- Initial scaffolding for dual-stack TypeScript Knowledge Graph and Tokenomics engine.
 
 ### Added
 - **Node.js 22 LTS & Provenance**: Modernized CI runtime and added signed build provenance to npm packages.

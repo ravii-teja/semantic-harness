@@ -208,3 +208,69 @@ class GraphMemory:
             if s and p and o:
                 extracted.append(self.add_triplet(s, p, o))
         return extracted
+
+    def get_all_entities(self) -> list[Entity]:
+        """Fetch all entities registered in the graph."""
+        cursor = self._conn.execute("SELECT id, name, entity_type, properties, created_at FROM entities")
+        return [
+            Entity(
+                id=row["id"],
+                name=row["name"],
+                entity_type=row["entity_type"],
+                properties=json.loads(row["properties"]),
+                created_at=row["created_at"],
+            )
+            for row in cursor.fetchall()
+        ]
+
+    def get_all_triplets(self) -> list[Triplet]:
+        """Fetch all relations registered in the graph."""
+        cursor = self._conn.execute("SELECT source_name, predicate, target_name, confidence, properties, timestamp FROM relations")
+        return [
+            Triplet(
+                source_name=row["source_name"],
+                predicate=row["predicate"],
+                target_name=row["target_name"],
+                confidence=row["confidence"],
+                properties=json.loads(row["properties"]),
+                timestamp=row["timestamp"],
+            )
+            for row in cursor.fetchall()
+        ]
+
+    def render_interactive_html(
+        self,
+        title: str = "Relational Knowledge Graph",
+        height: str = "700px",
+        include_turbo_quant: bool = True,
+    ) -> str:
+        """Render a black-and-white minimalist force-directed interactive visualization of this graph.
+
+        Clicking on any node details its properties and displays its TurboQuant bitstream.
+        """
+        from semantic_harness.visualization.kg_visualizer import KnowledgeGraphVisualizer
+
+        entities = self.get_all_entities()
+        triplets = self.get_all_triplets()
+
+        tq_details = []
+        if include_turbo_quant:
+            from semantic_harness.memory.turbo_quant import PolarQuantizer, SemanticFeatureEmbedder
+            embedder = SemanticFeatureEmbedder(dim=64)
+            quantizer = PolarQuantizer(dim=64)
+
+            for e in entities:
+                vec = embedder.embed(e.name)
+                q = quantizer.quantize(vec)
+                d = q.to_dict()
+                d["id"] = e.name
+                d["binary_string"] = q.to_binary_string()
+                tq_details.append(d)
+
+        return KnowledgeGraphVisualizer.to_interactive_html(
+            entities=entities,
+            triplets=triplets,
+            title=title,
+            height=height,
+            turbo_quant_details=tq_details,
+        )

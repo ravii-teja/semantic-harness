@@ -86,6 +86,23 @@ class QuantizedVector:
         raw_bytes = self.dim * 4
         return raw_bytes / max(1, self.byte_size)
 
+    def to_binary_string(self) -> str:
+        """Format the packed bits as a binary string representation."""
+        return "".join(f"{b:08b}" for b in self.packed_bits)[:self.padded_dim]
+
+    def to_dict(self) -> dict[str, Any]:
+        """Export serialized representation for analysis or JSON transport."""
+        return {
+            "dim": self.dim,
+            "padded_dim": self.padded_dim,
+            "norm": round(self.norm, 6),
+            "byte_size": self.byte_size,
+            "compression_ratio": round(self.compression_ratio, 2),
+            "packed_hex": self.packed_bits.hex(),
+            "qjl_hex": self.qjl_bits.hex() if self.qjl_bits else None,
+            "seed": self.seed,
+        }
+
 
 def _pseudo_random_permutation(dim: int, seed: int = 42) -> tuple[list[int], list[int]]:
     """Deterministic random permutation and inverse permutation of [0, dim-1]."""
@@ -110,7 +127,7 @@ class PolarQuantizer:
     eliminating outlier coordinates and allowing 1-bit to 3-bit representations without accuracy loss.
     """
 
-    def __init__(self, dim: int = 64, seed: int = 42, enable_qjl: bool = True):
+    def __init__(self, dim: int = 64, seed: int = 42, enable_qjl: bool = True) -> None:
         self.dim = dim
         self.padded_dim = _next_power_of_2(dim)
         self.seed = seed
@@ -215,7 +232,11 @@ class PolarQuantizer:
 
         Runs in sub-microsecond time with zero floating point multiplication.
         """
-        assert len(q1.packed_bits) == len(q2.packed_bits)
+        if len(q1.packed_bits) != len(q2.packed_bits) or q1.padded_dim != q2.padded_dim:
+            raise ValueError(
+                f"Cannot compute similarity between vectors of differing padded dimensions "
+                f"({q1.padded_dim} vs {q2.padded_dim})"
+            )
 
         # Bitwise XOR counts differing sign bits (Hamming Distance)
         total_dim = q1.padded_dim
@@ -248,7 +269,7 @@ class SemanticFeatureEmbedder:
     and random projection hashing without requiring multi-gigabyte models.
     """
 
-    def __init__(self, dim: int = 64):
+    def __init__(self, dim: int = 64) -> None:
         self.dim = dim
 
     def embed(self, text: str) -> list[float]:
@@ -294,7 +315,7 @@ class SearchResult:
 class TurboQuantVectorIndex:
     """Sub-millisecond compressed vector search index powered by PolarQuant."""
 
-    def __init__(self, dim: int = 64, seed: int = 42):
+    def __init__(self, dim: int = 64, seed: int = 42) -> None:
         self.dim = dim
         self.quantizer = PolarQuantizer(dim=dim, seed=seed)
         self.embedder = SemanticFeatureEmbedder(dim=dim)
@@ -308,7 +329,7 @@ class TurboQuantVectorIndex:
         vector: Sequence[float] | None = None,
         confidence: float = 1.0,
         metadata: dict[str, Any] | None = None,
-    ):
+    ) -> None:
         """Add or update an item in the compressed vector index."""
         if vector is None:
             vector = self.embedder.embed(intent_text)
@@ -357,7 +378,7 @@ class TurboQuantVectorIndex:
         results.sort(key=lambda r: r.similarity, reverse=True)
         return results[:top_k]
 
-    def remove(self, key: str):
+    def remove(self, key: str) -> None:
         """Remove item from index."""
         self._entries.pop(key, None)
 

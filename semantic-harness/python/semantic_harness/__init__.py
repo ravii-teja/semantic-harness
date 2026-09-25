@@ -25,6 +25,13 @@ from semantic_harness.execution.codeact import extract_code, CodeActStrategy
 from semantic_harness.visualization import (
     ProceduralGraphVisualizer,
     render_procedural_graph,
+    KnowledgeGraphVisualizer,
+)
+from semantic_harness.core.hardware import (
+    HardwareDetector,
+    HardwareProfile,
+    AcceleratorType,
+    get_default_local_model,
 )
 from semantic_harness.core.tokenomics import (
     TokenomicsTracker,
@@ -55,6 +62,10 @@ __all__ = [
     "step",
     "Agent",
     "AgentConfig",
+    "HardwareDetector",
+    "HardwareProfile",
+    "AcceleratorType",
+    "get_default_local_model",
     "Event",
     "EventBus",
     "EventType",
@@ -82,6 +93,7 @@ __all__ = [
     "CodeActStrategy",
     "ProceduralGraphVisualizer",
     "render_procedural_graph",
+    "KnowledgeGraphVisualizer",
     "BaseProvider",
     "ProviderResponse",
     "OpenAIProvider",

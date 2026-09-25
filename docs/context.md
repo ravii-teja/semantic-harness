@@ -61,8 +61,10 @@ harness/
 ### Core Python Modules
 * **`middleware.py` (`@step`)**: Minimal-overhead function decorator providing schema enforcement, retry mechanics, and zero-token procedural caching.
 * **`semantics/c2c.py` (`C2CValidator`)**: Chaos-to-Clarity validation logic. Extracts JSON from markdown fences, validates with Pydantic, and creates actionable diagnostic diffs on failure.
+* **`core/hardware.py` (`HardwareDetector`, `HardwareProfile`, `AcceleratorType`)**: Auto-detection engine inspecting macOS Apple Silicon Metal (unified memory via `sysctl`), NVIDIA CUDA GPUs (PyTorch/`nvidia-smi`), and host CPU core/RAM topologies to auto-configure the fastest local engine without manual configuration.
 * **`core/tokenomics.py` (`TokenomicsTracker`, `AmortizationEngine`, `DynamicCostRouter`)**: Telemetry tracking for prompt, completion, cached, and retry tokens, mathematical break-even threshold analysis ($r^*$), and adaptive 3-tier routing (Cache $\rightarrow$ Local SLM $\rightarrow$ Frontier Fallback).
 * **`memory/graph.py` (`GraphMemory`)**: Relational knowledge graph storing `(Subject, Predicate, Object)` triplets with multi-hop subgraph BFS traversal and context injection.
+* **`visualization/kg_visualizer.py` (`KnowledgeGraphVisualizer`)**: Minimalist black & white force-directed interactive visualization of relational knowledge graphs with click inspection and TurboQuant bitstream export.
 * **`memory/procedural.py` (`ProceduralMemory`)**: Key-value and fuzzy semantic store mapping normalized intent signatures to compiled execution routines.
 * **`memory/turbo_quant.py` (`TurboQuant`)**: PolarQuant compression with Fast Walsh-Hadamard Transform (FWHT), QJL dimension reduction, and bit-packing.
 * **`execution/repl.py` & `execution/codeact.py`**: In-process sandboxed REPL executing arbitrary Python AST blocks with configurable timeouts, state retention, and NOOA bounded previews for large collections and DataFrames.
@@ -178,10 +180,12 @@ The harness turns these small models into reliable production workers through si
 
 ---
 
-## 6. Current Implementation Status: TurboQuant & NOOA
+## 6. Implementation Status & Component Inventory
 
 | Component | Status | Implemented | Gaps & Next Steps |
 |---|:---:|---|---|
+| **Tokenomics & Cost Engine** | **✅ 100%** | Per-turn prompt/completion/cache telemetry, amortization curve break-even calculation ($r^*$), multi-tier dynamic cost routing (`CACHE` ➔ `LOCAL_SLM` ➔ `CLOUD_FRONTIER`). Dual-stack Python + TypeScript. | Web dashboard / Prometheus telemetry exporter integration. |
+| **Relational Knowledge Graph** | **✅ 100%** | SQLite property graph, `(Subject, Predicate, Object)` triplets with confidence scores, 2-hop BFS subgraph traversal, prompt context injection, regex triplet extraction. Dual-stack. | Automated LLM-assisted triplet extraction pipeline on unconstrained documents. |
+| **NVIDIA NOOA Patterns** | **✅ 85%** | Class-as-agent reflection, static/dynamic context split for KV-cache reuse, ACT-R activation ranking, CodeAct REPL loop, and **pass-by-reference bounded previews for DataFrames/Tensors**. | Empirical benchmarks measuring actual KV-cache prefix hits on vLLM/Ollama. |
 | **TurboQuant & PolarQuant** | **80%** | FWHT ($O(d \log d)$), deterministic sign randomization, PolarQuant 1-bit / 2-bit quantization, QJL dimension reduction, Python + TS vector indices. | Pure Python/NumPy without SIMD bitwise popcount or Metal/C kernels; needs empirical evaluation against large-scale ANN baselines. |
-| **NVIDIA NOOA Patterns** | **65%** | Class-as-agent reflection, static/dynamic context split for KV-cache reuse, ACT-R activation ranking, CodeAct REPL execution loop. | Pass-by-reference with bounded previews for big dataframes/tensors; verification benchmarks measuring actual KV-cache prefix hits on vLLM/Ollama. |
 

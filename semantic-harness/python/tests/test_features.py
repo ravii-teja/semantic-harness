@@ -146,3 +146,54 @@ def test_repl_bounded_previews():
     assert "dict len=50" in previews["b"]
     assert "c" in previews
     assert "str len=500" in previews["c"]
+
+
+def test_knowledge_graph_visualization():
+    kg = GraphMemory(db_path=":memory:")
+    kg.add_triplet("TensorFlow", "developed_by", "Google")
+    kg.add_triplet("PyTorch", "developed_by", "Meta")
+
+    html_out = kg.render_interactive_html(title="AI Frameworks", include_turbo_quant=True)
+    assert "<!DOCTYPE html>" in html_out
+    assert "vis.Network" in html_out
+    assert "TensorFlow" in html_out
+    assert "developed_by" in html_out
+    assert "TurboQuant Vector Representation" in html_out
+    assert "1-Bit Polar Quantized Bitstream" in html_out
+
+
+def test_hardware_detection_and_agent_wiring():
+    from semantic_harness.core.hardware import HardwareDetector, AcceleratorType, get_default_local_model
+    from semantic_harness.core.agent import Agent, AgentConfig
+    from semantic_harness.core.tokenomics import DynamicCostRouter, TokenomicsTracker
+
+    # 1. Detect hardware
+    profile = HardwareDetector.detect()
+    assert profile.accelerator in (
+        AcceleratorType.METAL,
+        AcceleratorType.CUDA,
+        AcceleratorType.ROCM,
+        AcceleratorType.CPU,
+    )
+    assert profile.cpu_cores > 0
+    assert profile.total_memory_gb > 0
+    assert isinstance(profile.recommended_model, str)
+    assert len(profile.recommended_model) > 0
+
+    default_model = get_default_local_model()
+    assert default_model == profile.recommended_model
+
+    # 2. Agent auto-wiring: AgentConfig() with model=None should auto-select hardware model
+    agent = Agent()
+    assert agent.config.model == profile.recommended_model
+    assert agent.hardware_profile is not None
+    assert agent.hardware_profile.accelerator == profile.accelerator
+
+    # Explicit model should not be overridden
+    agent_explicit = Agent(AgentConfig(model="gpt-4o"))
+    assert agent_explicit.config.model == "gpt-4o"
+
+    # 3. DynamicCostRouter auto-wiring
+    tracker = TokenomicsTracker()
+    router = DynamicCostRouter(tracker=tracker)
+    assert router.local_model == profile.recommended_model

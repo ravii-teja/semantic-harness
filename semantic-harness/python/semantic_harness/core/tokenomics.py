@@ -107,6 +107,10 @@ class TokenomicsTracker:
         self.records.append(rec)
         return rec
 
+    def record(self, *args: Any, **kwargs: Any) -> TokenUsageRecord:
+        """Ergonomic alias for record_turn."""
+        return self.record_turn(*args, **kwargs)
+
     @property
     def total_prompt_tokens(self) -> int:
         return sum(r.prompt_tokens for r in self.records)
@@ -114,6 +118,11 @@ class TokenomicsTracker:
     @property
     def total_completion_tokens(self) -> int:
         return sum(r.completion_tokens for r in self.records)
+
+    @property
+    def total_tokens(self) -> int:
+        """Total tokens across prompt, completion, and retry."""
+        return sum(r.prompt_tokens + r.completion_tokens + r.retry_tokens for r in self.records)
 
     @property
     def total_cached_tokens(self) -> int:
@@ -192,12 +201,16 @@ class DynamicCostRouter:
     def __init__(
         self,
         tracker: TokenomicsTracker,
-        local_model: str = "qwen2.5-coder:3b",
+        local_model: str | None = None,
         frontier_model: str = "gpt-4o-mini",
         max_local_retries: int = 2,
     ):
         self.tracker = tracker
-        self.local_model = local_model
+        if local_model is None:
+            from semantic_harness.core.hardware import get_default_local_model
+            self.local_model = get_default_local_model()
+        else:
+            self.local_model = local_model
         self.frontier_model = frontier_model
         self.max_local_retries = max_local_retries
 
