@@ -1,3 +1,8 @@
+
+<img width="1983" height="793" alt="semantic-harness" src="https://github.com/user-attachments/assets/6bc59635-661f-4793-adf3-bdc5151a2cce" />
+
+
+
 # ⚡ Semantic Harness
 
 [![CI](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml)
