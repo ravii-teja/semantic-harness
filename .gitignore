@@ -60,3 +60,4 @@ yarn-error.log*
 # Scratch and raw scraped dumps
 content.md
 scratch/
+semantic-harness/benchmarks/results/
