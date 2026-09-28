@@ -61,6 +61,43 @@ class HardwareDetector:
         return HardwareDetector._detect_cpu()
 
     @staticmethod
+    def detect_frameworks() -> dict[str, Any]:
+        """Detect installed deep learning tensor frameworks and their accelerator status."""
+        frameworks: dict[str, Any] = {
+            "torch": {"available": False, "version": None, "cuda": False, "mps": False, "rocm": False},
+            "tensorflow": {"available": False, "version": None, "gpu": False, "gpu_count": 0},
+        }
+
+        # Inspect PyTorch
+        try:
+            import torch
+            frameworks["torch"]["available"] = True
+            frameworks["torch"]["version"] = torch.__version__
+            frameworks["torch"]["cuda"] = bool(torch.cuda.is_available())
+            frameworks["torch"]["cuda_count"] = torch.cuda.device_count() if torch.cuda.is_available() else 0
+            # Apple Silicon MPS (Metal Performance Shaders)
+            frameworks["torch"]["mps"] = bool(
+                hasattr(torch.backends, "mps") and torch.backends.mps.is_available()
+            )
+            # AMD ROCm HIP
+            frameworks["torch"]["rocm"] = bool(getattr(torch.version, "hip", None) is not None)
+        except Exception:
+            pass
+
+        # Inspect TensorFlow
+        try:
+            import tensorflow as tf  # noqa: F401
+            frameworks["tensorflow"]["available"] = True
+            frameworks["tensorflow"]["version"] = getattr(tf, "__version__", None)
+            gpus = tf.config.list_physical_devices("GPU")
+            frameworks["tensorflow"]["gpu"] = len(gpus) > 0
+            frameworks["tensorflow"]["gpu_count"] = len(gpus)
+        except Exception:
+            pass
+
+        return frameworks
+
+    @staticmethod
     def _detect_apple_silicon() -> HardwareProfile | None:
         try:
             # Check unified memory using sysctl
@@ -71,6 +108,7 @@ class HardwareDetector:
             total_gb = 16.0
 
         cpu_cores = os.cpu_count() or 8
+        frameworks = HardwareDetector.detect_frameworks()
 
         # Check if MLX is available
         has_mlx = False
@@ -81,8 +119,13 @@ class HardwareDetector:
             has_mlx = False
 
         if has_mlx:
-            recommended_model = "mlx/Qwen2.5-0.5B-Instruct-4bit" if total_gb < 16 else "mlx/Qwen2.5-Coder-3B-Instruct-4bit"
+            recommended_model = (
+                "mlx/Qwen2.5-0.5B-Instruct-4bit" if total_gb < 16 else "mlx/Qwen2.5-Coder-3B-Instruct-4bit"
+            )
             recommended_provider = "mlx"
+        elif frameworks["torch"]["mps"]:
+            recommended_model = "qwen2.5:0.5b" if total_gb < 16 else "qwen2.5-coder:3b"
+            recommended_provider = "torch"
         else:
             recommended_model = "qwen2.5:0.5b" if total_gb < 16 else "qwen2.5-coder:3b"
             recommended_provider = "ollama"
@@ -95,12 +138,19 @@ class HardwareDetector:
             cpu_cores=cpu_cores,
             recommended_model=recommended_model,
             recommended_provider=recommended_provider,
-            metadata={"apple_silicon": True, "mlx_installed": has_mlx},
+            metadata={
+                "apple_silicon": True,
+                "mlx_installed": has_mlx,
+                "torch_mps": frameworks["torch"]["mps"],
+                "tensor_frameworks": frameworks,
+            },
         )
 
     @staticmethod
     def _detect_cuda() -> HardwareProfile | None:
-        # Try PyTorch CUDA if available
+        frameworks = HardwareDetector.detect_frameworks()
+
+        # Try PyTorch CUDA / ROCm if available
         try:
             import torch
             if torch.cuda.is_available():
@@ -109,16 +159,23 @@ class HardwareDetector:
                 vram_bytes = torch.cuda.get_device_properties(0).total_memory
                 total_vram_gb = vram_bytes / (1024**3)
 
+                is_rocm = frameworks["torch"]["rocm"]
+                accel_type = AcceleratorType.ROCM if is_rocm else AcceleratorType.CUDA
                 rec_model = "qwen2.5-coder:3b" if total_vram_gb >= 6.0 else "qwen2.5:0.5b"
                 return HardwareProfile(
-                    accelerator=AcceleratorType.CUDA,
+                    accelerator=accel_type,
                     device_name=f"{device_name} (x{device_count})",
                     total_memory_gb=round(total_vram_gb, 2),
                     available_memory_gb=round(total_vram_gb * 0.85, 2),
                     cpu_cores=os.cpu_count() or 4,
                     recommended_model=rec_model,
                     recommended_provider="ollama",
-                    metadata={"cuda_device_count": device_count, "torch_cuda": True},
+                    metadata={
+                        "cuda_device_count": device_count,
+                        "torch_cuda": True,
+                        "is_rocm": is_rocm,
+                        "tensor_frameworks": frameworks,
+                    },
                 )
         except Exception:
             pass
@@ -145,7 +202,11 @@ class HardwareDetector:
                     cpu_cores=os.cpu_count() or 4,
                     recommended_model=rec_model,
                     recommended_provider="ollama",
-                    metadata={"cuda_devices": len(lines), "nvidia_smi": True},
+                    metadata={
+                        "cuda_devices": len(lines),
+                        "nvidia_smi": True,
+                        "tensor_frameworks": frameworks,
+                    },
                 )
         except Exception:
             pass
@@ -180,6 +241,7 @@ class HardwareDetector:
                 pass
 
         cpu_cores = os.cpu_count() or 4
+        frameworks = HardwareDetector.detect_frameworks()
 
         # For CPU execution, recommend compact 0.5B or 1B models to keep latency low
         recommended_model = "qwen2.5:0.5b" if avail_ram_gb < 8.0 else "llama3.2:1b"
@@ -192,7 +254,11 @@ class HardwareDetector:
             cpu_cores=cpu_cores,
             recommended_model=recommended_model,
             recommended_provider="ollama",
-            metadata={"platform": sys.platform, "machine": platform.machine()},
+            metadata={
+                "platform": sys.platform,
+                "machine": platform.machine(),
+                "tensor_frameworks": frameworks,
+            },
         )
 
 

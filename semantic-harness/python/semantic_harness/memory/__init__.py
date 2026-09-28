@@ -1,7 +1,14 @@
 from semantic_harness.memory.long_term import LongTermMemory
 from semantic_harness.memory.procedural import (
+    BaseProceduralStorage,
     CachedProcedure,
+    CompiledProcedure,
+    DiskProceduralStorage,
+    ProcedurePrecondition,
     ProceduralMemory,
+    RedisProceduralStorage,
+    ReuseExplanation,
+    ReuseStatus,
     SemanticProceduralMemory,
 )
 from semantic_harness.memory.short_term import ShortTermMemory
@@ -18,7 +25,14 @@ __all__ = [
     "LongTermMemory",
     "ProceduralMemory",
     "SemanticProceduralMemory",
+    "BaseProceduralStorage",
+    "DiskProceduralStorage",
+    "RedisProceduralStorage",
     "CachedProcedure",
+    "CompiledProcedure",
+    "ProcedurePrecondition",
+    "ReuseExplanation",
+    "ReuseStatus",
     "PolarQuantizer",
     "TurboQuantVectorIndex",
     "QuantizedVector",

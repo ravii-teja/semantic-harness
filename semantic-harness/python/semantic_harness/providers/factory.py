@@ -30,6 +30,11 @@ def get_provider(model: str, **kwargs: Any) -> BaseProvider:
     elif m.startswith("mlx/") or m.startswith("metal/"):
         from semantic_harness.providers.mlx_provider import MLXProvider
         return MLXProvider(**kwargs)
+    elif m.startswith("torch/") or m.startswith("pytorch/") or m.startswith("cuda/") or m.startswith("mps/"):
+        from semantic_harness.providers.torch_provider import TorchProvider
+        prefix_len = m.find("/") + 1
+        model_name = model[prefix_len:]
+        return TorchProvider(model_name_or_path=model_name, **kwargs)
     elif ":" in m or m.startswith("ollama/") or m.startswith("qwen") or m.startswith("llama") or m.startswith("smol"):
         from semantic_harness.providers.ollama_provider import OllamaProvider
         base_url = kwargs.pop("base_url", "http://localhost:11434")

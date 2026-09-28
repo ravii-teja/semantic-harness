@@ -4,6 +4,7 @@ from semantic_harness.providers.anthropic_provider import AnthropicProvider
 from semantic_harness.providers.ollama_provider import OllamaProvider
 from semantic_harness.providers.huggingface_provider import HuggingFaceProvider
 from semantic_harness.providers.mlx_provider import MLXProvider
+from semantic_harness.providers.torch_provider import TorchProvider
 from semantic_harness.providers.factory import get_provider
 
 __all__ = [
@@ -14,5 +15,6 @@ __all__ = [
     "OllamaProvider",
     "HuggingFaceProvider",
     "MLXProvider",
+    "TorchProvider",
     "get_provider",
 ]

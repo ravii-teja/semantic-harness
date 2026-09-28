@@ -6,6 +6,7 @@ curve analysis (r*), and dynamic model routing (SLM vs. Cloud Frontier).
 from __future__ import annotations
 
 import math
+import threading
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable
@@ -66,14 +67,16 @@ class TokenUsageRecord:
 class TokenomicsTracker:
     """Collects per-turn token usage, computes costs, and generates telemetry summaries."""
 
-    def __init__(self, pricing_profiles: dict[str, ModelPricing] | None = None):
+    def __init__(self, pricing_profiles: dict[str, ModelPricing] | None = None) -> None:
+        self._lock = threading.RLock()
         self.pricing = dict(DEFAULT_PRICING)
         if pricing_profiles:
             self.pricing.update(pricing_profiles)
         self.records: list[TokenUsageRecord] = []
 
-    def set_pricing(self, model_name: str, prompt_per_million: float, completion_per_million: float):
-        self.pricing[model_name] = ModelPricing(prompt_per_million, completion_per_million)
+    def set_pricing(self, model_name: str, prompt_per_million: float, completion_per_million: float) -> None:
+        with self._lock:
+            self.pricing[model_name] = ModelPricing(prompt_per_million, completion_per_million)
 
     def record_turn(
         self,
@@ -87,25 +90,26 @@ class TokenomicsTracker:
         latency_ms: float = 0.0,
         metadata: dict[str, Any] | None = None,
     ) -> TokenUsageRecord:
-        pricing = self.pricing.get(model_name, ModelPricing(0.0, 0.0))
-        cost = 0.0
-        if not is_cache_hit:
-            cost = pricing.compute_cost(prompt_tokens + retry_tokens, completion_tokens)
+        with self._lock:
+            pricing = self.pricing.get(model_name, ModelPricing(0.0, 0.0))
+            cost = 0.0
+            if not is_cache_hit:
+                cost = pricing.compute_cost(prompt_tokens + retry_tokens, completion_tokens)
 
-        rec = TokenUsageRecord(
-            turn_id=turn_id,
-            model_name=model_name,
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            cached_tokens=cached_tokens,
-            retry_tokens=retry_tokens,
-            is_cache_hit=is_cache_hit,
-            cost_usd=cost,
-            latency_ms=latency_ms,
-            metadata=metadata or {},
-        )
-        self.records.append(rec)
-        return rec
+            rec = TokenUsageRecord(
+                turn_id=turn_id,
+                model_name=model_name,
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                cached_tokens=cached_tokens,
+                retry_tokens=retry_tokens,
+                is_cache_hit=is_cache_hit,
+                cost_usd=cost,
+                latency_ms=latency_ms,
+                metadata=metadata or {},
+            )
+            self.records.append(rec)
+            return rec
 
     def record(self, *args: Any, **kwargs: Any) -> TokenUsageRecord:
         """Ergonomic alias for record_turn."""
@@ -113,46 +117,59 @@ class TokenomicsTracker:
 
     @property
     def total_prompt_tokens(self) -> int:
-        return sum(r.prompt_tokens for r in self.records)
+        with self._lock:
+            return sum(r.prompt_tokens for r in self.records)
 
     @property
     def total_completion_tokens(self) -> int:
-        return sum(r.completion_tokens for r in self.records)
+        with self._lock:
+            return sum(r.completion_tokens for r in self.records)
 
     @property
     def total_tokens(self) -> int:
         """Total tokens across prompt, completion, and retry."""
-        return sum(r.prompt_tokens + r.completion_tokens + r.retry_tokens for r in self.records)
+        with self._lock:
+            return sum(r.prompt_tokens + r.completion_tokens + r.retry_tokens for r in self.records)
 
     @property
     def total_cached_tokens(self) -> int:
-        return sum(r.cached_tokens for r in self.records)
+        with self._lock:
+            return sum(r.cached_tokens for r in self.records)
+
+    @property
+    def total_turns(self) -> int:
+        with self._lock:
+            return len(self.records)
 
     @property
     def total_retry_tokens(self) -> int:
-        return sum(r.retry_tokens for r in self.records)
+        with self._lock:
+            return sum(r.retry_tokens for r in self.records)
 
     @property
     def total_cost_usd(self) -> float:
-        return sum(r.cost_usd for r in self.records)
+        with self._lock:
+            return sum(r.cost_usd for r in self.records)
 
     @property
     def cache_hit_rate(self) -> float:
-        if not self.records:
-            return 0.0
-        hits = sum(1 for r in self.records if r.is_cache_hit)
-        return hits / len(self.records)
+        with self._lock:
+            if not self.records:
+                return 0.0
+            hits = sum(1 for r in self.records if r.is_cache_hit)
+            return hits / len(self.records)
 
     def summary(self) -> dict[str, Any]:
-        return {
-            "total_turns": len(self.records),
-            "total_prompt_tokens": self.total_prompt_tokens,
-            "total_completion_tokens": self.total_completion_tokens,
-            "total_cached_tokens": self.total_cached_tokens,
-            "total_retry_tokens": self.total_retry_tokens,
-            "total_cost_usd": round(self.total_cost_usd, 6),
-            "cache_hit_rate": round(self.cache_hit_rate, 4),
-        }
+        with self._lock:
+            return {
+                "total_turns": len(self.records),
+                "total_prompt_tokens": self.total_prompt_tokens,
+                "total_completion_tokens": self.total_completion_tokens,
+                "total_cached_tokens": self.total_cached_tokens,
+                "total_retry_tokens": self.total_retry_tokens,
+                "total_cost_usd": round(self.total_cost_usd, 6),
+                "cache_hit_rate": round(self.cache_hit_rate, 4),
+            }
 
 
 class AmortizationEngine:
@@ -204,7 +221,7 @@ class DynamicCostRouter:
         local_model: str | None = None,
         frontier_model: str = "gpt-4o-mini",
         max_local_retries: int = 2,
-    ):
+    ) -> None:
         self.tracker = tracker
         if local_model is None:
             from semantic_harness.core.hardware import get_default_local_model

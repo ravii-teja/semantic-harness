@@ -27,6 +27,9 @@ plugins:
 
 nav:
   - Home: index.md
+  - Architecture: architecture.md
+  - System Context: context.md
+  - Feature Catalog: features.md
   - Enterprise Workflow: WORKFLOW.md
   - Release Pipeline: PIPELINE.md
   - Research Paper: SEMANTIC_HARNESS_PAPER.md

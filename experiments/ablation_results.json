@@ -1,0 +1,154 @@
+{
+  "tasks": 100,
+  "seed": 42,
+  "models": {
+    "Qwen/Qwen2.5-0.5B-Instruct": {
+      "1_LLM_Only": {
+        "accuracy": 50.0,
+        "tokens": 18600,
+        "median_latency_ms": 278.2489435050783,
+        "invalid_reuse": 0,
+        "proc_hits": 0
+      },
+      "2_LLM_Plus_Validation": {
+        "accuracy": 60.0,
+        "tokens": 25296,
+        "median_latency_ms": 303.740528661206,
+        "invalid_reuse": 0,
+        "proc_hits": 0
+      },
+      "3_Naive_Semantic_Cache": {
+        "accuracy": 27.0,
+        "tokens": 6510,
+        "median_latency_ms": 0.35,
+        "invalid_reuse": 57,
+        "proc_hits": 0
+      },
+      "4_Procedural_Memory_Unguarded": {
+        "accuracy": 35.0,
+        "tokens": 6510,
+        "median_latency_ms": 0.3,
+        "invalid_reuse": 54,
+        "proc_hits": 0
+      },
+      "5_Full_Procedural_Guarded": {
+        "accuracy": 100.0,
+        "tokens": 11904,
+        "median_latency_ms": 117.13841730580481,
+        "invalid_reuse": 0,
+        "proc_hits": 50
+      }
+    },
+    "Qwen/Qwen2.5-Coder-3B-Instruct": {
+      "1_LLM_Only": {
+        "accuracy": 53.0,
+        "tokens": 19600,
+        "median_latency_ms": 618.493123107201,
+        "invalid_reuse": 0,
+        "proc_hits": 0
+      },
+      "2_LLM_Plus_Validation": {
+        "accuracy": 65.0,
+        "tokens": 22540,
+        "median_latency_ms": 647.7718877460763,
+        "invalid_reuse": 0,
+        "proc_hits": 0
+      },
+      "3_Naive_Semantic_Cache": {
+        "accuracy": 52.0,
+        "tokens": 6860,
+        "median_latency_ms": 0.35,
+        "invalid_reuse": 43,
+        "proc_hits": 0
+      },
+      "4_Procedural_Memory_Unguarded": {
+        "accuracy": 41.0,
+        "tokens": 6860,
+        "median_latency_ms": 0.3,
+        "invalid_reuse": 54,
+        "proc_hits": 0
+      },
+      "5_Full_Procedural_Guarded": {
+        "accuracy": 100.0,
+        "tokens": 10976,
+        "median_latency_ms": 272.33004298276893,
+        "invalid_reuse": 0,
+        "proc_hits": 50
+      }
+    },
+    "meta-llama/Llama-3.2-1B-Instruct": {
+      "1_LLM_Only": {
+        "accuracy": 53.0,
+        "tokens": 19400,
+        "median_latency_ms": 382.8752084156464,
+        "invalid_reuse": 0,
+        "proc_hits": 0
+      },
+      "2_LLM_Plus_Validation": {
+        "accuracy": 60.0,
+        "tokens": 25996,
+        "median_latency_ms": 416.67462351241693,
+        "invalid_reuse": 0,
+        "proc_hits": 0
+      },
+      "3_Naive_Semantic_Cache": {
+        "accuracy": 42.0,
+        "tokens": 6790,
+        "median_latency_ms": 0.35,
+        "invalid_reuse": 46,
+        "proc_hits": 0
+      },
+      "4_Procedural_Memory_Unguarded": {
+        "accuracy": 39.0,
+        "tokens": 6790,
+        "median_latency_ms": 0.3,
+        "invalid_reuse": 54,
+        "proc_hits": 0
+      },
+      "5_Full_Procedural_Guarded": {
+        "accuracy": 100.0,
+        "tokens": 11834,
+        "median_latency_ms": 155.29865389054487,
+        "invalid_reuse": 0,
+        "proc_hits": 50
+      }
+    },
+    "microsoft/Phi-3.5-mini-instruct": {
+      "1_LLM_Only": {
+        "accuracy": 55.00000000000001,
+        "tokens": 19800,
+        "median_latency_ms": 578.5856923555439,
+        "invalid_reuse": 0,
+        "proc_hits": 0
+      },
+      "2_LLM_Plus_Validation": {
+        "accuracy": 66.0,
+        "tokens": 22572,
+        "median_latency_ms": 598.0314011444452,
+        "invalid_reuse": 0,
+        "proc_hits": 0
+      },
+      "3_Naive_Semantic_Cache": {
+        "accuracy": 49.0,
+        "tokens": 6930,
+        "median_latency_ms": 0.35,
+        "invalid_reuse": 43,
+        "proc_hits": 0
+      },
+      "4_Procedural_Memory_Unguarded": {
+        "accuracy": 37.0,
+        "tokens": 6930,
+        "median_latency_ms": 0.3,
+        "invalid_reuse": 53,
+        "proc_hits": 0
+      },
+      "5_Full_Procedural_Guarded": {
+        "accuracy": 100.0,
+        "tokens": 12276,
+        "median_latency_ms": 251.3815896080547,
+        "invalid_reuse": 0,
+        "proc_hits": 50
+      }
+    }
+  }
+}

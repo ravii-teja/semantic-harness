@@ -87,3 +87,7 @@ jobs:
 
       - name: Run local procedural cache & REPL benchmarks
         run: python3 semantic-harness/benchmarks/run_benchmark.py --benchmark cache repl
+
+      - name: Run scientific ablation benchmark (regression smoke test)
+        run: python3 experiments/run_ablation.py --tasks 20
+

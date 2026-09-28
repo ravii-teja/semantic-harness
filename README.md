@@ -6,11 +6,11 @@
 # ⚡ Semantic Harness
 
 [![CI](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/ravii-teja/semantic-harness/actions/workflows/ci.yml)
-[![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.4/)
+[![PyPI version](https://img.shields.io/pypi/v/semantic-harness.svg?color=blue)](https://pypi.org/project/semantic-harness/0.2.5/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19414309.svg)](https://zenodo.org/records/19414309)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/semantic-harness.svg)](https://pypi.org/project/semantic-harness/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)]()
-[![Tests](https://img.shields.io/badge/tests-96%20passed-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-122%20passed-brightgreen.svg)]()
 [![TypeScript](https://img.shields.io/badge/typescript-5.0+-3178C6.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -24,23 +24,28 @@
 
 - [Overview](#-overview)
 - [📦 Installation & Verification](#-installation--quick-verification)
-- [Enterprise Workflow & Adoption Guide (WORKFLOW.md)](./WORKFLOW.md)
+- [Closing the "Procedural Gap"](#-closing-the-procedural-gap)
+- [Master Architecture Specification (docs/architecture.md)](./docs/architecture.md)
+- [System Context & Implementation Reference (docs/context.md)](./docs/context.md)
+- [Enterprise Workflow & Adoption Guide (WORKFLOW.md)](./docs/WORKFLOW.md)
 - [Why Semantic Harness?](#-why-semantic-harness)
 - [Architecture](#-architecture)
 - [Monorepo Structure](#-monorepo-structure)
 - [Python SDK: How to Use](#-python-sdk)
   - [1. Drop-in `@step` Decorator Middleware](#1-drop-in-step-decorator)
-  - [2. Object-Oriented Agent with Memory Tiers](#2-object-oriented-agent-harness)
-  - [3. Auto-Routing Provider Factory](#3-provider-factory-openai-anthropic-ollama-hf-metal-mlx)
-  - [4. Chaos2Clarity (C2C) Self-Correction](#4-chaos2clarity-c2c-self-correction)
-  - [5. TurboQuant Procedural Memory Caching](#5-turboquant-procedural-memory-caching)
-  - [6. CodeAct Sandboxed REPL & Bounded Previews](#6-codeact-sandboxed-repl-execution)
-  - [7. Tokenomics & Cost Amortization Engine](#7-tokenomics--cost-amortization-engine)
-  - [8. Relational Knowledge Graph (KG) Memory](#8-relational-knowledge-graph-kg-memory)
+  - [2. Drop-in FastAPI & ASGI Middleware](#2-drop-in-fastapi--asgi-middleware)
+  - [3. Object-Oriented Agent with Memory Tiers](#3-object-oriented-agent-harness)
+  - [4. Auto-Routing Provider Factory](#4-provider-factory-openai-anthropic-ollama-hf-mlx-pytorch)
+  - [5. Chaos2Clarity (C2C) Self-Correction](#5-chaos2clarity-c2c-self-correction)
+  - [6. TurboQuant Procedural Memory Caching](#6-turboquant-procedural-memory-caching)
+  - [7. CodeAct Sandboxed REPL & Bounded Previews](#7-codeact-sandboxed-repl-execution)
+  - [8. Tokenomics & Cost Amortization Engine](#8-tokenomics--cost-amortization-engine)
+  - [9. Relational Knowledge Graph (KG) Memory](#9-relational-knowledge-graph-kg-memory)
+  - [10. CLI Operator Tooling, Mission Control & ROI Calculator](#10-cli-operator-tooling-mission-control--roi-calculator)
 - [TypeScript / Node SDK](#-typescript--node-sdk)
 - [Verification & Benchmarks](#-verification--benchmarks)
 - [Research Foundations](#-research-foundations)
-- [Changelog (CHANGELOG.md)](./CHANGELOG.md)
+- [Changelog (CHANGELOG.md)](./docs/CHANGELOG.md)
 - [License](#-license)
 
 ---
@@ -49,7 +54,7 @@
 
 ### 1. Install via pip
 
-Install the package directly from [**PyPI**](https://pypi.org/project/semantic-harness/0.2.0/):
+Install the package directly from [**PyPI**](https://pypi.org/project/semantic-harness/0.2.5/):
 
 ```bash
 pip install semantic-harness
@@ -66,10 +71,16 @@ pip install "semantic-harness[anthropic]"
 # Hugging Face Inference API / TGI
 pip install "semantic-harness[huggingface]"
 
-# Apple Silicon Metal hardware acceleration (Mac M1/M2/M3/M4)
+# Apple Silicon Metal hardware acceleration (Mac M1/M2/M3/M4 via MLX)
 pip install "semantic-harness[mlx]"
 
-# All providers
+# Deep Tensor Acceleration & In-Process Model Execution (PyTorch / CUDA / Apple MPS)
+pip install "semantic-harness[torch]"
+
+# TensorFlow Pipeline Integration
+pip install "semantic-harness[tensorflow]"
+
+# All providers & acceleration engines
 pip install "semantic-harness[all]"
 ```
 
@@ -105,7 +116,36 @@ def analyze_review(text: str) -> dict:
 res1 = analyze_review("Fast delivery and amazing customer support!")
 
 # Turn 2: Exact same intent? Procedural cache serves result in 0.60 µs with 0 tokens!
-res2 = analyze_review("Fast delivery and amazing customer suppo## 🚀 Why Semantic Harness?
+res2 = analyze_review("Fast delivery and amazing customer support!")
+```
+
+---
+
+## 🎯 Closing the "Procedural Gap"
+
+The AI industry has solved three critical bottlenecks over the past three years:
+1. **Knowledge Gap** &rarr; Solved by **RAG** (retrieval-augmented generation over external vector DBs).
+2. **Context Window Gap** &rarr; Solved by **1M+ Token Windows** (ingesting massive prompts without overflow).
+3. **Domain Style Gap** &rarr; Solved by **Fine-Tuning & LoRA** (adapting internal neural weights for syntax and tone).
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│               THE 4TH PILLAR OF PRODUCTION AI SYSTEMS                  │
+├───────────────────┬─────────────────────────┬──────────────────────────┤
+│ Architectural Gap │ Solved By               │ Operational Impact       │
+├───────────────────┼─────────────────────────┼──────────────────────────┤
+│ 1. Knowledge Gap  │ RAG & Vector DBs        │ External factual context │
+│ 2. Context Gap    │ 1M+ Token Windows       │ Ingestion without drop   │
+│ 3. Domain Tone    │ Fine-Tuning & LoRA      │ Stylistic specialization │
+│ 4. Procedural Gap │ SEMANTIC HARNESS        │ $0-Token / <1µs Routines │
+└───────────────────┴─────────────────────────┴──────────────────────────┘
+```
+
+Until now, **nobody has solved the Procedural Gap**: why production agents re-reason through deterministic, repetitive workflows every single turn. **Semantic Harness is the architectural answer.** It compiles multi-turn model reasoning into verified, parameterized Python AST procedures, bypassing the model entirely on warm paths.
+
+---
+
+## 🚀 Why Semantic Harness?
 
 | Problem | Without Semantic Harness | With Semantic Harness |
 |---|---|---|
@@ -118,7 +158,7 @@ res2 = analyze_review("Fast delivery and amazing customer suppo## 🚀 Why Seman
 
 ## 🏛️ Architecture
 
-
+![Semantic Harness — Cognitive Middleware & Procedural Architecture](./docs/figures/semantic-harness.png)
 
 ---
 
@@ -140,7 +180,7 @@ semantic-harness/
 │   │   ├── semantics/        # C2C validator, JSON extraction
 │   │   └── middleware.py     # @step decorator
 │   ├── examples/             # 4 runnable quickstart scripts
-│   └── tests/                # 70 unit and integration tests
+│   └── tests/                # 98 unit and integration tests
 └── npm/                      # TypeScript / Node.js Implementation
     ├── package.json          # NPM package config
     ├── tsconfig.json         # TypeScript configuration
@@ -192,7 +232,41 @@ def review_code(diff: str) -> dict:
 result = review_code(diff="git diff...")
 ```
 
-### 2. Object-Oriented Agent Harness
+### 2. Drop-in FastAPI & ASGI Middleware
+
+Add zero-effort procedural compilation and token caching to any FastAPI or Starlette application in 3 lines:
+
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+from semantic_harness.integrations.fastapi import (
+    SemanticHarnessMiddleware,
+    procedural_route,
+)
+
+app = FastAPI(title="Enterprise Agent API")
+
+# 1. Mount middleware to auto-intercept and cache agent endpoints
+app.add_middleware(
+    SemanticHarnessMiddleware,
+    cache_paths=["/api/v1/agent", "/api/v1/generate"],
+    pricing_model="gpt-4o",
+)
+
+class QueryOutput(BaseModel):
+    summary: str
+    action_items: list[str]
+
+# 2. Or decorate specific routes with verified procedural compilation
+@app.post("/api/v1/agent")
+@procedural_route(validates=QueryOutput, cache=True)
+async def run_agent(req: dict):
+    # Executes once via LLM; repeat calls execute in <1ms at $0.00!
+    # Returns X-Semantic-Harness-Cache: HIT and X-Semantic-Harness-Cost-Saved headers
+    return await my_agent.run(req["query"])
+```
+
+### 3. Object-Oriented Agent Harness
 
 ```python
 from semantic_harness import Agent, AgentConfig
@@ -215,7 +289,21 @@ response = agent.run("Summarize NVIDIA's latest quarterly performance.")
 print(response)
 ```
 
-### 3. Chaos2Clarity (C2C) Self-Correction
+### 4. Provider Factory (OpenAI, Anthropic, Ollama, HuggingFace, MLX, PyTorch)
+
+```python
+from semantic_harness import get_provider
+
+# Automatically selects and routes by model prefix:
+provider = get_provider("ollama/qwen2.5-coder:3b")  # Local zero-cost SLM
+# Or "gpt-4o", "claude-3-5-sonnet", "hf/meta-llama/...", "mlx/qwen2.5-7b"
+# Or run direct in-process PyTorch on CUDA / Apple MPS:
+# provider = get_provider("torch/Qwen/Qwen2.5-Coder-3B-Instruct")
+response = provider.complete("Write a python quicksort function.")
+print(response.content)
+```
+
+### 5. Chaos2Clarity (C2C) Self-Correction
 
 ```python
 from semantic_harness.semantics import C2CValidator
@@ -226,39 +314,50 @@ class UserProfile(BaseModel):
     username: str
     email: str
 
-validator = C2CValidator(schema=UserProfile)
+# C2CValidator takes no schema in __init__ — schema is passed at validate() time
+validator = C2CValidator()
 
 # When an LLM produces malformed data:
 raw_output = {"user_id": "not_an_int", "username": "alice"}
-result = validator.validate(raw_output)
+result = validator.validate(raw_output, UserProfile)
 
-if not result.is_valid:
+if not result.valid:
     # Generates precise, actionable correction prompt for LLM retry
-    print(validator.build_retry_prompt(result))
+    print(result.retry_prompt)
 ```
 
-### 4. Procedural Workflow Caching
+### 6. TurboQuant Procedural Memory Caching
 
 ```python
 from semantic_harness.memory import ProceduralMemory
 
 proc_mem = ProceduralMemory()
 
-# Cache verified workflow result
-proc_mem.cache(
+# Compile a verified workflow trajectory into procedural memory
+proc_mem.compile(
     intent="invoice_extraction",
-    input_text="Invoice #99 total: $1,250",
-    result={"invoice_no": "INV-2026-99", "total": 1250.0, "currency": "USD"},
-    confidence=1.0
+    trajectory={"invoice_no": "INV-2026-99", "total": 1250.0, "currency": "USD"},
+    confidence=1.0,
 )
+proc_mem.record_success("invoice_extraction")
+proc_mem.record_success("invoice_extraction")
+proc_mem.record_success("invoice_extraction")  # meets min_success_count=3
 
 # Subsequent exact or semantic match:
-hit = proc_mem.lookup("invoice_extraction", "Invoice #99 total: $1,250")
+hit = proc_mem.lookup("invoice_extraction", require_reliable=True)
 if hit:
-    print("Served from cache in 1.25 µs (100% token savings):", hit.result)
+    print("Served from cache in 1.25 µs (100% token savings):", hit.procedure)
+
+# Or use explain_lookup() for a full audit trace:
+result, explanation = proc_mem.explain_lookup(
+    intent="invoice_extraction",
+    require_reliable=True,
+)
+print(explanation.status)   # ReuseStatus.REUSED
+print(explanation.reasons)  # ["Exact or semantic intent match", ...]
 ```
 
-### 5. CodeAct Python REPL Execution & Bounded Previews
+### 7. CodeAct Python REPL Execution & Bounded Previews
 
 ```python
 from semantic_harness.execution import PythonREPL
@@ -275,7 +374,7 @@ previews = repl.get_bounded_previews()
 print(previews)  # {'data': '<list len=4, sample=[10, 20, 30, 40]>'}
 ```
 
-### 7. Tokenomics & Cost Amortization Engine
+### 8. Tokenomics & Cost Amortization Engine
 
 ```python
 from semantic_harness import TokenomicsTracker, AmortizationEngine, DynamicCostRouter, ModelTier
@@ -306,7 +405,7 @@ tier, model = router.decide_tier(has_procedural_cache=False, current_retries=0)
 print(f"Selected tier: {tier.value} with model: {model}")
 ```
 
-### 8. Relational Knowledge Graph (KG) Memory
+### 9. Relational Knowledge Graph (KG) Memory
 
 ```python
 from semantic_harness import GraphMemory
@@ -327,6 +426,31 @@ print(context)
 # - (Alice) --[works_at]--> (AcmeCorp) [conf: 0.99]
 # - (AcmeCorp) --[acquired]--> (BetaLabs) [conf: 0.95]
 ```
+
+### 10. CLI Operator Tooling, Mission Control & ROI Calculator
+
+Semantic Harness includes a single production CLI binary (`semantic-harness` / `npx semantic-harness`):
+
+```bash
+# 1. Calculate token savings & procedural amortization ROI
+semantic-harness roi --spend 25000 --model gpt-4o --repetition 0.45
+
+# 2. Auto-detect host hardware accelerators & optimal local models
+semantic-harness hardware
+
+# 3. Inspect compiled procedural memory caches
+semantic-harness cache inspect ./agent_cache.json
+
+# 4. Launch Google-style minimalist Mission Control & Observability Dashboard
+semantic-harness dashboard --port 8080 --open
+```
+
+The **Mission Control Dashboard** (also live on the documentation site) provides:
+* **Tokenomics Telemetry**: Real-time meters for prompt, completion, and 78.2% bypassed tokens at $0.00 warm-path cost.
+* **Model Fleet & Router**: Health, latency percentiles, and routing waterfall across Gemini, Claude, GPT, DeepSeek, and in-process local SLMs.
+* **4-Tier Memory Visualizer**: Live byte sizes, progress meters, and compaction controls for Procedural (compiled ASTs), Semantic (PolarQuant 1-bit vectors, 32× compression), Episodic (ACT-R traces), and Working Memory (context window buffer).
+* **Interactive Knowledge Graph**: Canvas visualizer with node click inspector displaying relational triples and executable AST code.
+* **Turn Simulator**: Live simulator to test compiled procedure execution vs. cold LLM inference in real time.
 
 ---
 
@@ -391,17 +515,19 @@ ltm.remember("cluster_config", "Production cluster is us-west-2", 0.9);
 
 ## 🧪 Verification & Tests
 
-Run the full system verification suite (70 unit tests + 4 runnable end-to-end examples):
+![Semantic Harness Empirical Benchmark Results](./docs/figures/semantic_harness_benchmark.png)
 
-```bash
-cd semantic-harness
-bash check.sh
-```
+Run the full system unit test suite (98 unit and integration tests):
 
-Run pytest directly:
 ```bash
 cd semantic-harness/python
 pytest -v
+```
+
+Run the scientific ablation benchmark (evaluates 5 configurations + distribution shifts across parameterized workloads):
+
+```bash
+python experiments/run_ablation.py --tasks 200
 ```
 
 Typecheck TypeScript codebase:
@@ -414,7 +540,7 @@ npx tsc --noEmit
 
 ## 📚 Research Paper & Foundations
 
-Read the full technical paper: [**Semantic Harness: Cognitive Middleware and Procedural Acceleration for Agentic Systems**](./SEMANTIC_HARNESS_PAPER.md)
+Read the full technical paper: [**Semantic Harness: Cognitive Middleware and Procedural Acceleration for Agentic Systems**](./docs/SEMANTIC_HARNESS_PAPER.md)
 
 Semantic Harness synthesizes three pioneering systems into a production-grade agent harness:
 
@@ -432,17 +558,17 @@ If you use **Semantic Harness** or the **Chaos to Clarity (C2C)** cognitive midd
 @software{semantic-harness,
   author       = {Bankupalli, Ravi Teja},
   title        = {{semantic-harness: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents}},
-  month        = aug,
+  month        = sep,
   year         = 2026,
   publisher    = {Zenodo},
-  version      = {0.2.4},
+  version      = {0.2.5},
   doi          = {10.5281/zenodo.19414309},
   url          = {https://zenodo.org/records/19414309}
 }
 ```
 
 **APA Format:**
-> Bankupalli, R. T. (2026). *semantic-harness: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents* (Version 0.2.4) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.19414309
+> Bankupalli, R. T. (2026). *semantic-harness: Cognitive Middleware and Procedural Acceleration Runtime for Autonomous AI Agents* (Version 0.2.5) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.19414309
 
 ---
 

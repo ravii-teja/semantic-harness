@@ -53,7 +53,7 @@ class Agent:
         self,
         config: AgentConfig | None = None,
         llm_model: str | None = None,
-    ):
+    ) -> None:
         self.config = config or AgentConfig()
         if llm_model:
             self.config.model = llm_model
@@ -81,7 +81,7 @@ class Agent:
         # Register available methods as tool descriptions
         self._register_methods()
 
-    def _register_methods(self):
+    def _register_methods(self) -> None:
         """Auto-discover public methods and register them as callable tools."""
         # Register as real LLM-callable tools (schema from type hints + docstring)
         registered = self.tools.register_object(self)
@@ -103,7 +103,7 @@ class Agent:
         if methods:
             self.context.set_static("available_methods", "\n".join(methods))
 
-    def run(self, task: str, **kwargs) -> Any:
+    def run(self, task: str, **kwargs: Any) -> Any:
         """Run the agent on a task. Dispatches to the configured execution strategy."""
         if self.config.execution_strategy == "codeact":
             from semantic_harness.execution.codeact import CodeActStrategy
@@ -112,7 +112,7 @@ class Agent:
         loop = AgentLoop(self)
         return loop.run(task, **kwargs)
 
-    async def arun(self, task: str, **kwargs) -> Any:
+    async def arun(self, task: str, **kwargs: Any) -> Any:
         """Async version of run."""
         if self.config.execution_strategy == "codeact":
             from semantic_harness.execution.codeact import CodeActStrategy

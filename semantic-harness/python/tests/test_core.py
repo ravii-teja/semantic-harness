@@ -151,6 +151,55 @@ class TestProceduralMemory:
         hit = proc.lookup("format csv")
         assert hit is not None
 
+    def test_explain_lookup_and_schema_guard(self):
+        proc = ProceduralMemory()
+        proc.compile(
+            intent="extract user",
+            trajectory={"user_id": 1, "name": "Ada"},
+            schema_fingerprint="fp_schema_v1",
+            min_confidence=0.8,
+            min_success_count=2,
+        )
+        # Not yet reliable
+        _, exp_unreliable = proc.explain_lookup("extract user", schema_fingerprint="fp_schema_v1", require_reliable=True)
+        assert exp_unreliable.status.value == "unreliable"
+
+        # Record 2 successes to make it reliable
+        proc.record_success("extract user")
+        proc.record_success("extract user")
+
+        # Now reliable with matching schema
+        hit, exp_reused = proc.explain_lookup("extract user", schema_fingerprint="fp_schema_v1", require_reliable=True)
+        assert exp_reused.is_reused
+        assert hit is not None
+        assert hit.trajectory == {"user_id": 1, "name": "Ada"}
+
+        # Attempt reuse with drifted schema -> REJECTED
+        hit_drift, exp_drift = proc.explain_lookup("extract user", schema_fingerprint="fp_schema_v2_altered", require_reliable=True)
+        assert hit_drift is None
+        assert exp_drift.status.value == "schema_mismatch"
+        assert "Schema fingerprint mismatch" in (exp_drift.rejection_reason or "")
+
+    def test_tool_version_precondition_guard(self):
+        proc = ProceduralMemory()
+        proc.compile(
+            intent="query database",
+            trajectory=["sql_query('SELECT * FROM users')"],
+            tool_signatures={"sql_query": "v1.2.0"},
+            min_success_count=1,
+        )
+        proc.record_success("query database")
+
+        # Matching tool signature
+        hit, exp = proc.explain_lookup("query database", tool_signatures={"sql_query": "v1.2.0"})
+        assert exp.is_reused
+        assert hit is not None
+
+        # Altered tool signature -> REJECTED
+        hit_mismatch, exp_mismatch = proc.explain_lookup("query database", tool_signatures={"sql_query": "v2.0.0"})
+        assert hit_mismatch is None
+        assert exp_mismatch.status.value == "tool_version_mismatch"
+
 
 # --- C2C Validator ---
 

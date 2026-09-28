@@ -15,6 +15,11 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
+import numpy as np
+
+_BYTE_POPCOUNT: np.ndarray = np.array([bin(i).count("1") for i in range(256)], dtype=np.int32)
+
+
 
 def _next_power_of_2(n: int) -> int:
     """Return smallest power of 2 >= n."""
@@ -43,6 +48,26 @@ def _fast_walsh_hadamard_transform(vec: list[float]) -> list[float]:
     # Orthogonal normalization factor 1 / sqrt(n)
     inv_norm = 1.0 / math.sqrt(n)
     return [v * inv_norm for v in res]
+
+
+def _torch_fwht(X: Any) -> Any:
+    """Fast Walsh-Hadamard Transform (FWHT) implemented as batched PyTorch tensor operations.
+
+    Accepts 2D tensor of shape (Batch, Dim) where Dim is a power of 2.
+    Computes H * X in O(B * d log d) time with parallel GPU tensor execution.
+    """
+    d = X.shape[-1]
+    h = 1
+    res = X.clone()
+    while h < d:
+        res = res.view(-1, d // (2 * h), 2, h)
+        x = res[:, :, 0, :].clone()
+        y = res[:, :, 1, :].clone()
+        res[:, :, 0, :] = x + y
+        res[:, :, 1, :] = x - y
+        res = res.view(-1, d)
+        h *= 2
+    return res * (1.0 / math.sqrt(d))
 
 
 def _pseudo_random_signs(dim: int, seed: int = 42) -> list[float]:
@@ -200,6 +225,83 @@ class PolarQuantizer:
             seed=self.seed,
         )
 
+    def quantize_batch(
+        self, vectors: Sequence[Sequence[float]], device: str = "auto"
+    ) -> list[QuantizedVector]:
+        """Quantize a batch of continuous vectors into compressed PolarQuant format.
+
+        Leverages PyTorch tensor acceleration (CUDA / Apple MPS / CPU) when available,
+        falling back seamlessly to single-vector quantization.
+        """
+        if not vectors:
+            return []
+
+        try:
+            import torch
+
+            if device == "auto":
+                if torch.cuda.is_available():
+                    dev = torch.device("cuda")
+                elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+                    dev = torch.device("mps")
+                else:
+                    dev = torch.device("cpu")
+            else:
+                dev = torch.device(device)
+
+            b_size = len(vectors)
+            padded = torch.zeros((b_size, self.padded_dim), dtype=torch.float32, device=dev)
+            norms = torch.zeros((b_size,), dtype=torch.float32, device=dev)
+
+            for i, vec in enumerate(vectors):
+                dim_len = min(len(vec), self.dim)
+                v_slice = torch.tensor(vec[:dim_len], dtype=torch.float32, device=dev)
+                n = torch.norm(v_slice)
+                norm_val = float(n) if float(n) > 0 else 1.0
+                norms[i] = norm_val
+                padded[i, :dim_len] = v_slice / norm_val
+
+            signs_tensor = torch.tensor(self._signs, dtype=torch.float32, device=dev)
+            perm_tensor = torch.tensor(self._perm, dtype=torch.long, device=dev)
+
+            signed = padded * signs_tensor
+            permuted = signed[:, perm_tensor]
+            hadamard = _torch_fwht(permuted)
+
+            polar_signs = (hadamard >= 0.0).cpu().numpy()
+
+            qjl_packed_list: list[bytes | None] = [None] * b_size
+            if self.enable_qjl:
+                reconstructed_hadamard = torch.where(
+                    hadamard >= 0.0, 1.0, -1.0
+                ) / math.sqrt(self.padded_dim)
+                residual = hadamard - reconstructed_hadamard
+                qjl_signs_t = torch.tensor(self._qjl_signs, dtype=torch.float32, device=dev)
+                qjl_perm_t = torch.tensor(self._qjl_perm, dtype=torch.long, device=dev)
+                qjl_signed = residual * qjl_signs_t
+                qjl_permuted = qjl_signed[:, qjl_perm_t]
+                qjl_hadamard = _torch_fwht(qjl_permuted)
+                qjl_signs = (qjl_hadamard >= 0.0).cpu().numpy()
+                for i in range(b_size):
+                    qjl_packed_list[i] = self._pack_signs_to_bytes(qjl_signs[i])
+
+            results: list[QuantizedVector] = []
+            norms_cpu = norms.cpu().tolist()
+            for i in range(b_size):
+                results.append(
+                    QuantizedVector(
+                        packed_bits=self._pack_signs_to_bytes(polar_signs[i]),
+                        dim=self.dim,
+                        padded_dim=self.padded_dim,
+                        norm=norms_cpu[i],
+                        qjl_bits=qjl_packed_list[i],
+                        seed=self.seed,
+                    )
+                )
+            return results
+        except (ImportError, Exception):
+            return [self.quantize(v) for v in vectors]
+
     def dequantize(self, q: QuantizedVector) -> list[float]:
         """Reconstruct approximate continuous vector from compressed representation."""
         # Unpack polar signs
@@ -261,6 +363,87 @@ class PolarQuantizer:
         # Clamp into [-1.0, 1.0]
         return max(-1.0, min(1.0, base_cosine))
 
+    @staticmethod
+    def similarity_dense_matrix(
+        q1: QuantizedVector, candidates_matrix: np.ndarray
+    ) -> np.ndarray:
+        """Compute cosine similarity against a 2D uint8 matrix of packed candidates (N, num_bytes).
+
+        Runs ultra-fast vectorized bitwise XOR and LUT popcount in parallel.
+        """
+        q1_arr = np.array(list(q1.packed_bits), dtype=np.uint8)
+        diff = np.bitwise_xor(candidates_matrix, q1_arr)
+        differing = _BYTE_POPCOUNT[diff].sum(axis=-1)
+        theta = (differing / q1.padded_dim) * math.pi
+        return np.clip(np.cos(theta), -1.0, 1.0)
+
+    @staticmethod
+    def similarity_batch(
+        q1: QuantizedVector, candidates: Sequence[QuantizedVector], device: str = "auto"
+    ) -> list[float]:
+        """Compute estimated cosine similarity for a query against a batch of candidates.
+
+        Leverages PyTorch tensor acceleration if available, falling back to CPU.
+        """
+        if not candidates:
+            return []
+
+        # For small candidate sets, pure integer bit_count avoids PyTorch allocation overhead
+        if len(candidates) < 64 and device == "auto":
+            return [PolarQuantizer.similarity(q1, c) for c in candidates]
+
+        try:
+            import torch
+
+            dev = torch.device("cpu")
+            if device == "auto":
+                if torch.cuda.is_available():
+                    dev = torch.device("cuda")
+                elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+                    dev = torch.device("mps")
+            elif device != "cpu":
+                dev = torch.device(device)
+
+            q1_bytes = torch.tensor(list(q1.packed_bits), dtype=torch.uint8, device=dev)
+            cand_bytes = torch.tensor(
+                [list(c.packed_bits) for c in candidates], dtype=torch.uint8, device=dev
+            )
+
+            # Bitwise XOR
+            diff = torch.bitwise_xor(cand_bytes, q1_bytes)
+            bits = torch.zeros_like(diff, dtype=torch.int32)
+            for b in range(8):
+                bits += ((diff >> b) & 1).to(torch.int32)
+            differing_bits = torch.sum(bits, dim=-1).to(torch.float32)
+
+            theta = (differing_bits / q1.padded_dim) * math.pi
+            base_cosine = torch.cos(theta)
+
+            # Residual correction
+            if q1.qjl_bits and all(c.qjl_bits is not None for c in candidates):
+                q1_qjl = torch.tensor(list(q1.qjl_bits), dtype=torch.uint8, device=dev)
+                cand_qjl = torch.tensor(
+                    [list(c.qjl_bits) for c in candidates if c.qjl_bits is not None],  # type: ignore
+                    dtype=torch.uint8,
+                    device=dev,
+                )
+                qjl_diff = torch.bitwise_xor(cand_qjl, q1_qjl)
+                qjl_bits_tensor = torch.zeros_like(qjl_diff, dtype=torch.int32)
+                for b in range(8):
+                    qjl_bits_tensor += ((qjl_diff >> b) & 1).to(torch.int32)
+                qjl_differing = torch.sum(qjl_bits_tensor, dim=-1).to(torch.float32)
+                qjl_theta = (qjl_differing / q1.padded_dim) * math.pi
+                base_cosine += torch.cos(qjl_theta) * (math.pi / (2.0 * q1.padded_dim))
+
+            clamped = torch.clamp(base_cosine, -1.0, 1.0)
+            return clamped.cpu().tolist()
+        except (ImportError, Exception):
+            try:
+                matrix = np.array([list(c.packed_bits) for c in candidates], dtype=np.uint8)
+                return PolarQuantizer.similarity_dense_matrix(q1, matrix).tolist()
+            except Exception:
+                return [PolarQuantizer.similarity(q1, c) for c in candidates]
+
 
 class SemanticFeatureEmbedder:
     """Lightweight deterministic feature projection for text embeddings.
@@ -320,6 +503,9 @@ class TurboQuantVectorIndex:
         self.quantizer = PolarQuantizer(dim=dim, seed=seed)
         self.embedder = SemanticFeatureEmbedder(dim=dim)
         self._entries: dict[str, dict[str, Any]] = {}
+        self._matrix_cache: np.ndarray | None = None
+        self._matrix_keys: list[str] = []
+        self._matrix_dirty: bool = True
 
     def add(
         self,
@@ -343,6 +529,7 @@ class TurboQuantVectorIndex:
             "confidence": confidence,
             "metadata": metadata or {},
         }
+        self._matrix_dirty = True
 
     def search(
         self,
@@ -359,9 +546,21 @@ class TurboQuantVectorIndex:
 
         q_query = self.quantizer.quantize(query_vec)
         results: list[SearchResult] = []
+        items = list(self._entries.values())
+        if not items:
+            return []
 
-        for item in self._entries.values():
-            sim = PolarQuantizer.similarity(q_query, item["quantized"])
+        if len(items) >= 64:
+            if self._matrix_dirty or self._matrix_cache is None or len(self._matrix_cache) != len(items):
+                self._matrix_cache = np.array([list(it["quantized"].packed_bits) for it in items], dtype=np.uint8)
+                self._matrix_keys = [it["key"] for it in items]
+                self._matrix_dirty = False
+            sims = PolarQuantizer.similarity_dense_matrix(q_query, self._matrix_cache).tolist()
+        else:
+            candidates = [item["quantized"] for item in items]
+            sims = PolarQuantizer.similarity_batch(q_query, candidates)
+
+        for item, sim in zip(items, sims):
             if sim >= min_similarity:
                 results.append(
                     SearchResult(
@@ -381,6 +580,7 @@ class TurboQuantVectorIndex:
     def remove(self, key: str) -> None:
         """Remove item from index."""
         self._entries.pop(key, None)
+        self._matrix_dirty = True
 
     def __len__(self) -> int:
         return len(self._entries)

@@ -27,17 +27,21 @@
         </div>
         <div class="brand-name">
           <span>Semantic<strong>Harness</strong></span>
-          <span class="version-tag">v0.2.3</span>
+          <span class="version-tag">v0.2.5</span>
         </div>
       </a>
 
       <nav class="nav-menu">
         <a href="#overview" class="nav-item active">Overview</a>
-        <a href="#simulator" class="nav-item">Interactive Simulator</a>
+        <a href="#procedural-gap" class="nav-item">Procedural Gap</a>
+        <a href="#console" class="nav-item">Mission Control</a>
+        <a href="#calculator" class="nav-item">ROI Calculator</a>
+        <a href="#fastapi" class="nav-item">FastAPI</a>
+        <a href="#simulator" class="nav-item">Simulator</a>
         <a href="#architecture" class="nav-item">Architecture</a>
         <a href="#benchmarks" class="nav-item">Benchmarks</a>
         <a href="#quickstart" class="nav-item">Quickstart</a>
-        <a href="#paper" class="nav-item">Research Paper</a>
+        <a href="#paper" class="nav-item">Paper</a>
       </nav>
 
       <div class="nav-actions">
@@ -112,6 +116,998 @@
             <div class="stat-title">Parameter Accuracy</div>
             <div class="stat-subtitle">0 stale errors vs. 18 in traditional vector caches</div>
           </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 1: THE PROCEDURAL GAP -->
+    <section id="procedural-gap" class="section">
+      <div class="container">
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">The Missing Architectural Pillar</span>
+          <h2>Closing the "Procedural Gap"</h2>
+          <p>Every major breakthrough in LLM infrastructure has solved a distinct architectural bottleneck. Until now, no framework addressed why production agents re-reason through deterministic, identical steps every single turn.</p>
+        </div>
+
+        <div class="pillar-grid">
+          
+          <!-- PILLAR 1 -->
+          <div class="pillar-card">
+            <div class="pillar-header">
+              <div class="pillar-icon"><i class="fa-solid fa-database"></i></div>
+              <span class="pillar-badge">Pillar 1</span>
+            </div>
+            <div class="pillar-title">Knowledge Gap</div>
+            <div class="pillar-solves">Solved by RAG &amp; Vector DBs</div>
+            <div class="pillar-desc">
+              Retrieves external documents, facts, and embeddings to ground the model against hallucinations.
+            </div>
+            <div class="pillar-verdict">
+              ⚠️ Injects knowledge, but leaves computation non-deterministic.
+            </div>
+          </div>
+
+          <!-- PILLAR 2 -->
+          <div class="pillar-card">
+            <div class="pillar-header">
+              <div class="pillar-icon"><i class="fa-solid fa-expand"></i></div>
+              <span class="pillar-badge">Pillar 2</span>
+            </div>
+            <div class="pillar-title">Context Length Gap</div>
+            <div class="pillar-solves">Solved by 1M+ Context Windows</div>
+            <div class="pillar-desc">
+              Accommodates massive books and repos without buffer overflow or immediate context truncation.
+            </div>
+            <div class="pillar-verdict">
+              ⚠️ Inflates KV cache latency and drives linear token billing spikes.
+            </div>
+          </div>
+
+          <!-- PILLAR 3 -->
+          <div class="pillar-card">
+            <div class="pillar-header">
+              <div class="pillar-icon"><i class="fa-solid fa-sliders"></i></div>
+              <span class="pillar-badge">Pillar 3</span>
+            </div>
+            <div class="pillar-title">Domain Tone Gap</div>
+            <div class="pillar-solves">Solved by Fine-Tuning &amp; LoRA</div>
+            <div class="pillar-desc">
+              Adapts internal neural weights to specialize syntax, domain jargon, and organizational voice.
+            </div>
+            <div class="pillar-verdict">
+              ⚠️ Expensive to retrain; still produces probabilistic variations.
+            </div>
+          </div>
+
+          <!-- PILLAR 4 (SEMANTIC HARNESS) -->
+          <div class="pillar-card highlight-pillar">
+            <div class="pillar-header">
+              <div class="pillar-icon"><i class="fa-solid fa-microchip"></i></div>
+              <span class="pillar-badge">Pillar 4 (New)</span>
+            </div>
+            <div class="pillar-title">The Procedural Gap</div>
+            <div class="pillar-solves">SOLVED BY SEMANTIC HARNESS</div>
+            <div class="pillar-desc">
+              Compiles multi-turn LLM reasoning into verified, type-safe Python AST routines. Eliminates redundant LLM inference completely on recurring tasks.
+            </div>
+            <div class="pillar-verdict">
+              ✅ $0.00 token cost &bull; Sub-microsecond dispatch &bull; 100% parameter accuracy.
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 2: LIVE MISSION CONTROL & OPERATOR CONSOLE (GOOGLE-STYLE MINIMALIST SURFACE) -->
+    <section id="console" class="section console-section">
+      <div class="container">
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">Operator Surface</span>
+          <h2>Live Mission Control &amp; Observability Console</h2>
+          <p>Inspect real-time tokenomics, intelligent model routing, 4-tier memory capacities (Procedural, Semantic, Episodic, Working), and the interactive Knowledge Graph. Zero headless mystery.</p>
+        </div>
+
+        <div class="console-wrapper">
+          
+          <!-- TOP APP BAR -->
+          <div class="console-topbar">
+            <div class="console-breadcrumb">
+              <i class="fa-solid fa-cloud text-blue"></i>
+              <span>Engine:</span>
+              <span class="console-project-badge">semantic-harness-runtime-01</span>
+              <span>&bull;</span>
+              <span class="console-status-pill">
+                <span class="pulse-dot"></span> 0-Token Fast Path Active
+              </span>
+            </div>
+
+            <div class="console-top-actions">
+              <button class="btn-console-action" onclick="triggerConsoleSimTurn()" title="Simulate incoming agent turn">
+                <i class="fa-solid fa-play text-blue"></i> Simulate Turn
+              </button>
+              <button class="btn-console-action" onclick="triggerConsoleCompaction()" title="Trigger ACT-R cognitive memory compaction">
+                <i class="fa-solid fa-broom text-amber"></i> Compaction
+              </button>
+              <button class="btn-console-action" onclick="exportConsoleTelemetry()" title="Download telemetry JSON">
+                <i class="fa-solid fa-download"></i> Export JSON
+              </button>
+            </div>
+          </div>
+
+          <!-- MATERIAL 3 SEGMENTED TABS BAR -->
+          <div class="console-tabs-bar">
+            <button class="console-tab-btn active" onclick="switchConsoleTab('overview', this)">
+              <i class="fa-solid fa-chart-pie"></i>
+              <span>Overview</span>
+              <span class="tab-badge" id="badge-overview">Live</span>
+            </button>
+            <button class="console-tab-btn" onclick="switchConsoleTab('tokenomics', this)">
+              <i class="fa-solid fa-coins"></i>
+              <span>Tokenomics &amp; Costs</span>
+              <span class="tab-badge" id="badge-tokenomics">$1,428 Saved</span>
+            </button>
+            <button class="console-tab-btn" onclick="switchConsoleTab('models', this)">
+              <i class="fa-solid fa-network-wired"></i>
+              <span>Models &amp; Routing</span>
+              <span class="tab-badge" id="badge-models">5 Active</span>
+            </button>
+            <button class="console-tab-btn" onclick="switchConsoleTab('memory', this)">
+              <i class="fa-solid fa-memory"></i>
+              <span>4-Tier Memory</span>
+              <span class="tab-badge" id="badge-memory">6.38 MB Total</span>
+            </button>
+            <button class="console-tab-btn" onclick="switchConsoleTab('graph', this)">
+              <i class="fa-solid fa-diagram-project"></i>
+              <span>Knowledge Graph</span>
+              <span class="tab-badge" id="badge-graph">18 Nodes</span>
+            </button>
+          </div>
+
+          <!-- CONSOLE BODY WITH TAB PANES -->
+          <div class="console-body">
+            
+            <!-- PANE 1: OVERVIEW -->
+            <div class="console-pane active" id="pane-overview">
+              <div class="console-kpi-grid">
+                <div class="console-kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-label">Cache Hit Rate</span>
+                    <div class="kpi-icon icon-green"><i class="fa-solid fa-bolt"></i></div>
+                  </div>
+                  <div class="kpi-value text-green" id="kpi-hit-rate">84.6%</div>
+                  <div class="kpi-trend">
+                    <span class="trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12.4%</span>
+                    <span>vs uncompiled baseline</span>
+                  </div>
+                </div>
+
+                <div class="console-kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-label">Cost Bypassed</span>
+                    <div class="kpi-icon icon-blue"><i class="fa-solid fa-dollar-sign"></i></div>
+                  </div>
+                  <div class="kpi-value text-blue" id="kpi-cost-saved">$1,428.40</div>
+                  <div class="kpi-trend">
+                    <span class="trend-up">Zero-token</span>
+                    <span>procedural cache hits</span>
+                  </div>
+                </div>
+
+                <div class="console-kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-label">Tokens Bypassed</span>
+                    <div class="kpi-icon icon-amber"><i class="fa-solid fa-fire"></i></div>
+                  </div>
+                  <div class="kpi-value text-amber" id="kpi-tokens-saved">2,418,920</div>
+                  <div class="kpi-trend">
+                    <span class="trend-down">78.2%</span>
+                    <span>of total token volume</span>
+                  </div>
+                </div>
+
+                <div class="console-kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-label">Dispatch Latency</span>
+                    <div class="kpi-icon icon-blue"><i class="fa-solid fa-gauge-high"></i></div>
+                  </div>
+                  <div class="kpi-value" id="kpi-avg-latency">80.3 µs</div>
+                  <div class="kpi-trend">
+                    <span class="trend-up">>600× faster</span>
+                    <span>than frontier inference</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SYSTEM DIAGNOSTICS & HARDWARE STATUS -->
+              <div class="console-card">
+                <div class="console-card-header">
+                  <span class="console-card-title"><i class="fa-solid fa-microchip text-blue"></i> Cognitive Execution Kernel &amp; Hardware Telemetry</span>
+                  <span class="pill pill-green">All Systems Healthy</span>
+                </div>
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+                  <div style="background: var(--md-surface-subtle); padding: 12px; border-radius: 8px; border: 1px solid var(--md-outline);">
+                    <div style="font-size: 0.72rem; color: var(--md-text-tertiary); text-transform: uppercase;">Hardware Accelerator</div>
+                    <div style="font-weight: 600; font-size: 0.9rem; margin-top: 4px; color: var(--md-text-primary);">Apple MPS / CUDA Vector Engine</div>
+                  </div>
+                  <div style="background: var(--md-surface-subtle); padding: 12px; border-radius: 8px; border: 1px solid var(--md-outline);">
+                    <div style="font-size: 0.72rem; color: var(--md-text-tertiary); text-transform: uppercase;">1-Bit Quantizer</div>
+                    <div style="font-weight: 600; font-size: 0.9rem; margin-top: 4px; color: var(--md-text-primary);">PolarQuant FWHT (0.18ms Hamming)</div>
+                  </div>
+                  <div style="background: var(--md-surface-subtle); padding: 12px; border-radius: 8px; border: 1px solid var(--md-outline);">
+                    <div style="font-size: 0.72rem; color: var(--md-text-tertiary); text-transform: uppercase;">Compiler Validation</div>
+                    <div style="font-weight: 600; font-size: 0.9rem; margin-top: 4px; color: var(--md-text-primary);">C2C Self-Healing (100% Accuracy)</div>
+                  </div>
+                  <div style="background: var(--md-surface-subtle); padding: 12px; border-radius: 8px; border: 1px solid var(--md-outline);">
+                    <div style="font-size: 0.72rem; color: var(--md-text-tertiary); text-transform: uppercase;">Prometheus Endpoint</div>
+                    <div style="font-weight: 600; font-size: 0.9rem; margin-top: 4px; color: var(--md-primary); font-family: var(--font-mono);">:8080/metrics (Scraping)</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- LIVE STREAM OF RECENT RUNS -->
+              <div class="console-card">
+                <div class="console-card-header">
+                  <span class="console-card-title"><i class="fa-solid fa-list-check text-blue"></i> Live Execution Stream (Recent Turns)</span>
+                  <span style="font-size: 0.78rem; color: var(--md-text-tertiary);">Auto-updating · 100% Trace Logged</span>
+                </div>
+                <div class="console-table-container">
+                  <table class="console-table">
+                    <thead>
+                      <tr>
+                        <th>Turn ID</th>
+                        <th>User Intent</th>
+                        <th>Execution Path</th>
+                        <th>Billed</th>
+                        <th>Saved</th>
+                        <th>Turn Latency</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="console-stream-body">
+                      <tr>
+                        <td class="mono-cell">#TRN-9402</td>
+                        <td><code>Calculate closed-won revenue for Europe</code></td>
+                        <td><span class="pill pill-green" style="font-size: 0.7rem; padding: 2px 6px;">COMPILED_AST</span></td>
+                        <td class="mono-cell">0 tok ($0.00)</td>
+                        <td class="mono-cell text-green font-bold">+$0.0074</td>
+                        <td class="mono-cell text-blue">82 µs</td>
+                        <td><span style="color: #1e8e3e; font-weight: 600;">✅ HIT (Verified)</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono-cell">#TRN-9401</td>
+                        <td><code>Analyze customer churn for Mid-Market segment</code></td>
+                        <td><span class="pill pill-green" style="font-size: 0.7rem; padding: 2px 6px;">COMPILED_AST</span></td>
+                        <td class="mono-cell">0 tok ($0.00)</td>
+                        <td class="mono-cell text-green font-bold">+$0.0092</td>
+                        <td class="mono-cell text-blue">79 µs</td>
+                        <td><span style="color: #1e8e3e; font-weight: 600;">✅ HIT (Verified)</span></td>
+                      </tr>
+                      <tr>
+                        <td class="mono-cell">#TRN-9400</td>
+                        <td><code>Synthesize new multi-region compliance summary</code></td>
+                        <td><span class="pill pill-blue" style="font-size: 0.7rem; padding: 2px 6px;">LLM_REASONING</span></td>
+                        <td class="mono-cell">1,820 tok ($0.014)</td>
+                        <td class="mono-cell" style="color: #747775;">$0.0000</td>
+                        <td class="mono-cell">1,940 ms</td>
+                        <td><span style="color: #1a73e8; font-weight: 600;">⚡ COMPILED NEW AST</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 2: TOKENOMICS & COSTS -->
+            <div class="console-pane" id="pane-tokenomics">
+              <div class="console-card">
+                <div class="console-card-header">
+                  <span class="console-card-title"><i class="fa-solid fa-chart-column text-blue"></i> Real-Time Token Consumption Breakdown</span>
+                  <span class="pill pill-green">78.2% Token Bypassed</span>
+                </div>
+                
+                <div class="token-breakdown-bar">
+                  <div class="token-seg bypassed" style="width: 78.2%;" title="Bypassed by Procedural Cache (2,418,920 tokens)"></div>
+                  <div class="token-seg prompt" style="width: 14.8%;" title="Prompt Tokens Incurred (412,800 tokens)"></div>
+                  <div class="token-seg completion" style="width: 7.0%;" title="Completion Tokens Incurred (128,450 tokens)"></div>
+                </div>
+
+                <div class="token-legend-row">
+                  <div class="legend-item">
+                    <span class="legend-color-dot" style="background: #1e8e3e;"></span>
+                    <span><strong>Bypassed ($0 Cost):</strong> <span id="tok-bypassed-val">2,418,920 tokens</span> (78.2%)</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color-dot" style="background: #1a73e8;"></span>
+                    <span><strong>Prompt Tokens Billed:</strong> 412,800 tokens (14.8%)</span>
+                  </div>
+                  <div class="legend-item">
+                    <span class="legend-color-dot" style="background: #f9ab00;"></span>
+                    <span><strong>Completion Tokens Billed:</strong> 128,450 tokens (7.0%)</span>
+                  </div>
+                </div>
+
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px;">
+                  <div style="background: var(--md-surface-subtle); padding: 16px; border-radius: 8px; border: 1px solid var(--md-outline);">
+                    <div style="font-size: 0.75rem; color: var(--md-text-tertiary); text-transform: uppercase;">Total Spend Incurred</div>
+                    <div style="font-size: 1.4rem; font-weight: 700; color: var(--md-text-primary); margin-top: 4px;">$12.40</div>
+                    <div style="font-size: 0.75rem; color: var(--md-text-tertiary); margin-top: 4px;">Frontier fallback turns</div>
+                  </div>
+                  <div style="background: var(--md-green-container); padding: 16px; border-radius: 8px; border: 1px solid rgba(30, 142, 62, 0.3);">
+                    <div style="font-size: 0.75rem; color: var(--md-green); text-transform: uppercase; font-weight: 600;">Net Procedural Savings</div>
+                    <div style="font-size: 1.4rem; font-weight: 700; color: var(--md-green); margin-top: 4px;">+$1,428.40</div>
+                    <div style="font-size: 0.75rem; color: var(--md-green); margin-top: 4px;">115.2× ROI Multiplier</div>
+                  </div>
+                  <div style="background: var(--md-surface-subtle); padding: 16px; border-radius: 8px; border: 1px solid var(--md-outline);">
+                    <div style="font-size: 0.75rem; color: var(--md-text-tertiary); text-transform: uppercase;">Projected Annual Savings</div>
+                    <div style="font-size: 1.4rem; font-weight: 700; color: var(--md-primary); margin-top: 4px;">$17,140.80</div>
+                    <div style="font-size: 0.75rem; color: var(--md-text-tertiary); margin-top: 4px;">At current query cadence</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MODEL PRICING & TOKEN CONSUMPTION TABLE -->
+              <div class="console-card">
+                <div class="console-card-header">
+                  <span class="console-card-title"><i class="fa-solid fa-table text-blue"></i> Provider Tokenomics &amp; Cost Registry</span>
+                </div>
+                <div class="console-table-container">
+                  <table class="console-table">
+                    <thead>
+                      <tr>
+                        <th>Model Name</th>
+                        <th>Provider</th>
+                        <th>Blended / 1M Tokens</th>
+                        <th>Calls</th>
+                        <th>Tokens Incurred</th>
+                        <th>Tokens Bypassed</th>
+                        <th>Net Saved</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Claude 3.7 Sonnet</strong></td>
+                        <td>Anthropic</td>
+                        <td class="mono-cell">$9.00 / M</td>
+                        <td>420</td>
+                        <td class="mono-cell">184,200</td>
+                        <td class="mono-cell text-green font-bold">1,120,000</td>
+                        <td class="mono-cell text-green">+$756.00</td>
+                      </tr>
+                      <tr>
+                        <td><strong>GPT-4o</strong></td>
+                        <td>OpenAI</td>
+                        <td class="mono-cell">$6.25 / M</td>
+                        <td>380</td>
+                        <td class="mono-cell">158,100</td>
+                        <td class="mono-cell text-green font-bold">980,000</td>
+                        <td class="mono-cell text-green">+$487.50</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Gemini 2.0 Flash</strong></td>
+                        <td>Google DeepMind</td>
+                        <td class="mono-cell">$0.25 / M</td>
+                        <td>940</td>
+                        <td class="mono-cell">198,950</td>
+                        <td class="mono-cell text-green font-bold">318,920</td>
+                        <td class="mono-cell text-green">+$184.90</td>
+                      </tr>
+                      <tr>
+                        <td><strong>In-Process Llama 3.2 SLM</strong></td>
+                        <td>Local TorchProvider</td>
+                        <td class="mono-cell" style="color: #1e8e3e; font-weight: 700;">$0.00 / M (MPS)</td>
+                        <td>1,840</td>
+                        <td class="mono-cell">0 (Local RAM)</td>
+                        <td class="mono-cell text-green font-bold">—</td>
+                        <td class="mono-cell text-green">+$0.00 (Zero Cost)</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 3: MODELS & ROUTING -->
+            <div class="console-pane" id="pane-models">
+              <div class="console-card">
+                <div class="console-card-header">
+                  <span class="console-card-title"><i class="fa-solid fa-sitemap text-blue"></i> Configured Model Fleet &amp; Health Registry</span>
+                  <span class="pill pill-green">5 Providers Online</span>
+                </div>
+
+                <div class="models-grid">
+                  <div class="model-card">
+                    <div class="model-card-top">
+                      <span class="model-name">Gemini 2.0 Flash</span>
+                      <span class="model-chip active">● Active</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--md-text-tertiary); margin-bottom: 8px;">Google DeepMind &bull; Fast Router</div>
+                    <div class="model-meta-row">
+                      <span>Latency (P50):</span>
+                      <span class="mono-cell text-blue">420 ms</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Cost / 1M:</span>
+                      <span class="mono-cell">$0.10 / $0.40</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Success Rate:</span>
+                      <span class="mono-cell text-green">99.8%</span>
+                    </div>
+                  </div>
+
+                  <div class="model-card">
+                    <div class="model-card-top">
+                      <span class="model-name">Claude 3.7 Sonnet</span>
+                      <span class="model-chip active">● Active</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--md-text-tertiary); margin-bottom: 8px;">Anthropic &bull; Complex Synthesizer</div>
+                    <div class="model-meta-row">
+                      <span>Latency (P50):</span>
+                      <span class="mono-cell text-blue">1,840 ms</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Cost / 1M:</span>
+                      <span class="mono-cell">$3.00 / $15.00</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Success Rate:</span>
+                      <span class="mono-cell text-green">99.5%</span>
+                    </div>
+                  </div>
+
+                  <div class="model-card">
+                    <div class="model-card-top">
+                      <span class="model-name">GPT-4.5 / 4o</span>
+                      <span class="model-chip standby"> Standby</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--md-text-tertiary); margin-bottom: 8px;">OpenAI &bull; General Fallback</div>
+                    <div class="model-meta-row">
+                      <span>Latency (P50):</span>
+                      <span class="mono-cell text-blue">1,120 ms</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Cost / 1M:</span>
+                      <span class="mono-cell">$2.50 / $10.00</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Success Rate:</span>
+                      <span class="mono-cell text-green">99.4%</span>
+                    </div>
+                  </div>
+
+                  <div class="model-card">
+                    <div class="model-card-top">
+                      <span class="model-name">DeepSeek R1</span>
+                      <span class="model-chip standby"> Standby</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--md-text-tertiary); margin-bottom: 8px;">DeepSeek &bull; Math/Logic Verification</div>
+                    <div class="model-meta-row">
+                      <span>Latency (P50):</span>
+                      <span class="mono-cell text-blue">2,410 ms</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Cost / 1M:</span>
+                      <span class="mono-cell">$0.55 / $2.19</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Success Rate:</span>
+                      <span class="mono-cell text-green">98.9%</span>
+                    </div>
+                  </div>
+
+                  <div class="model-card" style="border-color: #1a73e8; background: rgba(26, 115, 232, 0.02);">
+                    <div class="model-card-top">
+                      <span class="model-name">TorchProvider SLM</span>
+                      <span class="model-chip local">● In-Process</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--md-text-tertiary); margin-bottom: 8px;">Llama 3.2 1B &bull; Apple MPS Engine</div>
+                    <div class="model-meta-row">
+                      <span>Latency (P50):</span>
+                      <span class="mono-cell text-green font-bold">38.4 ms</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Cost / 1M:</span>
+                      <span class="mono-cell text-green font-bold">$0.00 (Zero)</span>
+                    </div>
+                    <div class="model-meta-row">
+                      <span>Device Memory:</span>
+                      <span class="mono-cell">1.82 GB RAM</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ROUTING POLICY CONTROLLER -->
+                <div style="background: var(--md-surface-subtle); padding: 18px; border-radius: 8px; border: 1px solid var(--md-outline); margin-top: 10px;">
+                  <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; color: var(--md-text-primary);">
+                    <i class="fa-solid fa-route text-blue"></i> Cognitive Execution Routing Policy
+                  </div>
+                  <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.82rem; color: var(--md-text-secondary); margin-top: 12px;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                      <input type="radio" name="router-policy" checked>
+                      <span><strong>Procedural-First (Recommended):</strong> Zero-Token AST Cache &rarr; Local SLM &rarr; Frontier LLM</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                      <input type="radio" name="router-policy">
+                      <span><strong>Cost-Optimized:</strong> Favor $0 ASTs &amp; Sub-Dollar Providers</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                      <input type="radio" name="router-policy">
+                      <span><strong>Latency-Critical:</strong> Local AST (&lt;100µs) with Fast Streaming Fallback</span>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- PANE 4: 4-TIER MEMORY & SIZES -->
+            <div class="console-pane" id="pane-memory">
+              <div class="memory-tiers-grid">
+                
+                <!-- TIER 1: PROCEDURAL -->
+                <div class="memory-tier-card">
+                  <span class="tier-badge tier-proc">Tier 1 &bull; Deterministic</span>
+                  <div class="tier-title">Procedural Memory</div>
+                  <div class="tier-desc">Compiled Python AST procedures, invariant schemas, and type-safe parameterized routines.</div>
+                  
+                  <div class="tier-metric-bar">
+                    <div class="tier-metric-labels">
+                      <span>Allocated: <strong>1.84 MB</strong></span>
+                      <span>142 / 2,048 (6.9%)</span>
+                    </div>
+                    <div class="tier-progress">
+                      <div class="tier-fill proc" style="width: 6.9%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="tier-stats-list">
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Active Routines:</span>
+                      <span class="tier-stat-val text-blue">142 Procedures</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Reliability Rate:</span>
+                      <span class="tier-stat-val text-green">99.4% Verified</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Average Run Time:</span>
+                      <span class="tier-stat-val text-blue">80.3 µs</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Persistence Engine:</span>
+                      <span class="tier-stat-val">Atomic SQLite / Disk</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TIER 2: SEMANTIC -->
+                <div class="memory-tier-card">
+                  <span class="tier-badge tier-sem">Tier 2 &bull; 1-Bit Vector</span>
+                  <div class="tier-title">Semantic Memory</div>
+                  <div class="tier-desc">PolarQuant 1-bit quantized vector index with Fast Walsh-Hadamard Transform search.</div>
+                  
+                  <div class="tier-metric-bar">
+                    <div class="tier-metric-labels">
+                      <span>Index Size: <strong>420 KB</strong></span>
+                      <span class="text-green font-bold">32× Compressed</span>
+                    </div>
+                    <div class="tier-progress">
+                      <div class="tier-fill sem" style="width: 3.1%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="tier-stats-list">
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Indexed Vectors:</span>
+                      <span class="tier-stat-val">1,024 Embeddings</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Embedding Dimension:</span>
+                      <span class="tier-stat-val">768-dim</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Cosine Threshold:</span>
+                      <span class="tier-stat-val">0.85 Minimum</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Search Latency:</span>
+                      <span class="tier-stat-val text-green">0.18 ms (Hamming)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TIER 3: EPISODIC -->
+                <div class="memory-tier-card">
+                  <span class="tier-badge tier-epi">Tier 3 &bull; Multi-Turn</span>
+                  <div class="tier-title">Episodic Memory</div>
+                  <div class="tier-desc">Historical session trajectories, trace logs, and cognitive activation decay (ACT-R scoring).</div>
+                  
+                  <div class="tier-metric-bar">
+                    <div class="tier-metric-labels">
+                      <span>Trace Storage: <strong>4.12 MB</strong></span>
+                      <span>58 Sessions</span>
+                    </div>
+                    <div class="tier-progress">
+                      <div class="tier-fill epi" style="width: 41.2%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="tier-stats-list">
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Total Turns Logged:</span>
+                      <span class="tier-stat-val">842 Turns</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Compaction Ratio:</span>
+                      <span class="tier-stat-val text-amber">3.4× Compacted</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Decay Factor:</span>
+                      <span class="tier-stat-val">d = 0.5 (ACT-R)</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Integrity Check:</span>
+                      <span class="tier-stat-val text-green">SHA-256 Passed</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TIER 4: WORKING -->
+                <div class="memory-tier-card">
+                  <span class="tier-badge tier-work">Tier 4 &bull; Context Window</span>
+                  <div class="tier-title">Working Memory</div>
+                  <div class="tier-desc">Active sliding context buffer, entity scratchpad, and short-term slot bindings.</div>
+                  
+                  <div class="tier-metric-bar">
+                    <div class="tier-metric-labels">
+                      <span>Buffer: <strong>1,640 Tokens</strong></span>
+                      <span>1,640 / 8,192 (20.0%)</span>
+                    </div>
+                    <div class="tier-progress">
+                      <div class="tier-fill work" style="width: 20.0%;"></div>
+                    </div>
+                  </div>
+
+                  <div class="tier-stats-list">
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Allocated RAM:</span>
+                      <span class="tier-stat-val">18.2 KB</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Active Slot Bindings:</span>
+                      <span class="tier-stat-val">12 Entities</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Task Frames:</span>
+                      <span class="tier-stat-val">3 Active</span>
+                    </div>
+                    <div class="tier-stat-item">
+                      <span class="tier-stat-name">Eviction Policy:</span>
+                      <span class="tier-stat-val">Priority FIFO</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- COMPILED PROCEDURES LIVE INSPECTOR TABLE -->
+              <div class="console-card">
+                <div class="console-card-header">
+                  <span class="console-card-title"><i class="fa-solid fa-code text-blue"></i> Compiled Procedural Memory Directory</span>
+                  <span style="font-size: 0.78rem; color: var(--md-text-tertiary);">Click any procedure to inspect compiled AST code</span>
+                </div>
+                <div class="console-table-container">
+                  <table class="console-table">
+                    <thead>
+                      <tr>
+                        <th>Procedure Signature</th>
+                        <th>Intent Matcher</th>
+                        <th>Executions</th>
+                        <th>Success Rate</th>
+                        <th>Reliability</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code style="color: #1a73e8; font-weight: 600;">crm_closed_won_revenue(region: str)</code></td>
+                        <td>"Calculate enterprise sales revenue for {region}"</td>
+                        <td class="mono-cell">412</td>
+                        <td class="mono-cell text-green font-bold">100.0%</td>
+                        <td><span class="pill pill-green" style="font-size: 0.7rem; padding: 2px 6px;">RELIABLE</span></td>
+                        <td><button class="btn-console-action" onclick="inspectProcedureAst('revenue')"><i class="fa-regular fa-eye"></i> View AST</button></td>
+                      </tr>
+                      <tr>
+                        <td><code style="color: #1a73e8; font-weight: 600;">compute_churn_ltv(segment: str)</code></td>
+                        <td>"Compute customer churn and LTV for {segment}"</td>
+                        <td class="mono-cell">289</td>
+                        <td class="mono-cell text-green font-bold">100.0%</td>
+                        <td><span class="pill pill-green" style="font-size: 0.7rem; padding: 2px 6px;">RELIABLE</span></td>
+                        <td><button class="btn-console-action" onclick="inspectProcedureAst('churn')"><i class="fa-regular fa-eye"></i> View AST</button></td>
+                      </tr>
+                      <tr>
+                        <td><code style="color: #1a73e8; font-weight: 600;">carrier_delay_vs_returns(carrier: str)</code></td>
+                        <td>"Analyze delivery delay vs return rate for {carrier}"</td>
+                        <td class="mono-cell">198</td>
+                        <td class="mono-cell text-green font-bold">100.0%</td>
+                        <td><span class="pill pill-green" style="font-size: 0.7rem; padding: 2px 6px;">RELIABLE</span></td>
+                        <td><button class="btn-console-action" onclick="inspectProcedureAst('logistics')"><i class="fa-regular fa-eye"></i> View AST</button></td>
+                      </tr>
+                      <tr>
+                        <td><code style="color: #1a73e8; font-weight: 600;">inventory_reorder_trigger(sku: str)</code></td>
+                        <td>"Check inventory reorder safety threshold for {sku}"</td>
+                        <td class="mono-cell">84</td>
+                        <td class="mono-cell text-green font-bold">98.8%</td>
+                        <td><span class="pill pill-green" style="font-size: 0.7rem; padding: 2px 6px;">RELIABLE</span></td>
+                        <td><button class="btn-console-action" onclick="inspectProcedureAst('inventory')"><i class="fa-regular fa-eye"></i> View AST</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANE 5: KNOWLEDGE & PROCEDURAL GRAPH -->
+            <div class="console-pane" id="pane-graph">
+              <div class="graph-stage-wrapper">
+                
+                <!-- CANVAS GRAPH AREA -->
+                <div class="graph-canvas-box">
+                  <canvas id="consoleGraphCanvas"></canvas>
+                  
+                  <div class="graph-controls-overlay">
+                    <button class="graph-ctrl-btn" onclick="zoomConsoleGraph(1.2)" title="Zoom in"><i class="fa-solid fa-plus"></i></button>
+                    <button class="graph-ctrl-btn" onclick="zoomConsoleGraph(0.8)" title="Zoom out"><i class="fa-solid fa-minus"></i></button>
+                    <button class="graph-ctrl-btn" onclick="resetConsoleGraph()" title="Center graph"><i class="fa-solid fa-arrows-to-dot"></i></button>
+                  </div>
+
+                  <div class="graph-filter-overlay">
+                    <button class="graph-filter-chip active" onclick="filterConsoleGraph('ALL', this)">All Nodes (18)</button>
+                    <button class="graph-filter-chip" onclick="filterConsoleGraph('PROCEDURE', this)">Procedures (4)</button>
+                    <button class="graph-filter-chip" onclick="filterConsoleGraph('ENTITY', this)">Entities (6)</button>
+                    <button class="graph-filter-chip" onclick="filterConsoleGraph('TOOL', this)">Tools (4)</button>
+                    <button class="graph-filter-chip" onclick="filterConsoleGraph('INVARIANT', this)">Invariants (4)</button>
+                  </div>
+                </div>
+
+                <!-- NODE INSPECTOR DRAWER -->
+                <div class="graph-node-drawer" id="graph-drawer">
+                  <div class="drawer-header">
+                    <span class="drawer-title" id="drawer-node-name">proc:crm_closed_won</span>
+                    <span class="pill pill-blue" id="drawer-node-type" style="font-size: 0.7rem; padding: 2px 6px;">PROCEDURE</span>
+                  </div>
+                  
+                  <div style="font-size: 0.8rem; color: var(--md-text-secondary); line-height: 1.4;" id="drawer-node-desc">
+                    Verified compiled Python AST procedure. Re-executes regional closed-won revenue calculation in 80µs at $0.00 token cost.
+                  </div>
+
+                  <div style="margin-top: 14px; font-size: 0.76rem; border-top: 1px solid var(--md-outline); padding-top: 10px;">
+                    <div style="font-weight: 600; color: var(--md-text-tertiary); text-transform: uppercase; margin-bottom: 6px;">Graph Relations:</div>
+                    <div id="drawer-relations-list" style="display: flex; flex-direction: column; gap: 4px; font-family: var(--font-mono); font-size: 0.75rem; color: var(--md-text-primary);">
+                      <div>&rarr; calls <code>sql_repl_engine</code></div>
+                      <div>&rarr; validates <code>inv:RegionEnum</code></div>
+                      <div>&rarr; derives_from <code>ent:SalesforceOpportunity</code></div>
+                    </div>
+                  </div>
+
+                  <div style="margin-top: 14px; border-top: 1px solid var(--md-outline); padding-top: 10px;">
+                    <div style="font-size: 0.76rem; font-weight: 600; color: var(--md-text-tertiary); text-transform: uppercase;">Executable AST Code:</div>
+                    <pre class="drawer-ast-code" id="drawer-code-preview">def crm_closed_won_revenue(region: str) -> dict:
+    query = f"SELECT SUM(amount) FROM opps WHERE region='{region}'"
+    res = sql_engine.execute(query)
+    return {"amount": res[0][0], "status": "verified"}</pre>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: TOKEN SAVINGS & ROI CALCULATOR -->
+    <section id="calculator" class="section bg-subtle">
+      <div class="container">
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">Economic Amortization</span>
+          <h2>Token Savings &amp; ROI Calculator</h2>
+          <p>Model reasoning is an upfront compilation investment. Input your monthly LLM spend to calculate amortized savings from procedural execution.</p>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-layout">
+            
+            <!-- INPUTS -->
+            <div class="calc-inputs">
+              
+              <div class="calc-input-group">
+                <div class="calc-input-header">
+                  <label for="calc-spend"><i class="fa-solid fa-dollar-sign text-blue"></i> Monthly LLM Token Spend:</label>
+                  <span class="calc-badge-val" id="calc-spend-badge">$25,000</span>
+                </div>
+                <input type="range" class="calc-slider" id="calc-spend" min="1000" max="200000" step="1000" value="25000" oninput="onCalcSpendChange(this.value)">
+              </div>
+
+              <div class="calc-input-group">
+                <div class="calc-input-header">
+                  <label for="calc-model"><i class="fa-solid fa-brain text-blue"></i> Primary Model Tier:</label>
+                </div>
+                <select class="calc-select" id="calc-model" onchange="updateSavingsCalculator()">
+                  <option value="gpt-4o" selected>GPT-4o ($2.50 / $10.00 per M tokens)</option>
+                  <option value="claude-3-5-sonnet">Claude 3.5 Sonnet ($3.00 / $15.00 per M tokens)</option>
+                  <option value="llama-3-3-70b">Llama 3.3 70B ($0.70 / $0.90 per M tokens)</option>
+                  <option value="qwen-2-5-72b">Qwen 2.5 72B ($0.90 / $1.30 per M tokens)</option>
+                  <option value="deepseek-v3">DeepSeek-V3 ($0.14 / $0.28 per M tokens)</option>
+                </select>
+              </div>
+
+              <div class="calc-input-group">
+                <div class="calc-input-header">
+                  <label for="calc-repetition"><i class="fa-solid fa-repeat text-blue"></i> Procedural Overlap / Task Repetition:</label>
+                  <span class="calc-badge-val" id="calc-repetition-badge">45% Overlap</span>
+                </div>
+                <input type="range" class="calc-slider" id="calc-repetition" min="15" max="85" step="5" value="45" oninput="onCalcRepetitionChange(this.value)">
+                <span class="calc-headline-sub">Recurring queries, schema reports, API workflows, and structured extraction.</span>
+              </div>
+
+              <div class="calc-input-group">
+                <div class="calc-input-header">
+                  <label for="calc-turns"><i class="fa-solid fa-arrows-spin text-blue"></i> Average Agent Turns Per Workflow:</label>
+                  <span class="calc-badge-val" id="calc-turns-badge">5 Turns</span>
+                </div>
+                <input type="range" class="calc-slider" id="calc-turns" min="1" max="15" step="1" value="5" oninput="onCalcTurnsChange(this.value)">
+              </div>
+
+            </div>
+
+            <!-- OUTPUTS -->
+            <div class="calc-outputs">
+              
+              <div class="calc-headline-savings">
+                <div class="calc-headline-label">Projected Monthly Net Savings</div>
+                <div class="calc-big-num" id="calc-monthly-savings">$10,778</div>
+                <div class="calc-headline-sub">Direct cash saved from bypassed model inference</div>
+              </div>
+
+              <div class="calc-metrics-grid">
+                
+                <div class="calc-metric-box">
+                  <div class="calc-metric-box-title">Annual Cost Reduction</div>
+                  <div class="calc-metric-box-val text-green" id="calc-annual-savings">$129,330</div>
+                </div>
+
+                <div class="calc-metric-box">
+                  <div class="calc-metric-box-title">Tokens Bypassed / Mo</div>
+                  <div class="calc-metric-box-val text-blue" id="calc-tokens-saved">1.80B Tokens</div>
+                </div>
+
+                <div class="calc-metric-box">
+                  <div class="calc-metric-box-title">Latency Saved / Mo</div>
+                  <div class="calc-metric-box-val" id="calc-hours-saved">486 hrs</div>
+                </div>
+
+                <div class="calc-metric-box">
+                  <div class="calc-metric-box-title">Break-Even Point (r*)</div>
+                  <div class="calc-metric-box-val text-accent" id="calc-breakeven-turn">Turn 1.2</div>
+                </div>
+
+              </div>
+
+              <div class="calc-break-even-banner">
+                <i class="fa-solid fa-circle-check text-green"></i>
+                <span>After <strong>Turn 1</strong>, recurring agent steps execute at <strong>$0.00 in <1µs</strong>.</span>
+              </div>
+
+              <div class="calc-actions">
+                <button class="btn-primary" onclick="copyCalcSummary(this)">
+                  <i class="fa-regular fa-copy"></i> Copy ROI Summary
+                </button>
+                <a href="#fastapi" class="btn-secondary">
+                  <i class="fa-solid fa-code"></i> View FastAPI Setup
+                </a>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: FASTAPI & ASGI MIDDLEWARE -->
+    <section id="fastapi" class="section">
+      <div class="container">
+        
+        <div class="section-title-box text-center">
+          <span class="subheading">Zero-Friction Integration</span>
+          <h2>Drop-In FastAPI &amp; ASGI Middleware</h2>
+          <p>Add <code>SemanticHarnessMiddleware</code> to any existing Python backend in 3 lines of code. Automatically intercepts API routes, checks compiled procedural memory, and adds transparent cost-saving headers.</p>
+        </div>
+
+        <div class="fastapi-showcase-grid">
+          
+          <div class="code-box active" style="margin-top: 0;">
+            <div class="code-bar">
+              <span>main.py (FastAPI App)</span>
+              <button class="copy-btn" onclick="copySnippet(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+            </div>
+            <pre><code class="language-python">from fastapi import FastAPI
+from pydantic import BaseModel
+from semantic_harness.integrations.fastapi import (
+    SemanticHarnessMiddleware,
+    procedural_route,
+)
+
+app = FastAPI(title="Enterprise Agent Backend")
+
+# 1. Add middleware to intercept and accelerate agent endpoints
+app.add_middleware(
+    SemanticHarnessMiddleware,
+    cache_paths=["/api/v1/agent", "/api/v1/generate"],
+    pricing_model="gpt-4o",
+)
+
+class AnalysisOutput(BaseModel):
+    summary: str
+    action_items: list[str]
+
+# 2. Or decorate specific routes with procedural validation
+@app.post("/api/v1/agent")
+@procedural_route(validates=AnalysisOutput, cache=True)
+async def run_agent_workflow(payload: dict):
+    # Executes once via LLM; repeat calls execute at $0 in <1ms!
+    return await my_agent_core.run(payload["query"])</code></pre>
+          </div>
+
+          <div class="headers-inspect-card">
+            <div class="headers-inspect-header">
+              <span><i class="fa-solid fa-network-wired text-blue"></i> HTTP Response Headers (Warm Path)</span>
+              <span class="pill pill-green" style="padding: 2px 8px; font-size: 0.72rem;">200 OK</span>
+            </div>
+            
+            <div class="header-row hit-row">
+              <span class="header-name">X-Semantic-Harness-Cache:</span>
+              <span class="header-val" style="color: #34a853; font-weight: 700;">HIT (Zero-Token Fast Path)</span>
+            </div>
+
+            <div class="header-row">
+              <span class="header-name">X-Semantic-Harness-Cost-Saved:</span>
+              <span class="header-val text-green">$0.007400</span>
+            </div>
+
+            <div class="header-row">
+              <span class="header-name">X-Semantic-Harness-Tokens-Bypassed:</span>
+              <span class="header-val">1,480 tokens</span>
+            </div>
+
+            <div class="header-row">
+              <span class="header-name">X-Semantic-Harness-Latency-Saved-Ms:</span>
+              <span class="header-val text-blue">1,842.10 ms</span>
+            </div>
+
+            <div class="header-row">
+              <span class="header-name">X-Semantic-Harness-Procedural-Hash:</span>
+              <span class="header-val">4a2f8b19e2c041a8</span>
+            </div>
+
+            <div class="header-row">
+              <span class="header-name">Content-Type:</span>
+              <span class="header-val">application/json</span>
+            </div>
+
+          </div>
+
         </div>
 
       </div>
@@ -633,7 +1629,7 @@ def validated_tool_node(state):
           <div class="paper-details-col">
             <div class="paper-badge-line">
               <span class="pill pill-blue"><i class="fa-solid fa-file-pdf"></i> Academic Paper</span>
-              <span class="pill pill-green"><i class="fa-solid fa-check"></i> Published v0.2.3</span>
+              <span class="pill pill-green"><i class="fa-solid fa-check"></i> Published v0.2.5</span>
             </div>
             <h3 class="paper-h3">Semantic Harness: Cognitive Middleware, Procedural Acceleration, and Layered Runtime Architecture for Autonomous AI Agents</h3>
             <p class="paper-meta"><strong>Author:</strong> Bankupalli Ravi Teja &bull; <strong>Affiliation:</strong> Independent Research / Open Source Systems</p>
@@ -659,7 +1655,7 @@ def validated_tool_node(state):
   month        = {August},
   journal      = {arXiv preprint},
   publisher    = {Zenodo},
-  version      = {0.2.3},
+  version      = {0.2.5},
   doi          = {10.5281/zenodo.19414309},
   url          = {https://zenodo.org/records/19414309}
 }</code></pre>

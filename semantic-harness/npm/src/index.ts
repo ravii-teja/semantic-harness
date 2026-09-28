@@ -36,5 +36,13 @@ export type { ModelPricing, TokenUsageRecord } from "./core/tokenomics.js";
 export { GraphMemory } from "./memory/graph.js";
 export type { GraphEntity, GraphTriplet } from "./memory/graph.js";
 
+// Hardware
+export { HardwareDetector } from "./core/hardware.js";
+export type { HardwareProfile, AcceleratorType } from "./core/hardware.js";
+
+// CLI
+export { main as runCli } from "./cli.js";
+
 // Version
-export const VERSION = "0.2.3";
+export const VERSION = "0.2.5";
+

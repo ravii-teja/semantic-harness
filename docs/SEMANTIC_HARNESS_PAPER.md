@@ -4,15 +4,19 @@
 **Affiliation:** Independent Research / Open Source Systems  
 **Date:** August 2026  
 **Repository:** [github.com/ravii-teja/semantic-harness](https://github.com/ravii-teja/semantic-harness)  
-**Package Index:** [pypi.org/project/semantic-harness/](https://pypi.org/project/semantic-harness/) (**v0.2.3**)  
-**Status:** Release v0.2.3 (Production-Verified & Published)  
+**Package Index:** [pypi.org/project/semantic-harness/](https://pypi.org/project/semantic-harness/) (**v0.2.5**)  
+**Status:** Release v0.2.5 (Production-Verified & Published)  
 **Research DOI:** [10.5281/zenodo.19414309](https://zenodo.org/records/19414309)  
 **Evaluation Artifacts:** [`notebooks/semantic_harness_notebook.ipynb`](file:///Users/home/Development/harness/experiments/semantic_harness_master_evaluation.ipynb)  
-**Benchmark Suite:** [`experiments/build_and_run_experiments.py`](file:///Users/home/Development/harness/experiments/build_and_run_experiments.py)
+**Benchmark Suite:** [`experiments/run_ablation.py`](file:///Users/home/Development/harness/experiments/run_ablation.py) | [`experiments/build_and_run_experiments.py`](file:///Users/home/Development/harness/experiments/build_and_run_experiments.py)
 
 ---
 
-![Master System Architecture & Visual Benchmark](file:///Users/home/Development/harness/docs/figures/semantic_harness_benchmark.png)
+![Semantic Harness System Architecture](./figures/semantic-harness.png)
+*Figure 1: High-level architectural pipeline of Semantic Harness spanning procedural caching, relational knowledge graph traversal, tokenomics routing, and C2C semantic validation.*
+
+![Master Visual Benchmark Comparison](./figures/semantic_harness_benchmark.png)
+*Figure 2: Empirical benchmark results across ablation layers, compute avoidance, and small-model accuracy lift.*
 
 ---
 

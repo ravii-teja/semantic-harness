@@ -1,7 +1,7 @@
 """Semantic Harness: Cognitive middleware and procedural runtime for autonomous AI agents."""
 
 from semantic_harness.__version__ import __version__
-from semantic_harness.middleware import step
+from semantic_harness.middleware import step, SemanticLayer
 from semantic_harness.core.agent import Agent, AgentConfig
 from semantic_harness.core.events import Event, EventBus, EventType
 from semantic_harness.core.persistence import JSONLSessionLog
@@ -11,6 +11,10 @@ from semantic_harness.memory.procedural import (
     ProceduralMemory,
     SemanticProceduralMemory,
     CachedProcedure,
+    CompiledProcedure,
+    ProcedurePrecondition,
+    ReuseExplanation,
+    ReuseStatus,
 )
 from semantic_harness.memory.long_term import LongTermMemory, MemoryItem
 from semantic_harness.memory.short_term import ShortTermMemory
@@ -54,12 +58,25 @@ from semantic_harness.providers import (
     OllamaProvider,
     HuggingFaceProvider,
     MLXProvider,
+    TorchProvider,
     get_provider,
+)
+from semantic_harness.telemetry import (
+    MetricsCollector,
+    get_metrics_collector,
+    SemanticTracer,
+    Span,
+    get_tracer,
+)
+from semantic_harness.integrations.fastapi import (
+    SemanticHarnessMiddleware,
+    procedural_route,
 )
 
 __all__ = [
     "__version__",
     "step",
+    "SemanticLayer",
     "Agent",
     "AgentConfig",
     "HardwareDetector",
@@ -79,6 +96,10 @@ __all__ = [
     "ProceduralMemory",
     "SemanticProceduralMemory",
     "CachedProcedure",
+    "CompiledProcedure",
+    "ProcedurePrecondition",
+    "ReuseExplanation",
+    "ReuseStatus",
     "LongTermMemory",
     "MemoryItem",
     "ShortTermMemory",
@@ -101,6 +122,7 @@ __all__ = [
     "OllamaProvider",
     "HuggingFaceProvider",
     "MLXProvider",
+    "TorchProvider",
     "get_provider",
     "TokenomicsTracker",
     "AmortizationEngine",
@@ -111,4 +133,11 @@ __all__ = [
     "GraphMemory",
     "Entity",
     "Triplet",
+    "MetricsCollector",
+    "get_metrics_collector",
+    "SemanticTracer",
+    "Span",
+    "get_tracer",
+    "SemanticHarnessMiddleware",
+    "procedural_route",
 ]
