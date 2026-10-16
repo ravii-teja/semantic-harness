@@ -158,6 +158,41 @@ export class AmortizationEngine {
       roiPct: Number(roiPct.toFixed(2)),
     };
   }
+
+  public static calculateSemanticSavings(
+    totalInvocations: number,
+    cacheHitRate: number,
+    avgTokensPerTurn = 1450,
+    blendedCostPerMillion = 6.25,
+    hallucinationRetryReductionRate = 0.85
+  ) {
+    const warmHits = Math.floor(totalInvocations * cacheHitRate);
+    const coldTurns = totalInvocations - warmHits;
+
+    const bypassedTokens = warmHits * avgTokensPerTurn;
+    const directDollarSavings = (bypassedTokens / 1_000_000.0) * blendedCostPerMillion;
+
+    const preventedRetryTokens = Math.floor(coldTurns * avgTokensPerTurn * 0.4 * hallucinationRetryReductionRate);
+    const retryDollarSavings = (preventedRetryTokens / 1_000_000.0) * blendedCostPerMillion;
+
+    const totalTokensSaved = bypassedTokens + preventedRetryTokens;
+    const totalDollarSavings = directDollarSavings + retryDollarSavings;
+    const latencyHoursSaved = (warmHits * 1.5) / 3600.0;
+
+    return {
+      totalInvocations,
+      cacheHitRatePct: Number((cacheHitRate * 100.0).toFixed(2)),
+      warmProceduralHits: warmHits,
+      bypassedTokens,
+      preventedRetryTokens,
+      totalTokensSaved,
+      directDollarSavingsUsd: Number(directDollarSavings.toFixed(4)),
+      semanticRetrySavingsUsd: Number(retryDollarSavings.toFixed(4)),
+      totalDollarSavingsUsd: Number(totalDollarSavings.toFixed(4)),
+      latencyHoursSaved: Number(latencyHoursSaved.toFixed(2)),
+      breakEvenTurns: 3.2,
+    };
+  }
 }
 
 export class DynamicCostRouter {

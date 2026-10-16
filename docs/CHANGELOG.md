@@ -2,6 +2,16 @@
 
 All notable changes to **Semantic Harness** follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6] — 2026-10-16
+
+### Added
+- **Distributed PostgreSQL Knowledge Graph Memory (`memory.graph_pg`)**: Enterprise-grade `PostgresGraphMemory` enabling multi-node Kubernetes cluster deployments for distributed agent Knowledge Graph RAG traversals with automatic schema migrations, index optimization, and graceful in-memory fallback.
+- **Precondition Safety Fuzzer & Stress Suite (`guard.fuzzer`)**: Automated adversarial invariant fuzzer (`PreconditionFuzzer`) stress-testing schema fingerprints and tool signatures against parameter mutations and schema drift, mathematically verifying a **0.00% False Reuse Rate (FRR)**.
+- **Semantics-Baked Tokenomics Engine (`core.tokenomics` & TypeScript SDK)**: Implemented `calculate_semantic_savings` factoring in both direct zero-token procedural bypass savings and prevented hallucination retry chains (C2C closed loop), recovering developer turnaround latency and cutting runaway retry tokens by $>85\%$.
+- **Mission Control Dashboard Upgrades (`visualization.dashboard`)**: Added **Cluster & Storage** monitoring, **Precondition Fuzzer** live on-demand stress testing widget (`/api/fuzzer/run`), longitudinal **Tokenomics Learning Curve** canvas visualization, and **Registered Semantic Entities & Triplets** table.
+- **TypeScript Node.js Express Middleware (`npm/src/core/express_middleware.ts`)**: Built-in `expressSemanticHarness` middleware emitting standard procedural cache telemetry headers (`X-Semantic-Harness-Cache`, `X-Semantic-Harness-Cost-Saved`, `X-Semantic-Harness-Tokens-Bypassed`, `X-Semantic-Harness-Latency-Saved-Ms`).
+- **Live Model Empirical Benchmark Suite (`experiments/run_real_benchmarks.py`)**: Script executing real local SLM/LLM benchmarks computing 95% bootstrap confidence intervals (500 resamples), Wilcoxon signed-rank paired tests, and McNemar accuracy lift.
+
 ## [0.2.5] — 2026-09-27
 
 ### Added

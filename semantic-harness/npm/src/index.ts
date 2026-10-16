@@ -40,9 +40,13 @@ export type { GraphEntity, GraphTriplet } from "./memory/graph.js";
 export { HardwareDetector } from "./core/hardware.js";
 export type { HardwareProfile, AcceleratorType } from "./core/hardware.js";
 
+// Middleware
+export { expressSemanticHarness } from "./core/express_middleware.js";
+export type { ExpressMiddlewareOptions } from "./core/express_middleware.js";
+
 // CLI
 export { main as runCli } from "./cli.js";
 
 // Version
-export const VERSION = "0.2.5";
+export const VERSION = "0.2.6";
 

@@ -32,7 +32,7 @@ test("TypeScript CLI handles version, hardware, and cache commands", () => {
   try {
     // 1. Version
     runCli(["version"]);
-    assert.ok(logs.some((l) => l.includes("0.2.5")));
+    assert.ok(logs.some((l) => l.includes("0.2.6")));
 
     // 2. Hardware
     runCli(["hardware"]);

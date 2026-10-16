@@ -46,6 +46,12 @@ describe("Tokenomics Engine (TypeScript)", () => {
     assert.equal(roi.actualAmortizedCostUsd, 0.05);
     assert.equal(roi.netSavingsUsd, 0.15);
     assert.equal(roi.roiPct, 300);
+
+    const semanticSavings = AmortizationEngine.calculateSemanticSavings(100, 0.8, 1000, 6.0);
+    assert.equal(semanticSavings.warmProceduralHits, 80);
+    assert.equal(semanticSavings.bypassedTokens, 80000);
+    assert.ok(semanticSavings.preventedRetryTokens > 0);
+    assert.ok(semanticSavings.totalDollarSavingsUsd > 0.48);
   });
 
   test("dynamically routes tiers based on cache and retries", () => {

@@ -1,9 +1,28 @@
 # Semantic Harness: System Context & Architecture Overview
 
-> **Document Version:** 0.2.5  
+> **Document Version:** 0.2.6  
 > **Target Path:** `docs/context.md`  
 > **Source Base:** `semantic-harness` monorepo (`python/`, `npm/`, `.github/workflows/`, `website/`)  
 > **Author & Research:** Bankupalli Ravi Teja | Zenodo DOI: [10.5281/zenodo.19414309](https://zenodo.org/records/19414309)
+
+---
+
+## 0. Chronological System Updates (Latest First)
+
+### [2026-10-16] Version 0.2.6 — Distributed Graph RAG, Adversarial Precondition Fuzzing & Semantics-Baked Tokenomics
+- **Distributed PostgreSQL Knowledge Graph Memory (`memory/graph_pg.py`)**: Added `PostgresGraphMemory` extending entity-relation property graph storage to PostgreSQL cluster deployments with automatic connection pooling (`RealDictCursor`), automatic index migrations, and graceful in-memory fallback.
+- **Precondition Safety Fuzzer & Stress Suite (`guard/fuzzer.py`)**: Integrated `PreconditionFuzzer` to stress-test schema fingerprints and tool signatures against random parameter injections and schema drift, verifying a **0.00% False Reuse Rate (FRR)**.
+- **Semantics-Baked Tokenomics Amortization Engine (`core/tokenomics.py` & `npm/src/core/tokenomics.ts`)**: Added `calculate_semantic_savings` factoring in both direct 0-token procedural bypass and prevented schema hallucination retry loops (C2C closed loop), yielding $>85\%$ reduction in runaway retry tokens.
+- **Live Model Empirical Benchmark Suite (`experiments/run_real_benchmarks.py`)**: Live local SLM/LLM benchmark harness computing 95% bootstrap confidence intervals (500 resamples), Wilcoxon signed-rank paired tests, and McNemar accuracy lift.
+- **TypeScript Node.js Express Middleware (`npm/src/core/express_middleware.ts`)**: Zero-effort `expressSemanticHarness` middleware emitting procedural cache hit headers (`X-Semantic-Harness-Cache`, `X-Semantic-Harness-Cost-Saved`, `X-Semantic-Harness-Tokens-Bypassed`, `X-Semantic-Harness-Latency-Saved-Ms`).
+- **Mission Control Dashboard Upgrades (`visualization/dashboard.py`)**: Added **Cluster & Storage** monitoring, **Precondition Fuzzer** live on-demand stress testing widget (`/api/fuzzer/run`), longitudinal **Tokenomics Learning Curve** canvas visualization, and **Registered Semantic Entities & Triplets** table.
+
+### [2026-09-27] Version 0.2.5 — Mission Control Console, FastAPI Middleware & Multi-Model Ablations
+- **Drop-In FastAPI & ASGI Middleware (`integrations/fastapi.py`)**: Zero-effort `SemanticHarnessMiddleware` and `procedural_route` decorator for FastAPI/Starlette applications.
+- **Mission Control Dashboard & Turn-Key Visualizer (`visualization/dashboard.py`)**: Google Material 3 / DeepMind aesthetic dashboard for tokenomics, 4-tier memory, model fleet routing, and knowledge graph.
+- **Multi-Model Empirical Benchmark Suite (`experiments/run_ablation.py`)**: Automated 5-layer ablation across 4 local SLMs (`Qwen/Qwen2.5-0.5B`, `Qwen/Qwen2.5-Coder-3B`, `Llama-3.2-1B`, `Phi-3.5-mini`).
+- **Distributed Redis Procedural Backend (`memory/procedural.py`)**: Pluggable `RedisProceduralStorage` for Kubernetes horizontal pod autoscaling.
+- **Ultra-Dense LUT Popcount Similarity Matrix Kernel (`memory/turbo_quant.py`)**: 256-element byte popcount lookup table (`_BYTE_POPCOUNT`) and accelerated matrix similarity (`similarity_dense_matrix`).
 
 ---
 

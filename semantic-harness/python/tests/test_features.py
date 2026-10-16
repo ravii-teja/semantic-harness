@@ -68,6 +68,18 @@ def test_amortization_engine():
     assert roi["net_savings_usd"] == 0.15
     assert roi["roi_pct"] == 300.0
 
+    semantic_savings = AmortizationEngine.calculate_semantic_savings(
+        total_invocations=100,
+        cache_hit_rate=0.75,
+        avg_tokens_per_turn=1000,
+        blended_cost_per_million=6.0,
+    )
+    assert semantic_savings["warm_procedural_hits"] == 75
+    assert semantic_savings["bypassed_tokens"] == 75000
+    assert semantic_savings["prevented_retry_tokens"] > 0
+    assert semantic_savings["total_tokens_saved"] > 75000
+    assert semantic_savings["total_dollar_savings_usd"] > 0.45
+
 
 def test_dynamic_cost_router():
     tracker = TokenomicsTracker()

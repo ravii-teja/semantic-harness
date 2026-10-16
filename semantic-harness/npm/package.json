@@ -1,6 +1,6 @@
 {
   "name": "@ravii-teja/semantic-harness",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Cognitive middleware and procedural acceleration runtime for autonomous AI agents",
   "publishConfig": {
     "access": "public"

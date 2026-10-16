@@ -131,6 +131,17 @@ def test_observability_dashboard_server():
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/data") as resp:
             data = json.loads(resp.read().decode("utf-8"))
             assert "step_calls_total" in data
+
+        # 4. Fetch Live Fuzzer Stress API
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/fuzzer/run?iterations=10") as resp:
+            fuzz_data = json.loads(resp.read().decode("utf-8"))
+            assert fuzz_data["status"] == "PASS"
+            assert fuzz_data["frr_percent"] == 0.0
+
+        # 5. Fetch Cluster & Storage API
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/cluster") as resp:
+            cluster_data = json.loads(resp.read().decode("utf-8"))
+            assert cluster_data["status"] == "healthy"
     finally:
         server.stop()
 

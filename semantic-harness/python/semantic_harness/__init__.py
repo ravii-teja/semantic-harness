@@ -50,6 +50,8 @@ from semantic_harness.memory.graph import (
     Entity,
     Triplet,
 )
+from semantic_harness.memory.graph_pg import PostgresGraphMemory
+from semantic_harness.guard.fuzzer import PreconditionFuzzer, FuzzResult
 from semantic_harness.providers import (
     BaseProvider,
     ProviderResponse,
@@ -131,8 +133,11 @@ __all__ = [
     "ModelPricing",
     "TokenUsageRecord",
     "GraphMemory",
+    "PostgresGraphMemory",
     "Entity",
     "Triplet",
+    "PreconditionFuzzer",
+    "FuzzResult",
     "MetricsCollector",
     "get_metrics_collector",
     "SemanticTracer",
