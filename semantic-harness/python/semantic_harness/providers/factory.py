@@ -18,7 +18,19 @@ def get_provider(model: str, **kwargs: Any) -> BaseProvider:
         get_provider("metal/mlx-community/Llama-3.2-1B")    -> MLXProvider
     """
     m = model.lower()
-    if m.startswith("gpt") or m.startswith("o1") or m.startswith("o3"):
+    if m.startswith("azure/") or m.startswith("azure-openai/"):
+        from semantic_harness.providers.openai_provider import OpenAIProvider
+        # Azure OpenAI-compatible endpoint
+        return OpenAIProvider(**kwargs)
+    elif m.startswith("bedrock/") or m.startswith("aws/"):
+        # AWS Bedrock endpoint via OpenAI compatibility or boto3 bridge
+        from semantic_harness.providers.openai_provider import OpenAIProvider
+        return OpenAIProvider(**kwargs)
+    elif m.startswith("vertex/") or m.startswith("gcp/") or m.startswith("gemini/"):
+        # Google Cloud Vertex AI / Gemini endpoint
+        from semantic_harness.providers.openai_provider import OpenAIProvider
+        return OpenAIProvider(**kwargs)
+    elif m.startswith("gpt") or m.startswith("o1") or m.startswith("o3"):
         from semantic_harness.providers.openai_provider import OpenAIProvider
         return OpenAIProvider(**kwargs)
     elif m.startswith("claude"):

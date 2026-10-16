@@ -14,6 +14,9 @@ docs/*
 !docs/architecture.md
 !docs/WORKFLOW.md
 !docs/PIPELINE.md
+!docs/rbac-and-cloud.md
+!docs/audit.md
+!docs/study.md
 !docs/figures/
 !docs/figures/**
 !docs/mkdocs.yml

@@ -446,24 +446,56 @@ class PolarQuantizer:
 
 
 class SemanticFeatureEmbedder:
-    """Lightweight deterministic feature projection for text embeddings.
+    """Hybrid feature projection and dense neural embedding for text intents.
 
-    Converts text intents into continuous feature vectors using subword n-grams
-    and random projection hashing without requiring multi-gigabyte models.
+    Converts text intents into continuous feature vectors using:
+    1. Dense neural models via sentence-transformers (e.g. all-MiniLM-L6-v2) if installed/specified.
+    2. Zero-dependency subword n-grams and random projection hashing as default instant fallback.
     """
 
-    def __init__(self, dim: int = 64) -> None:
+    def __init__(self, dim: int = 64, model_name: str | None = None) -> None:
         self.dim = dim
+        self.model_name = model_name
+        self._st_model: Any = None
+        if model_name:
+            try:
+                from sentence_transformers import SentenceTransformer
+                self._st_model = SentenceTransformer(model_name)
+            except Exception:
+                self._st_model = None
 
     def embed(self, text: str) -> list[float]:
         """Generate normalized continuous embedding vector for input text."""
+        if not text.strip():
+            return [0.0] * self.dim
+
+        # 1. Use neural sentence-transformer model if available
+        if self._st_model is not None:
+            try:
+                emb = self._st_model.encode(text, normalize_embeddings=True)
+                raw_list = emb.tolist() if hasattr(emb, "tolist") else list(emb)
+                # Align to self.dim
+                if len(raw_list) >= self.dim:
+                    vec = raw_list[:self.dim]
+                else:
+                    vec = raw_list + [0.0] * (self.dim - len(raw_list))
+                # Re-normalize
+                norm_sq = sum(x * x for x in vec)
+                if norm_sq > 0:
+                    inv_norm = 1.0 / math.sqrt(norm_sq)
+                    return [x * inv_norm for x in vec]
+                return vec
+            except Exception:
+                pass
+
+        # 2. Fast deterministic subword n-gram hashing
         tokens = text.lower().strip().split()
         if not tokens:
             return [0.0] * self.dim
 
         vec = [0.0] * self.dim
 
-        # 1. Word unigrams & character tri-grams
+        # Word unigrams & character tri-grams
         features = list(tokens)
         cleaned = "".join(c for c in text.lower() if c.isalnum() or c.isspace())
         for i in range(len(cleaned) - 2):

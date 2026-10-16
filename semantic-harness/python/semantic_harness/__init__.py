@@ -74,6 +74,32 @@ from semantic_harness.integrations.fastapi import (
     SemanticHarnessMiddleware,
     procedural_route,
 )
+from semantic_harness.tools_sql import (
+    SQLDatabaseTool,
+    SQLResult,
+)
+from semantic_harness.core.orchestrator import (
+    AgentOrchestrator,
+)
+from semantic_harness.security import (
+    SecurityContext,
+    Role,
+    Permission,
+    expand_permissions,
+    ANONYMOUS_CONTEXT,
+    SYSTEM_CONTEXT,
+    require_permission,
+    PermissionDeniedError,
+    AuthConfig,
+    AuthResolver,
+    get_resolver,
+    resolve as resolve_token,
+)
+from semantic_harness.cloud import (
+    CloudFactory,
+    get_cloud,
+)
+
 
 __all__ = [
     "__version__",
@@ -145,4 +171,23 @@ __all__ = [
     "get_tracer",
     "SemanticHarnessMiddleware",
     "procedural_route",
+    "SQLDatabaseTool",
+    "SQLResult",
+    "AgentOrchestrator",
+    # Security / RBAC
+    "SecurityContext",
+    "Role",
+    "Permission",
+    "expand_permissions",
+    "ANONYMOUS_CONTEXT",
+    "SYSTEM_CONTEXT",
+    "require_permission",
+    "PermissionDeniedError",
+    "AuthConfig",
+    "AuthResolver",
+    "get_resolver",
+    "resolve_token",
+    # Multi-Cloud SDK
+    "CloudFactory",
+    "get_cloud",
 ]

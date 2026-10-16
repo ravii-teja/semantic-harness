@@ -1,6 +1,6 @@
 # Semantic Harness: System Context & Architecture Overview
 
-> **Document Version:** 0.2.6  
+> **Document Version:** 0.3.0  
 > **Target Path:** `docs/context.md`  
 > **Source Base:** `semantic-harness` monorepo (`python/`, `npm/`, `.github/workflows/`, `website/`)  
 > **Author & Research:** Bankupalli Ravi Teja | Zenodo DOI: [10.5281/zenodo.19414309](https://zenodo.org/records/19414309)
@@ -9,13 +9,34 @@
 
 ## 0. Chronological System Updates (Latest First)
 
-### [2026-10-16] Version 0.2.6 — Distributed Graph RAG, Adversarial Precondition Fuzzing & Semantics-Baked Tokenomics
-- **Distributed PostgreSQL Knowledge Graph Memory (`memory/graph_pg.py`)**: Added `PostgresGraphMemory` extending entity-relation property graph storage to PostgreSQL cluster deployments with automatic connection pooling (`RealDictCursor`), automatic index migrations, and graceful in-memory fallback.
-- **Precondition Safety Fuzzer & Stress Suite (`guard/fuzzer.py`)**: Integrated `PreconditionFuzzer` to stress-test schema fingerprints and tool signatures against random parameter injections and schema drift, verifying a **0.00% False Reuse Rate (FRR)**.
-- **Semantics-Baked Tokenomics Amortization Engine (`core/tokenomics.py` & `npm/src/core/tokenomics.ts`)**: Added `calculate_semantic_savings` factoring in both direct 0-token procedural bypass and prevented schema hallucination retry loops (C2C closed loop), yielding $>85\%$ reduction in runaway retry tokens.
-- **Live Model Empirical Benchmark Suite (`experiments/run_real_benchmarks.py`)**: Live local SLM/LLM benchmark harness computing 95% bootstrap confidence intervals (500 resamples), Wilcoxon signed-rank paired tests, and McNemar accuracy lift.
-- **TypeScript Node.js Express Middleware (`npm/src/core/express_middleware.ts`)**: Zero-effort `expressSemanticHarness` middleware emitting procedural cache hit headers (`X-Semantic-Harness-Cache`, `X-Semantic-Harness-Cost-Saved`, `X-Semantic-Harness-Tokens-Bypassed`, `X-Semantic-Harness-Latency-Saved-Ms`).
-- **Mission Control Dashboard Upgrades (`visualization/dashboard.py`)**: Added **Cluster & Storage** monitoring, **Precondition Fuzzer** live on-demand stress testing widget (`/api/fuzzer/run`), longitudinal **Tokenomics Learning Curve** canvas visualization, and **Registered Semantic Entities & Triplets** table.
+### [2026-10-16] Version 0.3.0 — Enterprise Multi-Cloud SDK & Fine-Grained RBAC Security Framework
+- **Immutable Security Context Model (`security/context.py`)**: Introduced `SecurityContext` as a frozen, immutable dataclass to prevent mid-turn privilege escalation within autonomous agent reasoning loops. Propagates `tenant_id`, `principal_id`, `roles`, fine-grained `permissions`, and resolved `cloud` backend across turns.
+- **Cumulative Role & Fine-Grained Permission Taxonomy (`security/context.py`)**: Established standard cumulative enterprise roles (`viewer` ⊂ `analyst` ⊂ `operator` ⊂ `admin`) mapping to 13 fine-grained permissions across API, Memory/Graph, Tool Execution, LLM/Orchestration, and Administration.
+- **Vendor-Neutral OIDC/JWT Validation via JWKS (`security/auth.py`)**: Implemented stateless JWT signature verification using JSON Web Key Sets (JWKS) with automatic discovery and TTL caching. Seamlessly supports Okta, Microsoft Entra ID (Azure AD), AWS Cognito, Google Workspace, Keycloak, and Auth0 with zero vendor lock-in.
+- **Machine-to-Machine (M2M) Scoped API Key Engine (`security/auth.py`)**: Added SHA-256 hashed API key management (`sh_live_...`) with tenant scoping, role assignment, and multi-key environment ingestion (`SEMANTIC_HARNESS_API_KEYS`).
+- **Permission Enforcement Decorators (`security/decorators.py`)**: Developed `@require_permission` for synchronous and asynchronous tool execution boundaries, raising `PermissionDeniedError` on unauthorized invocations while maintaining backward compatibility.
+- **Multi-Cloud Driver Abstraction Layer (`cloud/base.py`, `cloud/__init__.py`)**: Designed `AbstractCloudDriver`, `CloudAuthDriver`, `SecretProvider`, and `BlobStorage` unified async interfaces with a dynamic `CloudFactory` that auto-probes cloud metadata servers (GCP, AWS, Azure, Local).
+- **Zero-Dependency Local Cloud Driver (`cloud/drivers/local_driver.py`)**: Default fallback driver supporting filesystem-based blob storage (`file://`) and environment-backed secrets with prefix-namespacing.
+- **Cloud-Native Drivers with Lazy Dependency Loading**:
+  - **GCP Driver (`cloud/drivers/gcp_driver.py`)**: Workload Identity / Application Default Credentials (ADC), Secret Manager, and Google Cloud Storage (`gs://`).
+  - **AWS Driver (`cloud/drivers/aws_driver.py`)**: IAM Instance Profiles / EKS IRSA session tokens, AWS Secrets Manager, and Amazon S3 (`s3://`).
+  - **Azure Driver (`cloud/drivers/azure_driver.py`)**: `DefaultAzureCredential` Managed Identities, Azure Key Vault, and Azure Blob Storage (`az://`).
+- **Comprehensive RBAC & Cloud Architecture Specification (`docs/rbac-and-cloud.md`)**: Complete architectural blueprint covering the 3-tier enforcement model, threat analysis, operational guidelines, and cloud deployment guides.
+- **Modular Packaging (`pyproject.toml`)**: Added targeted optional extras (`[gcp]`, `[aws]`, `[azure]`, `[rbac]`, `[cloud-all]`, `[enterprise]`).
+
+- **Async PostgreSQL Pool & Non-Blocking Graph RAG (`memory/graph_pg.py`)**: Added `init_async_pool`, `close_async_pool`, and non-blocking `aadd_entity`, `aadd_triplet`, and `aget_relations_for` using `asyncpg` with managed connection pooling (`min_size=2`, `max_size=10`) for zero-blocking ASGI operations.
+- **Enterprise SQL Database Query Agent Tool (`tools_sql.py`)**: Added `SQLDatabaseTool` and `SQLResult` supporting automated schema discovery in markdown format, read-only query safety bounds (rejecting DDL/DML injection), and automated mapping of relational query results into Knowledge Graph triplets.
+- **Dashboard API Key Authentication (`visualization/dashboard.py` & `cli.py`)**: Enforced API key verification across the dashboard server (`Authorization: Bearer <key>` and `X-Semantic-Harness-Key` header inspection) with `--api-key` CLI configuration to prevent unauthorized access in cloud environments.
+- **PostgreSQL Incremental Schema Migrations (`memory/migrations.py`)**: Added `PostgresMigrationManager` applying sequential DDL migrations with table version tracking, index optimization, and automatic execution during database initialization.
+- **C2C Closed-Loop Exponential Backoff & Jitter (`semantics/c2c.py`)**: Implemented `validate_with_retry` with randomized jitter and exponential backoff (`base_delay * 2^attempt + jitter`) to avoid burst rate-limit errors during automated model self-healing cycles.
+- **Multi-Agent Orchestrator (`core/orchestrator.py`)**: Implemented `AgentOrchestrator` coordinating teams of specialized agents with shared distributed Procedural Memory caching and sequential pipeline execution (`broadcast_pipeline`).
+- **Dense Neural Embedding Integration (`memory/turbo_quant.py`)**: Upgraded `SemanticFeatureEmbedder` with support for `sentence-transformers` dense neural embeddings alongside zero-dependency subword n-gram hashing fallback.
+- **Cloud Provider Routing Expansion (`providers/factory.py`)**: Added native routing for Azure OpenAI (`azure/`, `azure-openai/`), AWS Bedrock (`bedrock/`, `aws/`), and GCP Vertex AI (`vertex/`, `gcp/`, `gemini/`).
+- **Streaming Response Architecture (`providers/base.py` & `providers/openai_provider.py`)**: Added `complete_stream` async token generator to `BaseProvider` and `OpenAIProvider`.
+- **Precondition Safety Fuzzer & Stress Suite (`guard/fuzzer.py`)**: Verified **0.00% False Reuse Rate (FRR)** under adversarial parameter injections.
+- **Semantics-Baked Tokenomics Amortization Engine (`core/tokenomics.py` & `npm/src/core/tokenomics.ts`)**: Integrated `calculate_semantic_savings` factoring in both direct 0-token procedural bypass and prevented schema hallucination retry loops.
+- **TypeScript Node.js Express Middleware (`npm/src/core/express_middleware.ts`)**: Zero-effort `expressSemanticHarness` middleware emitting procedural cache hit headers.
+
 
 ### [2026-09-27] Version 0.2.5 — Mission Control Console, FastAPI Middleware & Multi-Model Ablations
 - **Drop-In FastAPI & ASGI Middleware (`integrations/fastapi.py`)**: Zero-effort `SemanticHarnessMiddleware` and `procedural_route` decorator for FastAPI/Starlette applications.

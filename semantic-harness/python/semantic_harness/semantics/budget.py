@@ -1,5 +1,6 @@
 """Context budget manager — ensures prompts fit within model context limits."""
 from __future__ import annotations
+from typing import Any
 
 
 class ContextBudget:
@@ -13,12 +14,30 @@ class ContextBudget:
     For exact counting, integrate tiktoken.
     """
 
-    def __init__(self, max_tokens: int = 4096, chars_per_token: float = 4.0):
+    def __init__(self, max_tokens: int = 4096, chars_per_token: float = 4.0, model_name: str | None = None):
         self.max_tokens = max_tokens
         self._chars_per_token = chars_per_token
+        self.model_name = model_name
+        self._tokenizer: Any = None
+        if model_name:
+            try:
+                import tiktoken
+                try:
+                    self._tokenizer = tiktoken.encoding_for_model(model_name)
+                except Exception:
+                    self._tokenizer = tiktoken.get_encoding("cl100k_base")
+            except ImportError:
+                self._tokenizer = None
 
     def estimate_tokens(self, text: str) -> int:
-        """Estimate token count from text length."""
+        """Estimate or accurately count token count from text length."""
+        if not text:
+            return 0
+        if self._tokenizer is not None:
+            try:
+                return len(self._tokenizer.encode(text))
+            except Exception:
+                pass
         return int(len(text) / self._chars_per_token)
 
     def fits(self, text: str) -> bool:

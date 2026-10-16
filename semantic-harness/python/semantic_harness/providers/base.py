@@ -39,3 +39,17 @@ class BaseProvider(ABC):
     ) -> ProviderResponse:
         """Synchronously complete chat messages."""
         ...
+
+    async def complete_stream(
+        self,
+        messages: list[dict[str, str]],
+        model: str,
+        max_tokens: int = 1024,
+        temperature: float = 0.0,
+        **kwargs: Any,
+    ):
+        """Asynchronously stream token chunks. Yields token string chunks."""
+        # Default fallback to complete if streaming not explicitly implemented
+        resp = await self.complete(messages, model=model, max_tokens=max_tokens, temperature=temperature, **kwargs)
+        yield resp.content
+

@@ -2,10 +2,39 @@
 
 All notable changes to **Semantic Harness** follow [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2026-10-16
+
+### Added
+- **Fine-Grained Role-Based Access Control (RBAC) (`security.context` & `security.decorators`)**:
+  - `SecurityContext`: Immutable, frozen security carrier holding `tenant_id`, `principal_id`, `roles`, `permissions`, and `cloud` backend metadata to guarantee zero mid-turn privilege escalation.
+  - Cumulative Role Hierarchy: `viewer` ⊂ `analyst` ⊂ `operator` ⊂ `admin`.
+  - 13 Fine-Grained Permissions: across dashboard, metrics, graph read/write, memory, tool execution (standard vs. destructive), LLM invocation, orchestrator runs, migrations, and tenant management.
+  - `@require_permission`: Decorator enforcing permission policies across synchronous and asynchronous methods with `PermissionDeniedError`.
+- **Stateless Vendor-Neutral OIDC/JWT & M2M Scoped API Key Engine (`security.auth`)**:
+  - OpenID Connect (OIDC) JWT validation using JWKS (JSON Web Key Sets) caching with automatic discovery for Okta, Microsoft Entra ID (Azure AD), AWS Cognito, Google Workspace, Keycloak, and Auth0.
+  - Machine-to-Machine (M2M) prefixed API keys (`sh_live_...`) with SHA-256 storage, multi-key environment configuration (`SEMANTIC_HARNESS_API_KEYS`), and legacy single-key backward compatibility.
+- **Multi-Cloud Driver Abstraction Layer (`cloud` & `cloud.drivers`)**:
+  - Unified `CloudFactory` and `get_cloud()` supporting automatic metadata server detection across GCP, AWS, Azure, and Local.
+  - `AbstractCloudDriver`, `CloudAuthDriver`, `SecretProvider`, and `BlobStorage` abstract interfaces ensuring vendor-neutral enterprise readiness.
+  - **Local Driver (`cloud.drivers.local_driver`)**: Zero-dependency filesystem blob storage (`file://`) and environment variable secret manager.
+  - **GCP Driver (`cloud.drivers.gcp_driver`)**: Google Workload Identity / Application Default Credentials (ADC), Secret Manager, and Google Cloud Storage (`gs://`).
+  - **AWS Driver (`cloud.drivers.aws_driver`)**: IAM Instance Profiles / EKS IRSA session tokens, AWS Secrets Manager, and Amazon S3 (`s3://`).
+  - **Azure Driver (`cloud.drivers.azure_driver`)**: `DefaultAzureCredential` Managed Identities, Azure Key Vault, and Azure Blob Storage (`az://`).
+- **Comprehensive RBAC & Cloud Architecture Specification (`docs/rbac-and-cloud.md`)**: Complete architectural specification covering threat modeling, three-tier enforcement, and operational guidance.
+- **Packaging Extras in `pyproject.toml`**: Added `[gcp]`, `[aws]`, `[azure]`, `[rbac]`, `[cloud-all]`, and `[enterprise]` installation targets.
+
 ## [0.2.6] — 2026-10-16
 
 ### Added
-- **Distributed PostgreSQL Knowledge Graph Memory (`memory.graph_pg`)**: Enterprise-grade `PostgresGraphMemory` enabling multi-node Kubernetes cluster deployments for distributed agent Knowledge Graph RAG traversals with automatic schema migrations, index optimization, and graceful in-memory fallback.
+- **Async PostgreSQL Pool & Non-Blocking Graph RAG (`memory.graph_pg`)**: Added `init_async_pool`, `close_async_pool`, and non-blocking `aadd_entity`, `aadd_triplet`, and `aget_relations_for` using `asyncpg` with managed connection pooling (`min_size=2`, `max_size=10`) for zero-blocking ASGI operations.
+- **Enterprise SQL Database Query Agent Tool (`tools_sql`)**: Added `SQLDatabaseTool` and `SQLResult` supporting automated schema discovery in markdown format, read-only query safety bounds (rejecting DDL/DML injection), and automated mapping of relational query results into Knowledge Graph triplets.
+- **Dashboard API Key Authentication (`visualization.dashboard` & `cli`)**: Enforced API key verification across the dashboard server (`Authorization: Bearer <key>` and `X-Semantic-Harness-Key` header inspection) with `--api-key` CLI configuration to prevent unauthorized access in cloud environments.
+- **PostgreSQL Incremental Schema Migrations (`memory.migrations`)**: Added `PostgresMigrationManager` applying sequential DDL migrations with table version tracking, index optimization, and automatic execution during database initialization.
+- **C2C Closed-Loop Exponential Backoff & Jitter (`semantics.c2c`)**: Implemented `validate_with_retry` with randomized jitter and exponential backoff (`base_delay * 2^attempt + jitter`) to avoid burst rate-limit errors during automated model self-healing cycles.
+- **Multi-Agent Orchestrator (`core.orchestrator`)**: Implemented `AgentOrchestrator` coordinating teams of specialized agents with shared distributed Procedural Memory caching and sequential pipeline execution (`broadcast_pipeline`).
+- **Dense Neural Embedding Integration (`memory.turbo_quant`)**: Upgraded `SemanticFeatureEmbedder` with support for `sentence-transformers` dense neural embeddings alongside zero-dependency subword n-gram hashing fallback.
+- **Cloud Provider Routing Expansion (`providers.factory`)**: Added native routing for Azure OpenAI (`azure/`, `azure-openai/`), AWS Bedrock (`bedrock/`, `aws/`), and GCP Vertex AI (`vertex/`, `gcp/`, `gemini/`).
+- **Streaming Response Architecture (`providers.base` & `providers.openai_provider`)**: Added `complete_stream` async token generator to `BaseProvider` and `OpenAIProvider`.
 - **Precondition Safety Fuzzer & Stress Suite (`guard.fuzzer`)**: Automated adversarial invariant fuzzer (`PreconditionFuzzer`) stress-testing schema fingerprints and tool signatures against parameter mutations and schema drift, mathematically verifying a **0.00% False Reuse Rate (FRR)**.
 - **Semantics-Baked Tokenomics Engine (`core.tokenomics` & TypeScript SDK)**: Implemented `calculate_semantic_savings` factoring in both direct zero-token procedural bypass savings and prevented hallucination retry chains (C2C closed loop), recovering developer turnaround latency and cutting runaway retry tokens by $>85\%$.
 - **Mission Control Dashboard Upgrades (`visualization.dashboard`)**: Added **Cluster & Storage** monitoring, **Precondition Fuzzer** live on-demand stress testing widget (`/api/fuzzer/run`), longitudinal **Tokenomics Learning Curve** canvas visualization, and **Registered Semantic Entities & Triplets** table.

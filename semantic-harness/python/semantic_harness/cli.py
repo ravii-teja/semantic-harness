@@ -67,6 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
     dash_parser.add_argument("--port", type=int, default=8080, help="Port to bind dashboard server (default: 8080)")
     dash_parser.add_argument("--host", type=str, default="127.0.0.1", help="Host address (default: 127.0.0.1)")
     dash_parser.add_argument("--open", action="store_true", help="Automatically open dashboard in web browser")
+    dash_parser.add_argument("--api-key", type=str, default=None, help="Require API key authentication header (or env SEMANTIC_HARNESS_API_KEY)")
 
     # Subcommand: roi
     roi_parser = subparsers.add_parser("roi", help="Calculate token cost savings and procedural compilation ROI")
@@ -186,11 +187,11 @@ def cmd_metrics() -> int:
     return 0
 
 
-def cmd_dashboard(port: int = 8080, host: str = "127.0.0.1", open_browser: bool = False) -> int:
+def cmd_dashboard(port: int = 8080, host: str = "127.0.0.1", open_browser: bool = False, api_key: str | None = None) -> int:
     """Launch live enterprise observability web dashboard."""
     import time
     from semantic_harness.visualization.dashboard import serve_dashboard
-    server = serve_dashboard(port=port, host=host, open_browser=open_browser)
+    server = serve_dashboard(port=port, host=host, open_browser=open_browser, api_key=api_key)
     try:
         while True:
             time.sleep(1)
@@ -256,7 +257,7 @@ def main(args: Sequence[str] | None = None) -> int:
     elif parsed.command == "metrics":
         return cmd_metrics()
     elif parsed.command == "dashboard":
-        return cmd_dashboard(port=parsed.port, host=parsed.host, open_browser=parsed.open)
+        return cmd_dashboard(port=parsed.port, host=parsed.host, open_browser=parsed.open, api_key=parsed.api_key)
     elif parsed.command == "roi":
         return cmd_roi(
             spend=parsed.spend,

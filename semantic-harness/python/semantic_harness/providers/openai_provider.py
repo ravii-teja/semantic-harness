@@ -64,6 +64,29 @@ class OpenAIProvider(BaseProvider):
             raw=resp.model_dump(),
         )
 
+    async def complete_stream(
+        self,
+        messages: list[dict[str, str]],
+        model: str = "gpt-4o-mini",
+        max_tokens: int = 1024,
+        temperature: float = 0.0,
+        **kwargs: Any,
+    ):
+        """Asynchronously stream token chunks via OpenAI streaming API."""
+        stream = await self._async_client.chat.completions.create(
+            model=model,
+            messages=messages,  # type: ignore
+            max_tokens=max_tokens,
+            temperature=temperature,
+            stream=True,
+            **kwargs,
+        )
+        async for chunk in stream:
+            delta = chunk.choices[0].delta if chunk.choices else None
+            if delta and delta.content:
+                yield delta.content
+
+
     def complete_sync(
         self,
         messages: list[dict[str, str]],

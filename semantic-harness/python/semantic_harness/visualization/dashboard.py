@@ -864,8 +864,38 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
         self.dashboard_server = dashboard_server
         super().__init__(*args, **kwargs)
 
+    def _is_authorized(self) -> bool:
+        """Verify API key authentication if api_key is configured on dashboard server."""
+        expected_key = getattr(self.dashboard_server, "api_key", None)
+        if not expected_key:
+            return True
+        auth_header = self.headers.get("Authorization", "")
+        if auth_header.startswith("Bearer "):
+            token = auth_header[7:].strip()
+            if token == expected_key:
+                return True
+        key_header = self.headers.get("X-Semantic-Harness-Key", "")
+        if key_header == expected_key:
+            return True
+        # Check query param as fallback for browser view: ?key=...
+        if "?key=" in self.path:
+            import urllib.parse
+            parsed = urllib.parse.urlparse(self.path)
+            q = urllib.parse.parse_qs(parsed.query)
+            if q.get("key", [""])[0] == expected_key:
+                return True
+        return False
+
     def do_GET(self) -> None:
-        if self.path in ("/", "/dashboard"):
+        if not self._is_authorized():
+            self.send_response(401)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("WWW-Authenticate", 'Bearer realm="Semantic Harness Dashboard"')
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": "Unauthorized: valid API key required"}).encode("utf-8"))
+            return
+
+        if self.path in ("/", "/dashboard") or self.path.startswith("/?"):
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
@@ -962,12 +992,15 @@ class DashboardServer:
         metrics: Optional[MetricsCollector] = None,
         graph: Optional[GraphMemory] = None,
         procedural: Optional[ProceduralMemory] = None,
+        api_key: Optional[str] = None,
     ) -> None:
         self.port = port
         self.host = host
         self.metrics = metrics or get_metrics_collector()
         self.graph = graph
         self.procedural = procedural
+        import os
+        self.api_key = api_key or os.environ.get("SEMANTIC_HARNESS_API_KEY")
         self._server: Optional[socketserver.TCPServer] = None
         self._thread: Optional[threading.Thread] = None
 
@@ -1006,6 +1039,7 @@ def serve_dashboard(
     metrics: Optional[MetricsCollector] = None,
     graph: Optional[GraphMemory] = None,
     procedural: Optional[ProceduralMemory] = None,
+    api_key: Optional[str] = None,
 ) -> DashboardServer:
     """Start and return a live dashboard server."""
     server = DashboardServer(
@@ -1014,6 +1048,7 @@ def serve_dashboard(
         metrics=metrics,
         graph=graph,
         procedural=procedural,
+        api_key=api_key,
     )
     server.start(open_browser=open_browser)
     return server

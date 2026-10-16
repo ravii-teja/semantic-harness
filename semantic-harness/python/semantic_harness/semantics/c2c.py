@@ -120,6 +120,67 @@ class C2CValidator:
             return result.data
         raise ValueError(result.retry_prompt)
 
+    async def validate_with_retry(
+        self,
+        initial_data: dict[str, Any] | str,
+        schema: type[T],
+        generate_fn: Any,
+        base_delay_sec: float = 0.5,
+        backoff_factor: float = 2.0,
+        jitter: bool = True,
+    ) -> ValidationResult:
+        """
+        Validate output with automatic exponential backoff and jitter retry loop.
+        
+        Args:
+            initial_data: Raw JSON or text from LLM.
+            schema: Target Pydantic model.
+            generate_fn: Async or sync callable receiving retry_prompt: str and returning new output.
+            base_delay_sec: Initial backoff delay in seconds (default: 0.5s).
+            backoff_factor: Multiplier for backoff (default: 2.0).
+            jitter: Whether to add random jitter to delay.
+        """
+        import asyncio
+        import inspect
+        import random
+
+        current = initial_data
+        last_result: ValidationResult | None = None
+
+        for attempt in range(self.max_retries + 1):
+            if isinstance(current, str):
+                try:
+                    parsed = extract_json(current)
+                except Exception as e:
+                    last_result = ValidationResult(
+                        valid=False,
+                        errors=[f"Failed to extract JSON object: {e}"],
+                        retry_prompt=f"Your output was not valid JSON. Please return a single JSON object matching the {schema.__name__} schema.",
+                    )
+                    parsed = None
+            else:
+                parsed = current
+
+            if parsed is not None:
+                last_result = self.validate(parsed, schema)
+                if last_result.valid:
+                    return last_result
+
+            if attempt < self.max_retries:
+                # Exponential backoff with jitter
+                delay = base_delay_sec * (backoff_factor ** attempt)
+                if jitter:
+                    delay += random.uniform(0.0, base_delay_sec * 0.5)
+                await asyncio.sleep(delay)
+
+                # Regenerate with retry prompt
+                if inspect.iscoroutinefunction(generate_fn):
+                    current = await generate_fn(last_result.retry_prompt)
+                else:
+                    current = generate_fn(last_result.retry_prompt)
+
+        return last_result or ValidationResult(valid=False, errors=["Max retries reached"])
+
     def _build_retry_prompt(self, errors: list[str], schema: type[T]) -> str:
         """Build an LLM-friendly retry prompt from validation errors."""
         schema_hint = ""
